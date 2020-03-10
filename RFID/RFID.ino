@@ -15,7 +15,7 @@ void setup() {
   Serial.println("Approximate your card to the reader...");
   Serial.println();
 
-pinMode(piezo, OUTPUT);
+  pinMode(piezo, OUTPUT);
 }
 
 void loop() 
@@ -42,6 +42,7 @@ void loop()
      content.concat(String(mfrc522.uid.uidByte[i] < 0x10 ? " 0" : " "));
      content.concat(String(mfrc522.uid.uidByte[i], HEX));
   }
+ 
   Serial.println();
   Serial.print("Message : "); 
   content.toUpperCase();
@@ -60,31 +61,3 @@ void loop()
     
   }
 } 
-
-
-
-/*void play() {
-  int notelength;
-  for (int playMusic = 0; playMusic < 29; playMusic++){
-  if (a == 4) { //chorus
-    // chorus
-    notelength = beatlength * song1_chorus_rhythmn[b];
-    if (song1_chorus_melody[b] > 0) {
-      Serial.print(lyrics_chorus[c]);
-      
-      tone(piezo, song1_chorus_melody[b], notelength);
-      c++;
-    }
-    b++;
-    if (b >= sizeof(song1_chorus_melody) / sizeof(int)) {
-      Serial.println("");
-      a++;
-      b = 0;
-      c = 0;
-    }
-  }
-  delay(notelength); // necessary because piezo is on independent timer
-  noTone(piezo);
-  delay(notelength * beatseparationconstant); // create separation between notes
-  }
-} */
