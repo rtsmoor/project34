@@ -15,4 +15,4 @@ public class Balance {
         balance -= balChange;
         System.out.println(balance);
     }
-}
+}   
