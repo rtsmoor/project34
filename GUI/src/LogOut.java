@@ -1,7 +1,7 @@
 public class LogOut {
-    int inactivityTimer;
-    boolean logout = false;
-    int maxtime;
+    private int inactivityTimer;
+    private boolean logout = false;
+    private int maxtime = 30;
 
     void userLogout(){
         if(inactivityTimer > maxtime){
