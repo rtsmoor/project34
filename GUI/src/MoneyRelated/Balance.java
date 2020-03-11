@@ -1,7 +1,4 @@
-import java.math.BigDecimal;
-
-
-//variabelen worden vervangen door de gegevens uit de database en de user input (tijdelijke placeholder)
+package MoneyRelated;//variabelen worden vervangen door de gegevens uit de database en de user input (tijdelijke placeholder)
 
 public class Balance {
     private int balance = 0;
@@ -14,6 +11,5 @@ public class Balance {
         System.out.println(balance);
         balance -= balChange;
         System.out.println(balance);
-        System.out.println("hallo ik, ik is het");
     }
 }   

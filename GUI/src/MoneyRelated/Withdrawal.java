@@ -1,4 +1,4 @@
-import java.math.BigDecimal;
+package MoneyRelated;
 
 public class Withdrawal extends Balance {
     private int amount = 0;
