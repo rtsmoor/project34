@@ -14,5 +14,6 @@ public class Balance {
         System.out.println(balance);
         balance -= balChange;
         System.out.println(balance);
+        System.out.println("Hallo het is ik");
     }
 }   
