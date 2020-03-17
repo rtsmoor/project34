@@ -56,7 +56,8 @@ void loop() {
 
 void masterRequest(){
   row_values *row = NULL;
-  int pincode = 0;
+  byte response[32];
+  String pincode;
 
   delay(1000);
 
@@ -71,21 +72,20 @@ void masterRequest(){
   do {
     row = cur_mem->get_next_row();
     if (row != NULL) {
-      pincode = atol(row->values[0]);
+      pincode = row->values[0];
     }
+    Wire.beginTransmission(8);
+    for (byte i=0;i<32;i++) 
+      {
+        response[i] = (byte)pincode.charAt(i);
+      }
+    Wire.write(response, sizeof(response));
+    Wire.endTransmission();
   } while (row != NULL);
   // Deleting the cursor also frees up memory used
   delete cur_mem;
 
   // Show the result
-  Serial.print("Pincode: ");
-  Serial.println(pincode);
-  byte highbyte=pincode>>8; //shift right 8 bits, leaving only the 8 high bits.
-  byte lowbyte=pincode&0xFF; //bitwise AND with 0xFF
-  Wire.beginTransmission(8);
-  Wire.write(highbyte);
-  Wire.write(lowbyte);
-  Wire.endTransmission();
   delay(500);
   checkDatabase = 0;
 }

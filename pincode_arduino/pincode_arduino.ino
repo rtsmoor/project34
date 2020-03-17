@@ -1,5 +1,6 @@
 #include <Keypad.h>
 #include <Wire.h>
+#include <MD5.h>
 
 const byte ROWS = 4; //four rows
 const byte COLS = 4; //four columns
@@ -15,6 +16,7 @@ int pinCount = 0;
 int i = 0;
 int checkDatabase = 0;
 long enteredCode = 0;
+char *md5str;
 char enteredCodeArray[4] = {'0', '0', '0', '0'};
 char pinCode[4] = {'2','4','5','1'};
 byte rowPins[ROWS] = {9,8,7,6}; //connect to the row pinouts of the keypad
@@ -45,6 +47,10 @@ void loop(){
         int currentNumber = enteredCodeArray[(i-x)-1] - '0';
         enteredCode += currentNumber * round(pow(10, x));
       }
+      unsigned char* hash=MD5::make_hash(enteredCode);
+      //generate the digest (hex encoding) of our hash
+      md5str = MD5::make_digest(hash, 16);
+      free(hash);
       checkDatabase = 1;
       Serial.println("Authorizing...");
       sendEvent();
@@ -80,25 +86,30 @@ void sendEvent(){
 }
 
 void receiveEvent(int howMany){
-    byte highbyte = Wire.read();
-    byte lowbyte = Wire.read();
-    int receivedCode = (highbyte<<8)+lowbyte;
-    passwordControl(receivedCode);
+  String receivedCode = "";
+  while(Wire.available()){
+    char b = Wire.read();
+    receivedCode += b;
+  }
+  passwordControl(receivedCode);
 }
 
-void passwordControl(int pincode){
+void passwordControl(String pincode){
   if(enteredCode != 0){
-    if(enteredCode == pincode){
+    String checkCode(md5str);
+    if(checkCode == pincode){
       Serial.println("Succes");
-      checkDatabase = 0;
     }
     else{
       Serial.println("Access denied");
-      Serial.println();
-      Serial.print("Please enter pincode: ");
     }
     if(i != 0){
         i = -1;
       }
+    checkDatabase = 0;
+    enteredCode = 0;
+
+    Serial.println();
+    Serial.print("Please enter pincode: ");
   }
 }
