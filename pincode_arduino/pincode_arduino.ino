@@ -3,9 +3,66 @@
 #include <MD5.h>
 #include <SPI.h>
 #include <MFRC522.h>
+#include <Crypto.h>
+#include <SHA512.h>
+#include <string.h>
+
+#define HASH_SIZE 64
+#define BLOCK_SIZE 128
 
 #define SS_PIN 10
 #define RST_PIN 9
+
+long enteredCode = 0;
+char enteredCodeArray[4] = {'0', '0', '0', '0'};
+
+
+//Hashing
+
+struct hashVector
+{
+    const char *name;
+    const char *data;
+    uint8_t hash[HASH_SIZE];
+};
+
+
+
+hashVector const pinHash = {"SHA-512 #1", enteredCodeArray};
+
+SHA512 sha512;
+
+byte buffer[BLOCK_SIZE + 2];
+String hashedCode = "";
+
+void hashMaker(Hash *hash, const struct hashVector *updateHash, size_t inc)
+{
+    size_t size = strlen(updateHash->data);
+    size_t posn, len;
+    uint8_t value[HASH_SIZE];
+
+    hash->reset();
+    for (posn = 0; posn < size; posn += inc) {
+        len = size - posn;
+        if (len > inc)
+            len = inc;
+        hash->update(updateHash->data + posn, len);
+    }
+    hash->finalize(value, sizeof(value));
+    for(int i = 0; i < 64; i++){
+      byte b = value[i];
+      hashedCode += String(b, HEX);
+    }
+    Serial.println();
+    Serial.println(hashedCode);
+}
+
+//End of hashing
+
+
+
+
+
 
 MFRC522 mfrc522(SS_PIN, RST_PIN);   // Create MFRC522 instance.
 
@@ -23,9 +80,7 @@ bool finished = false;
 int pinCount = 0;
 int i = 0;
 int checkDatabase = 0;
-long enteredCode = 0;
 char *md5str;
-char enteredCodeArray[4] = {'0', '0', '0', '0'};
 String passUID= "";
 byte rowPins[ROWS] = {8,7,6,5}; //connect to the row pinouts of the keypad
 byte colPins[COLS] = {4,3,2,1}; //connect to the column pinouts of the keypad
@@ -93,13 +148,7 @@ void loop(){
       }
 
 
-      //Hashing
-      //Serial.print("Hashing: "); Serial.print(enteredCode);
-      unsigned char* hash=MD5::make_hash(enteredCode);
-      //generate the digest (hex encoding) of our hash
-      md5str = MD5::make_digest(hash, 16);
-      //Serial.println(md5str);
-      free(hash);
+      hashMaker(&sha512, &pinHash, 4);
 
       //Start check
       Serial.println("Authorizing...");
@@ -141,7 +190,6 @@ void sendEvent(){
     }
     Wire.write(response, sizeof(response)); 
   }
-  passUID = "";
 }
 
 
@@ -160,7 +208,7 @@ void receiveEvent(int howMany){
 
 //Compare hashed database pincode and hashed entered code
 void passwordControl(String pincode){
-    String checkCode(md5str);
+    String checkCode(enteredCode);
     if(checkCode == pincode){
       //Serial.print(checkCode); Serial.print(" : "); Serial.println(pincode);
       Serial.println("Succes");
@@ -175,6 +223,7 @@ void passwordControl(String pincode){
     checkDatabase = 0;
     enteredCode = 0;
     cardPresented = false;
+    passUID = "00000000000";
 
     Serial.println();
     Serial.print("Please enter pincode: ");
