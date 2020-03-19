@@ -53,8 +53,7 @@ void hashMaker(Hash *hash, const struct hashVector *updateHash, size_t inc)
       byte b = value[i];
       hashedCode += String(b, HEX);
     }
-    Serial.println();
-    Serial.println(hashedCode);
+    //Serial.println(hashedCode);
 }
 
 //End of hashing
@@ -78,7 +77,7 @@ char hexaKeys[ROWS][COLS] = {
 bool cardPresented = false;
 bool finished = false;
 int pinCount = 0;
-int i = 0;
+int keyCounter = 0;
 int checkDatabase = 0;
 char *md5str;
 String passUID= "";
@@ -99,7 +98,7 @@ void setup(){
   mfrc522.PCD_Init();
 
   
-  Serial.print("Please present your card: ");
+  Serial.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nPlease present your card: ");
 }
   
 void loop(){
@@ -128,7 +127,7 @@ void loop(){
   
     content.toUpperCase();
     passUID = content.substring(1);
-    Serial.println(passUID);
+    Serial.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
     cardPresented = true;
 
     Serial.print("Please enter pincode: ");
@@ -141,9 +140,8 @@ void loop(){
 
     //Register code
     if(customKey == '#'){
-      Serial.println();
-      for(int x = 0; x < i; x++){
-        int currentNumber = enteredCodeArray[(i-x)-1] - '0';
+      for(int x = 0; x < keyCounter; x++){
+        int currentNumber = enteredCodeArray[(keyCounter-x)-1] - '0';
         enteredCode += currentNumber * round(pow(10, x));
       }
 
@@ -151,7 +149,7 @@ void loop(){
       hashMaker(&sha512, &pinHash, 4);
 
       //Start check
-      Serial.println("Authorizing...");
+      Serial.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nAuthorizing...");
       sendEvent();
       finished = true;
       delay(3000);
@@ -159,23 +157,22 @@ void loop(){
 
     
     if(customKey != '*' || customKey != 'D'){
-    enteredCodeArray[i] = customKey;
-    if(i >= 0){
+    enteredCodeArray[keyCounter] = customKey;
+    if(keyCounter >= 0){
       Serial.print('*');
     }
     }
     if(customKey == 'D'){   //char D is deleting the whole line
-      if(i > 0){
-        i = -1;
+      if(keyCounter > 0){
+        keyCounter = -1;
       }
       pinCount = 0;
-      for(int x = 0; x < i; x++){
+      for(int x = 0; x < keyCounter; x++){
         enteredCodeArray[x] = 0;
       }
       enteredCode = 0;
-      Serial.println();
     }
-    i++;
+    keyCounter++;
     enteredCode = 0;
   }
 }
@@ -208,23 +205,33 @@ void receiveEvent(int howMany){
 
 //Compare hashed database pincode and hashed entered code
 void passwordControl(String pincode){
-    String checkCode(enteredCode);
+    String checkCode;
+    for(int i = 0; i < 32; i++){
+      checkCode += (char)hashedCode.charAt(i);
+    }
     if(checkCode == pincode){
       //Serial.print(checkCode); Serial.print(" : "); Serial.println(pincode);
-      Serial.println("Succes");
+      Serial.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nSucces");
+      for(int i = 0; i < 200; i++){
+        delay(50);
+      }
     }
     else{
       //Serial.print(checkCode); Serial.print(" : "); Serial.println(pincode);
-      Serial.println("Access denied");
+      Serial.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nAccess denied");
     }
-    if(i != 0){
-        i = -1;
+    resetting();
+
+}
+
+void resetting(){
+  int delaying = 0;
+  if(keyCounter != 0){
+        keyCounter = -1;
       }
     checkDatabase = 0;
     enteredCode = 0;
     cardPresented = false;
     passUID = "00000000000";
-
-    Serial.println();
-    Serial.print("Please enter pincode: ");
+ 
 }
