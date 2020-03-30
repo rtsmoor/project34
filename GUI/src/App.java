@@ -3,7 +3,8 @@ import MoneyRelated.*;
 
 public class App {
     public static void main(String[] args) {
-
-        LogIn logIn = new LogIn();
+        Gui gui = new Gui();
+        gui.createApp();
+//        LogIn logIn = new LogIn();
     }
 }

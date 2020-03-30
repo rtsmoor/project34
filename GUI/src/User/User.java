@@ -1,6 +1,9 @@
 package User;
+import MoneyRelated.Balance;
 
-class User {
+public class User {
+    public Balance balance = new Balance();
+
     private int inactivityTimer;
     private boolean logout = false;
     private int maxtime = 30;
