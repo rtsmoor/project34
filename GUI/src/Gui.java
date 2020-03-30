@@ -12,39 +12,61 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class Gui extends JFrame implements ActionListener {
-    private String version = "1.0";
+    private String version = "1.0.1";
 
     private User user = new User();
 
-    private JFrame mainFrame = new JFrame("BankApp V" + version);
-    private JPanel mainPanel = new JPanel();
+    private JFrame frame = new JFrame("BankApp V" + version);
+    private JPanel panelStart = new JPanel();
+    private JPanel panelMain = new JPanel();
+    private JPanel panelCustomAmount = new JPanel();
     private JButton quickPin = new JButton("Snel €70,- pinnen");
     private JButton showBal = new JButton("Bekijk saldo");
     private JButton customPin = new JButton("Kies bedrag");
     private JButton abort = new JButton("Afbreken");
-    private JTextArea ta = new JTextArea();
+    private JButton abort2 = new JButton("Afbreken");
+    private JButton b1 = new JButton("20");
+    private JButton b2 = new JButton("50");
+    private JButton b3 = new JButton("100");
+    private JButton b4 = new JButton("150");
+    private JTextArea taPanelMain = new JTextArea();
+    private JTextArea taPanelStart = new JTextArea("Scan uw pas om verder te gaan");
 
     void createApp(){
-        mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        mainFrame.setSize(400, 400);
-        mainFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(400, 400);
+        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 //        mainFrame.setUndecorated(true); // zorgt ervoor dat je niet zomaar uit het programma kan klikken
-        mainFrame.add(mainPanel);
-        mainPanel.add(quickPin);
-        mainPanel.add(showBal);
-        mainPanel.add(customPin);
-        mainPanel.add(abort);
+        frame.add(panelMain);
+        panelMain.add(quickPin);
+        panelMain.add(showBal);
+        panelMain.add(customPin);
+        panelMain.add(abort);
+
+        panelStart.add(taPanelStart);
+
+        panelCustomAmount.add(b1);
+        panelCustomAmount.add(b2);
+        panelCustomAmount.add(b3);
+        panelCustomAmount.add(b4);
+        panelCustomAmount.add(abort2);
 
 
         eventHandler();
 
-// todo maak GridBagLayout waar de knoppen worden toegevoegd.
-//  gebruik mainPanel.remove(knopnaam) en mainPanel.add(knopnaam) als je knoppen wilt toevoegen/weghalen
+// todo maak GridBagLayout waar de knoppen in worden toegevoegd.
+//  remove panels van het JFrame als je een nieuwe erop wilt zetten
       /*  mainFrame.getContentPane().add(BorderLayout.SOUTH, );*/
-        mainFrame.getContentPane().add(BorderLayout.NORTH, ta);
-        mainFrame.getContentPane().add(BorderLayout.CENTER, mainPanel);
-        mainFrame.setVisible(true);
+//        frame.getContentPane().add(BorderLayout.NORTH, taPanelMain);
+        frame.getContentPane().add(BorderLayout.CENTER, panelMain);
+        frame.setVisible(true);
+    }
 
+    void changePanel(JPanel panel){
+        frame.getContentPane().removeAll();
+        frame.getContentPane().add(panel);
+        frame.getContentPane().revalidate();
+        frame.getContentPane().repaint();
     }
 
     private void eventHandler(){
@@ -56,6 +78,8 @@ public class Gui extends JFrame implements ActionListener {
         customPin.setActionCommand("customPin");
         abort.addActionListener(this);
         abort.setActionCommand("abort");
+        abort2.addActionListener(this);
+        abort2.setActionCommand("abort");
 
 
     }
@@ -65,13 +89,14 @@ public class Gui extends JFrame implements ActionListener {
         if("abort".equalsIgnoreCase(e.getActionCommand())){
             //code om uit te loggen en naar het hoofdmenu te gaan
             System.out.println("aborting...");
-            ta.setText("");
+            taPanelMain.setText("");
+            changePanel(panelMain);
         }
 
         if("showBal".equalsIgnoreCase(e.getActionCommand())){
             //code om het saldo te laten zien
             System.out.println("showing balance");
-            ta.setText(Integer.toString(user.balance.getBalance()));
+            taPanelMain.setText(Integer.toString(user.balance.getBalance()));
         }
 
         if("pin70".equalsIgnoreCase(e.getActionCommand())){
@@ -83,6 +108,7 @@ public class Gui extends JFrame implements ActionListener {
             // code om een nieuw menu te krijgen waar je een nieuw bedrag kan kiezen (of waar je zelf een bedrag kan intikken)
             //todo voorstellen aan PO of ze meerdere voorgeselecteerde bedragen willen zien of gelijk dat ze het bedrag moeten intoetsen
             System.out.println("custom bedrag pinnen");
+            changePanel(panelCustomAmount);
         }
     }
 }
