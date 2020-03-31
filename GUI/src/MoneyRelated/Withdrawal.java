@@ -8,7 +8,7 @@ public class Withdrawal extends Balance {
     return amount;
 }
 
-    int customWithdrawal(int input){
+    public int customWithdrawal(int input){
         double balance = amount = input;
         withdrawBalance(amount);
 

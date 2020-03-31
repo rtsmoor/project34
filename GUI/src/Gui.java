@@ -20,15 +20,21 @@ public class Gui extends JFrame implements ActionListener {
     private JPanel panelStart = new JPanel();
     private JPanel panelMain = new JPanel();
     private JPanel panelCustomAmount = new JPanel();
+    private JPanel transaction = new JPanel();
+    private JPanel password = new JPanel();
+    private JButton yesBon = new JButton("Yes");
+    private JButton noBon = new JButton("No");
     private JButton quickPin = new JButton("Snel €70,- pinnen");
     private JButton showBal = new JButton("Bekijk saldo");
     private JButton customPin = new JButton("Kies bedrag");
     private JButton abort = new JButton("Afbreken");
     private JButton abort2 = new JButton("Afbreken");
+    private JButton abort3 = new JButton("Afbreken");
     private JButton b1 = new JButton("20");
     private JButton b2 = new JButton("50");
     private JButton b3 = new JButton("100");
     private JButton b4 = new JButton("150");
+    private JPasswordField passwordField = new JPasswordField(10);
     private JTextArea taPanelMain = new JTextArea();
     private JTextArea taPanelStart = new JTextArea("Scan uw pas om verder te gaan");
 
@@ -50,6 +56,12 @@ public class Gui extends JFrame implements ActionListener {
         panelCustomAmount.add(b3);
         panelCustomAmount.add(b4);
         panelCustomAmount.add(abort2);
+
+        transaction.add(noBon);
+        transaction.add(yesBon);
+        transaction.add(abort3);
+
+        password.add(passwordField);
 
 
         eventHandler();
@@ -80,6 +92,15 @@ public class Gui extends JFrame implements ActionListener {
         abort.setActionCommand("abort");
         abort2.addActionListener(this);
         abort2.setActionCommand("abort");
+        abort3.addActionListener(this);
+        abort3.setActionCommand("abort");
+        yesBon.addActionListener(this);
+        yesBon.setActionCommand("yesBon");
+        noBon.addActionListener(this);
+        noBon.setActionCommand("noBon");
+        b1.addActionListener(this);
+        b1.setActionCommand("twintig");
+
 
 
     }
@@ -104,11 +125,24 @@ public class Gui extends JFrame implements ActionListener {
             System.out.println("pin €70,-");
         }
 
-        if("customPin".equalsIgnoreCase(e.getActionCommand())){
+        if("customPin".equalsIgnoreCase(e.getActionCommand())) {
             // code om een nieuw menu te krijgen waar je een nieuw bedrag kan kiezen (of waar je zelf een bedrag kan intikken)
             //todo voorstellen aan PO of ze meerdere voorgeselecteerde bedragen willen zien of gelijk dat ze het bedrag moeten intoetsen
             System.out.println("custom bedrag pinnen");
             changePanel(panelCustomAmount);
         }
+         if("yesBon".equalsIgnoreCase(e.getActionCommand()))   {
+             System.out.println("Bon printen");
+             changePanel(password);
+
+            }
+         if("noBon".equalsIgnoreCase(e.getActionCommand()))   {
+                System.out.println("Bon niet printen");
+                changePanel(password);
+        }
+         if("twintig".equalsIgnoreCase(e.getActionCommand())){
+             System.out.println("Bon niet printen");
+             changePanel(transaction);
+         }
     }
 }
