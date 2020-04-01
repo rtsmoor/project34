@@ -6,8 +6,9 @@
 #include <Crypto.h>
 #include <SHA512.h>
 #include <string.h>
+#include <avr/wdt.h>
 
-#define HASH_SIZE 64
+#define HASH_SIZE 32
 #define BLOCK_SIZE 128
 
 #define SS_PIN 10
@@ -49,7 +50,7 @@ void hashMaker(Hash *hash, const struct hashVector *updateHash, size_t inc)
         hash->update(updateHash->data + posn, len);
     }
     hash->finalize(value, sizeof(value));
-    for(int i = 0; i < 64; i++){
+    for(int i = 0; i < 32; i++){
       byte b = value[i];
       hashedCode += String(b, HEX);
     }
@@ -76,6 +77,8 @@ char hexaKeys[ROWS][COLS] = {
 };
 bool cardPresented = false;
 bool finished = false;
+bool cardBlocked = false;
+String cardBlockedCode = "11111111111111111111111111111111";
 int pinCount = 0;
 int keyCounter = 0;
 int checkDatabase = 0;
@@ -87,7 +90,7 @@ byte colPins[COLS] = {4,3,2,1}; //connect to the column pinouts of the keypad
 //initialize an instance of class NewKeypad
 Keypad customKeypad = Keypad( makeKeymap(hexaKeys), rowPins, colPins, ROWS, COLS); 
 
-void setup(){
+void setup(){ 
   Wire.begin(8);  //0x08 =8
   Wire.onReceive(receiveEvent);
   Wire.onRequest(sendEvent);
@@ -130,7 +133,15 @@ void loop(){
     Serial.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
     cardPresented = true;
 
-    Serial.print("Please enter pincode: ");
+    if(cardBlocked){
+      setup();
+      exit;
+      return;
+    }
+    if(cardPresented){
+    delay(2000);
+    Serial.print("Please enter pincode: "); 
+  }
   } 
   
   //Button is pressed
@@ -196,6 +207,12 @@ void receiveEvent(int howMany){
   while(Wire.available()){
     char b = Wire.read();
     receivedCode += b;
+    
+  }
+  if(receivedCode.equals(cardBlockedCode)){
+    Serial.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nPass blocked, contact costumer support.");
+    cardBlocked = true;
+    resetting();
   }
   if(enteredCode != 0 && finished){
     passwordControl(receivedCode);
@@ -217,7 +234,7 @@ void passwordControl(String pincode){
       }
     }
     else{
-      //Serial.print(checkCode); Serial.print(" : "); Serial.println(pincode);
+      Serial.print(checkCode); Serial.print(" : "); Serial.println(pincode);
       Serial.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nAccess denied");
     }
     resetting();
@@ -233,5 +250,8 @@ void resetting(){
     enteredCode = 0;
     cardPresented = false;
     passUID = "00000000000";
- 
+    cardBlocked = false;
+    hashedCode = "";
+    sendEvent();
+    setup();
 }
