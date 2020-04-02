@@ -5,7 +5,6 @@ klas: TI1C
 */
 
 import User.*;
-import MoneyRelated.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,7 +12,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class Gui extends JFrame implements ActionListener {
-    private String version = "1.0.2";
+    int array_length = 10;
+    private String version = "1.0.3";
 
     private User user = new User();
 
@@ -21,30 +21,49 @@ public class Gui extends JFrame implements ActionListener {
 
     private JPanel panelStart = new JPanel();
     private JPanel panelMain = new JPanel();
-    private JPanel panelCustomAmount = new JPanel();
+    private JPanel panelChooseAmount = new JPanel();
     private JPanel panelTransaction = new JPanel();
     private JPanel panelPassword = new JPanel();
+    private JPanel panelCustomAmount = new JPanel();
+    private JPanel panelShowBal = new JPanel();
 
     private JButton yesBon = new JButton("Yes");
     private JButton noBon = new JButton("No");
     private JButton quickPin = new JButton("Snel €70,- pinnen");
     private JButton showBal = new JButton("Bekijk saldo");
     private JButton customPin = new JButton("Kies bedrag");
-    private JButton abort = new JButton("Afbreken");
-    private JButton abort2 = new JButton("Afbreken");
-    private JButton abort3 = new JButton("Afbreken");
+
+    JButton[] abort = new JButton[array_length];
+    JButton[] naarHoofdMenu = new JButton[array_length];
+
     private JButton bedrag1 = new JButton("20");
     private JButton bedrag2 = new JButton("50");
     private JButton bedrag3 = new JButton("100");
     private JButton bedrag4 = new JButton("150");
+    private JButton anderBedrag = new JButton("ander bedrag");
     private JButton nextPage = new JButton("Volgende");
     private JButton nextPage1 = new JButton("Volgende");
 
     private JPasswordField passwordField = new JPasswordField(10);
-    private JTextArea taPanelMain = new JTextArea();
+    private JTextField customBedragField = new JTextField(10);
+    private JTextArea taShowBal = new JTextArea();
     private JTextArea taPanelStart = new JTextArea("Scan uw pas om verder te gaan");
 
+    void createAbortButton(){
+        for(int i = 0; i < abort.length; i++){
+            abort[i] = new JButton("afbreken");
+        }
+    }
+
+    void createHoofdmenuButton(){
+        for(int i = 0; i < naarHoofdMenu.length; i++){
+            naarHoofdMenu[i] = new JButton("Terug naar het hoofdmenu");
+        }
+    }
+
     void createApp(){
+        createAbortButton();
+        createHoofdmenuButton();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(400, 400);
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -53,24 +72,34 @@ public class Gui extends JFrame implements ActionListener {
         panelMain.add(quickPin);
         panelMain.add(showBal);
         panelMain.add(customPin);
-        panelMain.add(abort);
+        panelMain.add(abort[0]);
 
         panelStart.add(taPanelStart);
         panelStart.add(nextPage);
 
-        panelCustomAmount.add(bedrag1);
-        panelCustomAmount.add(bedrag2);
-        panelCustomAmount.add(bedrag3);
-        panelCustomAmount.add(bedrag4);
-        panelCustomAmount.add(abort2);
+        panelChooseAmount.add(bedrag1);
+        panelChooseAmount.add(bedrag2);
+        panelChooseAmount.add(bedrag3);
+        panelChooseAmount.add(bedrag4);
+        panelChooseAmount.add(anderBedrag);
+        panelChooseAmount.add(abort[1]);
+        panelChooseAmount.add(naarHoofdMenu[1]);
 
         panelTransaction.add(noBon);
         panelTransaction.add(yesBon);
-        panelTransaction.add(abort3);
+        panelTransaction.add(abort[2]);
+        panelTransaction.add(naarHoofdMenu[2]);
 
         panelPassword.add(passwordField);
         panelPassword.add(nextPage1);
 
+        panelCustomAmount.add(customBedragField);
+        panelCustomAmount.add(abort[3]);
+        panelCustomAmount.add(naarHoofdMenu[3]);
+
+        panelShowBal.add(taShowBal);
+        panelShowBal.add(abort[4]);
+        panelShowBal.add(naarHoofdMenu[4]);
 
         eventHandler();
 
@@ -96,18 +125,29 @@ public class Gui extends JFrame implements ActionListener {
         showBal.setActionCommand("showBal");
         customPin.addActionListener(this);
         customPin.setActionCommand("customPin");
-        abort.addActionListener(this);
-        abort.setActionCommand("abort");
-        abort2.addActionListener(this);
-        abort2.setActionCommand("abort");
-        abort3.addActionListener(this);
-        abort3.setActionCommand("abort");
+
+        for(int i = 0; i < array_length; i++){
+            abort[i].addActionListener(this);
+            abort[i].setActionCommand("abort");
+            naarHoofdMenu[i].addActionListener(this);
+            naarHoofdMenu[i].setActionCommand("hoofdmenu");
+        }
+
         yesBon.addActionListener(this);
         yesBon.setActionCommand("yesBon");
         noBon.addActionListener(this);
         noBon.setActionCommand("noBon");
+
         bedrag1.addActionListener(this);
-        bedrag1.setActionCommand("twintig");
+        bedrag1.setActionCommand("customBedrag1");
+        bedrag2.addActionListener(this);
+        bedrag2.setActionCommand("customBedrag2");
+        bedrag3.addActionListener(this);
+        bedrag3.setActionCommand("customBedrag3");
+        bedrag4.addActionListener(this);
+        bedrag4.setActionCommand("customBedrag4");
+        anderBedrag.addActionListener(this);
+        anderBedrag.setActionCommand("anderBedrag");
 
         nextPage.addActionListener(this);
         nextPage.setActionCommand("volgende");
@@ -121,17 +161,25 @@ public class Gui extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+
         if("abort".equalsIgnoreCase(e.getActionCommand())){
-            //code om uit te loggen en naar het hoofdmenu te gaan
+            //code om uit te loggen en naar het startscherm te gaan
             System.out.println("aborting...");
-            taPanelMain.setText("");
+            taShowBal.setText("");
             changePanel(panelStart);
+        }
+
+        if("hoofdmenu".equalsIgnoreCase(e.getActionCommand())){
+            //code om naar het hoofdmenu te gaan
+            System.out.println("naar hoofdmenu");
+            changePanel(panelMain);
         }
 
         if("showBal".equalsIgnoreCase(e.getActionCommand())){
             //code om het saldo te laten zien
             System.out.println("showing balance");
-            taPanelMain.setText(Integer.toString(user.balance.getBalance()));
+            changePanel(panelShowBal);
+            taShowBal.setText(Integer.toString(user.balance.getBalance()));
         }
 
         if("pin70".equalsIgnoreCase(e.getActionCommand())){
@@ -143,7 +191,7 @@ public class Gui extends JFrame implements ActionListener {
             // code om een nieuw menu te krijgen waar je een nieuw bedrag kan kiezen (of waar je zelf een bedrag kan intikken)
             //todo voorstellen aan PO of ze meerdere voorgeselecteerde bedragen willen zien of gelijk dat ze het bedrag moeten intoetsen
             System.out.println("custom bedrag pinnen");
-            changePanel(panelCustomAmount);
+            changePanel(panelChooseAmount);
         }
          if("yesBon".equalsIgnoreCase(e.getActionCommand()))   {
              System.out.println("Bon printen");
@@ -165,6 +213,10 @@ public class Gui extends JFrame implements ActionListener {
         if("volgendee".equalsIgnoreCase((e.getActionCommand()))){
             System.out.println("Naar hoofdscherm");
             changePanel(panelMain); //moet nog veranderd worden naar inlogscherm
+        }
+        if("anderBedrag".equalsIgnoreCase((e.getActionCommand()))){
+            System.out.println("ander bedrag invullen");
+            changePanel(panelCustomAmount);
         }
 
     }
