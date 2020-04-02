@@ -4,7 +4,8 @@ Studentnummer: 0990534
 klas: TI1C
 */
 
-import User.User;
+import User.*;
+import MoneyRelated.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,7 +13,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class Gui extends JFrame implements ActionListener {
-    private String version = "1.0.1";
+    private String version = "1.0.2";
 
     private User user = new User();
 
@@ -20,8 +21,8 @@ public class Gui extends JFrame implements ActionListener {
     private JPanel panelStart = new JPanel();
     private JPanel panelMain = new JPanel();
     private JPanel panelCustomAmount = new JPanel();
-    private JPanel transaction = new JPanel();
-    private JPanel password = new JPanel();
+    private JPanel panelTransaction = new JPanel();
+    private JPanel panelPassword = new JPanel();
     private JButton yesBon = new JButton("Yes");
     private JButton noBon = new JButton("No");
     private JButton quickPin = new JButton("Snel €70,- pinnen");
@@ -30,10 +31,10 @@ public class Gui extends JFrame implements ActionListener {
     private JButton abort = new JButton("Afbreken");
     private JButton abort2 = new JButton("Afbreken");
     private JButton abort3 = new JButton("Afbreken");
-    private JButton b1 = new JButton("20");
-    private JButton b2 = new JButton("50");
-    private JButton b3 = new JButton("100");
-    private JButton b4 = new JButton("150");
+    private JButton bedrag1 = new JButton("20");
+    private JButton bedrag2 = new JButton("50");
+    private JButton bedrag3 = new JButton("100");
+    private JButton bedrag4 = new JButton("150");
     private JPasswordField passwordField = new JPasswordField(10);
     private JTextArea taPanelMain = new JTextArea();
     private JTextArea taPanelStart = new JTextArea("Scan uw pas om verder te gaan");
@@ -51,17 +52,17 @@ public class Gui extends JFrame implements ActionListener {
 
         panelStart.add(taPanelStart);
 
-        panelCustomAmount.add(b1);
-        panelCustomAmount.add(b2);
-        panelCustomAmount.add(b3);
-        panelCustomAmount.add(b4);
+        panelCustomAmount.add(bedrag1);
+        panelCustomAmount.add(bedrag2);
+        panelCustomAmount.add(bedrag3);
+        panelCustomAmount.add(bedrag4);
         panelCustomAmount.add(abort2);
 
-        transaction.add(noBon);
-        transaction.add(yesBon);
-        transaction.add(abort3);
+        panelTransaction.add(noBon);
+        panelTransaction.add(yesBon);
+        panelTransaction.add(abort3);
 
-        password.add(passwordField);
+        panelPassword.add(passwordField);
 
 
         eventHandler();
@@ -98,8 +99,8 @@ public class Gui extends JFrame implements ActionListener {
         yesBon.setActionCommand("yesBon");
         noBon.addActionListener(this);
         noBon.setActionCommand("noBon");
-        b1.addActionListener(this);
-        b1.setActionCommand("twintig");
+        bedrag1.addActionListener(this);
+        bedrag1.setActionCommand("twintig");
 
 
 
@@ -133,16 +134,16 @@ public class Gui extends JFrame implements ActionListener {
         }
          if("yesBon".equalsIgnoreCase(e.getActionCommand()))   {
              System.out.println("Bon printen");
-             changePanel(password);
+             changePanel(panelPassword);
 
             }
          if("noBon".equalsIgnoreCase(e.getActionCommand()))   {
                 System.out.println("Bon niet printen");
-                changePanel(password);
+                changePanel(panelPassword);
         }
          if("twintig".equalsIgnoreCase(e.getActionCommand())){
              System.out.println("Bon niet printen");
-             changePanel(transaction);
+             changePanel(panelTransaction);
          }
     }
 }
