@@ -18,11 +18,13 @@ public class Gui extends JFrame implements ActionListener {
     private User user = new User();
 
     private JFrame frame = new JFrame("BankApp V" + version);
+
     private JPanel panelStart = new JPanel();
     private JPanel panelMain = new JPanel();
     private JPanel panelCustomAmount = new JPanel();
     private JPanel panelTransaction = new JPanel();
     private JPanel panelPassword = new JPanel();
+
     private JButton yesBon = new JButton("Yes");
     private JButton noBon = new JButton("No");
     private JButton quickPin = new JButton("Snel €70,- pinnen");
@@ -35,6 +37,9 @@ public class Gui extends JFrame implements ActionListener {
     private JButton bedrag2 = new JButton("50");
     private JButton bedrag3 = new JButton("100");
     private JButton bedrag4 = new JButton("150");
+    private JButton nextPage = new JButton("Volgende");
+    private JButton nextPage1 = new JButton("Volgende");
+
     private JPasswordField passwordField = new JPasswordField(10);
     private JTextArea taPanelMain = new JTextArea();
     private JTextArea taPanelStart = new JTextArea("Scan uw pas om verder te gaan");
@@ -51,6 +56,7 @@ public class Gui extends JFrame implements ActionListener {
         panelMain.add(abort);
 
         panelStart.add(taPanelStart);
+        panelStart.add(nextPage);
 
         panelCustomAmount.add(bedrag1);
         panelCustomAmount.add(bedrag2);
@@ -63,6 +69,7 @@ public class Gui extends JFrame implements ActionListener {
         panelTransaction.add(abort3);
 
         panelPassword.add(passwordField);
+        panelPassword.add(nextPage1);
 
 
         eventHandler();
@@ -71,7 +78,7 @@ public class Gui extends JFrame implements ActionListener {
 //  remove panels van het JFrame als je een nieuwe erop wilt zetten
       /*  mainFrame.getContentPane().add(BorderLayout.SOUTH, );*/
 //        frame.getContentPane().add(BorderLayout.NORTH, taPanelMain);
-        frame.getContentPane().add(BorderLayout.CENTER, panelMain);
+        frame.getContentPane().add(BorderLayout.CENTER, panelStart);
         frame.setVisible(true);
     }
 
@@ -102,6 +109,12 @@ public class Gui extends JFrame implements ActionListener {
         bedrag1.addActionListener(this);
         bedrag1.setActionCommand("twintig");
 
+        nextPage.addActionListener(this);
+        nextPage.setActionCommand("volgende");
+        nextPage1.addActionListener(this);
+        nextPage1.setActionCommand("volgendee");
+
+
 
 
     }
@@ -112,7 +125,7 @@ public class Gui extends JFrame implements ActionListener {
             //code om uit te loggen en naar het hoofdmenu te gaan
             System.out.println("aborting...");
             taPanelMain.setText("");
-            changePanel(panelMain);
+            changePanel(panelStart);
         }
 
         if("showBal".equalsIgnoreCase(e.getActionCommand())){
@@ -145,5 +158,14 @@ public class Gui extends JFrame implements ActionListener {
              System.out.println("Bon niet printen");
              changePanel(panelTransaction);
          }
+         if("volgende".equalsIgnoreCase((e.getActionCommand()))){
+             System.out.println("Naar inlogscherm");
+             changePanel(panelPassword); //moet nog veranderd worden naar inlogscherm
+         }
+        if("volgendee".equalsIgnoreCase((e.getActionCommand()))){
+            System.out.println("Naar hoofdscherm");
+            changePanel(panelMain); //moet nog veranderd worden naar inlogscherm
+        }
+
     }
 }
