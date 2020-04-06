@@ -1,4 +1,4 @@
-package MoneyRelated;//variabelen worden vervangen door de gegevens uit de database en de user input (tijdelijke placeholder)
+package mainPackage.MoneyRelated;//variabelen worden vervangen door de gegevens uit de database en de user input (tijdelijke placeholder)
 
 public class Balance {
     private int balance = 0;

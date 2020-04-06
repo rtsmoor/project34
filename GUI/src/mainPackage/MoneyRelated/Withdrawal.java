@@ -1,4 +1,4 @@
-package MoneyRelated;
+package mainPackage.MoneyRelated;
 
 public class Withdrawal extends Balance {
     private int amount = 0;

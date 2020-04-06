@@ -1,21 +1,22 @@
-/*
-Made by: Ruben Smoor
-Studentnummer: 0990534
-klas: TI1C
-*/
+package mainPackage;
 
-import User.*;
+import mainPackage.User.*;
 
 import javax.swing.*;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DocumentFilter;
+import javax.swing.text.PlainDocument;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Arrays;
 
 public class Gui extends JFrame implements ActionListener {
     int array_length = 10;
-    private String version = "1.0.3";
+    private String version = "1.0.4";
 
-    private User user = new User();
+    private User user = new User(this);
 
     private JFrame frame = new JFrame("BankApp V" + version);
 
@@ -90,6 +91,7 @@ public class Gui extends JFrame implements ActionListener {
         panelTransaction.add(abort[2]);
         panelTransaction.add(naarHoofdMenu[2]);
 
+        panelPassword.add(new JLabel("Enter PIN:"));
         panelPassword.add(passwordField);
         panelPassword.add(nextPage1);
 
@@ -100,6 +102,21 @@ public class Gui extends JFrame implements ActionListener {
         panelShowBal.add(taShowBal);
         panelShowBal.add(abort[4]);
         panelShowBal.add(naarHoofdMenu[4]);
+
+        // code die ervoor zorgt dat er max 4 tekens ingevuld worden (van stackoverflow gepakt)
+        PlainDocument document = (PlainDocument) passwordField.getDocument();
+        document.setDocumentFilter(new DocumentFilter() {
+
+            @Override
+            public void replace(DocumentFilter.FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
+                String string = fb.getDocument().getText(0, fb.getDocument().getLength()) + text;
+
+                if (string.length() <= 4) {
+                    super.replace(fb, offset, length, text, attrs); //To change body of generated methods, choose Tools | Templates.
+                }
+            }
+
+        });
 
         eventHandler();
 
@@ -152,7 +169,7 @@ public class Gui extends JFrame implements ActionListener {
         nextPage.addActionListener(this);
         nextPage.setActionCommand("volgende");
         nextPage1.addActionListener(this);
-        nextPage1.setActionCommand("volgendee");
+        nextPage1.setActionCommand("wachtwoord");
 
 
 
@@ -210,9 +227,12 @@ public class Gui extends JFrame implements ActionListener {
              System.out.println("Naar inlogscherm");
              changePanel(panelPassword); //moet nog veranderd worden naar inlogscherm
          }
-        if("volgendee".equalsIgnoreCase((e.getActionCommand()))){
-            System.out.println("Naar hoofdscherm");
+        if("wachtwoord".equalsIgnoreCase((e.getActionCommand()))){
+            System.out.println("login");
+            user.setPasswordCheck(passwordField.getPassword());
+            System.out.println("passwd: " + Arrays.toString(user.getPasswordCheck()));
             changePanel(panelMain); //moet nog veranderd worden naar inlogscherm
+            passwordField.setText("");
         }
         if("anderBedrag".equalsIgnoreCase((e.getActionCommand()))){
             System.out.println("ander bedrag invullen");
