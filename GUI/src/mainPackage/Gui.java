@@ -14,19 +14,23 @@ import java.util.Arrays;
 
 public class Gui extends JFrame implements ActionListener {
     int array_length = 10;
-    private String version = "1.0.4";
+    private User user;
+    private String version = "1.0.5";
+    private LogIn login;
 
-    private User user = new User(this);
+    Gui(){
+         login = new LogIn(this);
+    }
 
     private JFrame frame = new JFrame("BankApp V" + version);
 
-    private JPanel panelStart = new JPanel();
-    private JPanel panelMain = new JPanel();
-    private JPanel panelChooseAmount = new JPanel();
-    private JPanel panelTransaction = new JPanel();
-    private JPanel panelPassword = new JPanel();
-    private JPanel panelCustomAmount = new JPanel();
-    private JPanel panelShowBal = new JPanel();
+     public JPanel panelStart = new JPanel();
+     public JPanel panelMain = new JPanel();
+     public JPanel panelChooseAmount = new JPanel();
+     public JPanel panelTransaction = new JPanel();
+     public JPanel panelPassword = new JPanel();
+     public JPanel panelCustomAmount = new JPanel();
+     public JPanel panelShowBal = new JPanel();
 
     private JButton yesBon = new JButton("Yes");
     private JButton noBon = new JButton("No");
@@ -36,38 +40,39 @@ public class Gui extends JFrame implements ActionListener {
 
     JButton[] abort = new JButton[array_length];
     JButton[] naarHoofdMenu = new JButton[array_length];
+    JButton[] nextPage = new JButton[array_length];
 
     private JButton bedrag1 = new JButton("20");
     private JButton bedrag2 = new JButton("50");
     private JButton bedrag3 = new JButton("100");
     private JButton bedrag4 = new JButton("150");
     private JButton anderBedrag = new JButton("ander bedrag");
-    private JButton nextPage = new JButton("Volgende");
-    private JButton nextPage1 = new JButton("Volgende");
 
-    private JPasswordField passwordField = new JPasswordField(10);
-    private JTextField customBedragField = new JTextField(10);
+    public JPasswordField passwordField = new JPasswordField(4);
+    public JTextField customBedragField = new JTextField(10);
     private JTextArea taShowBal = new JTextArea();
     private JTextArea taPanelStart = new JTextArea("Scan uw pas om verder te gaan");
 
-    void createAbortButton(){
-        for(int i = 0; i < abort.length; i++){
+
+
+    private void createButonArrays(){
+        for(int i = 0; i < array_length; i++){
+            naarHoofdMenu[i] = new JButton("Terug naar het hoofdmenu");
             abort[i] = new JButton("afbreken");
+            nextPage[i] = new JButton("Volgende(temp)");// temp array, zal wss niet nodig zijn bij het eindproduct
         }
+        nextPage[2].setText("Volgende");
     }
 
-    void createHoofdmenuButton(){
-        for(int i = 0; i < naarHoofdMenu.length; i++){
-            naarHoofdMenu[i] = new JButton("Terug naar het hoofdmenu");
-        }
+    public void setUser(User user) {
+        this.user = user;
     }
 
     void createApp(){
-        createAbortButton();
-        createHoofdmenuButton();
+        createButonArrays();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(400, 400);
-        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+//        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 //        mainFrame.setUndecorated(true); // zorgt ervoor dat je niet zomaar uit het programma kan klikken
         frame.add(panelMain);
         panelMain.add(quickPin);
@@ -76,7 +81,8 @@ public class Gui extends JFrame implements ActionListener {
         panelMain.add(abort[0]);
 
         panelStart.add(taPanelStart);
-        panelStart.add(nextPage);
+        taPanelStart.setEditable(false);
+        panelStart.add(nextPage[0]);
 
         panelChooseAmount.add(bedrag1);
         panelChooseAmount.add(bedrag2);
@@ -93,13 +99,16 @@ public class Gui extends JFrame implements ActionListener {
 
         panelPassword.add(new JLabel("Enter PIN:"));
         panelPassword.add(passwordField);
-        panelPassword.add(nextPage1);
+        panelPassword.add(nextPage[1]);
 
+        panelCustomAmount.add(new JLabel("Voer aangepast bedrag in:"));
         panelCustomAmount.add(customBedragField);
+        panelCustomAmount.add(nextPage[2]);
         panelCustomAmount.add(abort[3]);
         panelCustomAmount.add(naarHoofdMenu[3]);
 
         panelShowBal.add(taShowBal);
+        taShowBal.setEditable(false);
         panelShowBal.add(abort[4]);
         panelShowBal.add(naarHoofdMenu[4]);
 
@@ -128,7 +137,7 @@ public class Gui extends JFrame implements ActionListener {
         frame.setVisible(true);
     }
 
-    void changePanel(JPanel panel){
+    public void changePanel(JPanel panel){
         frame.getContentPane().removeAll();
         frame.getContentPane().add(panel);
         frame.getContentPane().revalidate();
@@ -166,13 +175,12 @@ public class Gui extends JFrame implements ActionListener {
         anderBedrag.addActionListener(this);
         anderBedrag.setActionCommand("anderBedrag");
 
-        nextPage.addActionListener(this);
-        nextPage.setActionCommand("volgende");
-        nextPage1.addActionListener(this);
-        nextPage1.setActionCommand("wachtwoord");
-
-
-
+        nextPage[0].addActionListener(this);
+        nextPage[0].setActionCommand("inlogScherm");
+        nextPage[1].addActionListener(this);
+        nextPage[1].setActionCommand("wachtwoord");
+        nextPage[2].addActionListener(this);
+        nextPage[2].setActionCommand("?undefined?");//todo set action command
 
     }
 
@@ -182,6 +190,7 @@ public class Gui extends JFrame implements ActionListener {
         if("abort".equalsIgnoreCase(e.getActionCommand())){
             //code om uit te loggen en naar het startscherm te gaan
             System.out.println("aborting...");
+            user.userLogout();
             taShowBal.setText("");
             changePanel(panelStart);
         }
@@ -205,37 +214,41 @@ public class Gui extends JFrame implements ActionListener {
         }
 
         if("customPin".equalsIgnoreCase(e.getActionCommand())) {
-            // code om een nieuw menu te krijgen waar je een nieuw bedrag kan kiezen (of waar je zelf een bedrag kan intikken)
+
             //todo voorstellen aan PO of ze meerdere voorgeselecteerde bedragen willen zien of gelijk dat ze het bedrag moeten intoetsen
             System.out.println("custom bedrag pinnen");
             changePanel(panelChooseAmount);
         }
          if("yesBon".equalsIgnoreCase(e.getActionCommand()))   {
              System.out.println("Bon printen");
-             changePanel(panelPassword);
+//             changePanel(panelPassword);
 
             }
          if("noBon".equalsIgnoreCase(e.getActionCommand()))   {
                 System.out.println("Bon niet printen");
-                changePanel(panelPassword);
+//                changePanel(panelPassword);
         }
-         if("twintig".equalsIgnoreCase(e.getActionCommand())){
-             System.out.println("Bon niet printen");
+         if("customBedrag1".equalsIgnoreCase(e.getActionCommand())){
+             System.out.println("20 euro");
              changePanel(panelTransaction);
          }
-         if("volgende".equalsIgnoreCase((e.getActionCommand()))){
+         if("inlogScherm".equalsIgnoreCase((e.getActionCommand()))){
+             login.setRfidDetected(true);
              System.out.println("Naar inlogscherm");
-             changePanel(panelPassword); //moet nog veranderd worden naar inlogscherm
+             changePanel(panelPassword);
+              //moet nog veranderd worden naar inlogscherm
          }
         if("wachtwoord".equalsIgnoreCase((e.getActionCommand()))){
             System.out.println("login");
+            login.requestLogin();
             user.setPasswordCheck(passwordField.getPassword());
             System.out.println("passwd: " + Arrays.toString(user.getPasswordCheck()));
-            changePanel(panelMain); //moet nog veranderd worden naar inlogscherm
+            changePanel(panelMain); //?moet nog veranderd worden naar inlogscherm?
             passwordField.setText("");
         }
         if("anderBedrag".equalsIgnoreCase((e.getActionCommand()))){
             System.out.println("ander bedrag invullen");
+            customBedragField.setText("");
             changePanel(panelCustomAmount);
         }
 

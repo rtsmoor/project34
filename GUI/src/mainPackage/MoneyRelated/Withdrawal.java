@@ -1,18 +1,19 @@
 package mainPackage.MoneyRelated;
 
 public class Withdrawal extends Balance {
-    private int amount = 0;
+    private int withdrawalAmount = 0;
 
-    int fastWithdrawal(){
-    amount = 70;
-    return amount;
+    public void fastWithdrawal(){
+    withdrawalAmount = 70;
+
+        //todo add code that communicates this with arduino
 }
 
-    public int customWithdrawal(int input){
-        double balance = amount = input;
-        withdrawBalance(amount);
+    public void customWithdrawal(int input){
+        double balance = withdrawalAmount = input;
+        withdrawBalance(withdrawalAmount);
 
-        return amount;
+        //todo add code that communicates this with arduino
     }
 
 }

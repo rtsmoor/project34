@@ -8,13 +8,17 @@ public class User {
     public Balance balance = new Balance();
     public Gui gui;
 
-    private int inactivityTimer;
+//    private int inactivityTimer;
+//    private int maxtime = 30;
     private boolean logout = false;
-    private int maxtime = 30;
     private char[] passwordCheck = new char[4];
 
-    public User(Gui gui){
+    User(Gui gui){
         this.gui = gui;
+    }
+
+    public void setLogout(boolean logout) {
+        this.logout = logout;
     }
 
     public char[] getPasswordCheck() {
@@ -25,11 +29,10 @@ public class User {
         this.passwordCheck = passwordCheck;
     }
 
-    void userLogout(){
-        if(inactivityTimer > maxtime){
-            User user = null;
-        }
-
-        Arrays.fill(passwordCheck, '0');
+    public void userLogout(){
+        gui.setUser(null); // deletes connections to the user, so the garbage collector deletes the user.
+        gui.customBedragField.setText("");
+        Arrays.fill(passwordCheck, '0'); // zet het wachtwoord weer op 0000 voor security redenen.
+        System.out.println("user is logged out");
     }
 }
