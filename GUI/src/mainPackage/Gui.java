@@ -15,7 +15,7 @@ import java.util.Arrays;
 public class Gui extends JFrame implements ActionListener {
     int array_length = 10;
     private User user;
-    private String version = "1.0.5";
+    private String version = "1.0.6";
     private LogIn login;
 
     Gui(){
@@ -27,10 +27,12 @@ public class Gui extends JFrame implements ActionListener {
      public JPanel panelStart = new JPanel();
      public JPanel panelMain = new JPanel();
      public JPanel panelChooseAmount = new JPanel();
-     public JPanel panelTransaction = new JPanel();
+     public JPanel panelBon = new JPanel();
      public JPanel panelPassword = new JPanel();
      public JPanel panelCustomAmount = new JPanel();
      public JPanel panelShowBal = new JPanel();
+     public JPanel panelFinalizeTransaction = new JPanel();
+     private JTextArea tempTa = new JTextArea("hier komt overzichtelijk de transactie informatie \nterwijl het geld uit de dispenser komt");
 
     private JButton yesBon = new JButton("Yes");
     private JButton noBon = new JButton("No");
@@ -59,9 +61,8 @@ public class Gui extends JFrame implements ActionListener {
         for(int i = 0; i < array_length; i++){
             naarHoofdMenu[i] = new JButton("Terug naar het hoofdmenu");
             abort[i] = new JButton("afbreken");
-            nextPage[i] = new JButton("Volgende(temp)");// temp array, zal wss niet nodig zijn bij het eindproduct
+            nextPage[i] = new JButton("Volgende");// temp array, zal wss niet nodig zijn bij het eindproduct
         }
-        nextPage[2].setText("Volgende");
     }
 
     public void setUser(User user) {
@@ -92,10 +93,10 @@ public class Gui extends JFrame implements ActionListener {
         panelChooseAmount.add(abort[1]);
         panelChooseAmount.add(naarHoofdMenu[1]);
 
-        panelTransaction.add(noBon);
-        panelTransaction.add(yesBon);
-        panelTransaction.add(abort[2]);
-        panelTransaction.add(naarHoofdMenu[2]);
+        panelBon.add(noBon);
+        panelBon.add(yesBon);
+        panelBon.add(abort[2]);
+        panelBon.add(naarHoofdMenu[2]);
 
         panelPassword.add(new JLabel("Enter PIN:"));
         panelPassword.add(passwordField);
@@ -111,6 +112,8 @@ public class Gui extends JFrame implements ActionListener {
         taShowBal.setEditable(false);
         panelShowBal.add(abort[4]);
         panelShowBal.add(naarHoofdMenu[4]);
+
+        panelFinalizeTransaction.add(tempTa);
 
         // code die ervoor zorgt dat er max 4 tekens ingevuld worden (van stackoverflow gepakt)
         PlainDocument document = (PlainDocument) passwordField.getDocument();
@@ -180,7 +183,7 @@ public class Gui extends JFrame implements ActionListener {
         nextPage[1].addActionListener(this);
         nextPage[1].setActionCommand("wachtwoord");
         nextPage[2].addActionListener(this);
-        nextPage[2].setActionCommand("?undefined?");//todo set action command
+        nextPage[2].setActionCommand("custAmountToNext");
 
     }
 
@@ -198,6 +201,7 @@ public class Gui extends JFrame implements ActionListener {
         if("hoofdmenu".equalsIgnoreCase(e.getActionCommand())){
             //code om naar het hoofdmenu te gaan
             System.out.println("naar hoofdmenu");
+            user.toMainMenu();
             changePanel(panelMain);
         }
 
@@ -211,33 +215,41 @@ public class Gui extends JFrame implements ActionListener {
         if("pin70".equalsIgnoreCase(e.getActionCommand())){
             //code om 70 euro te pinnen (kan via dezelfde methode als die voor hetzelfde bedrag)
             System.out.println("pin €70,-");
+            user.makeWithdrawal();
         }
 
         if("customPin".equalsIgnoreCase(e.getActionCommand())) {
 
-            //todo voorstellen aan PO of ze meerdere voorgeselecteerde bedragen willen zien of gelijk dat ze het bedrag moeten intoetsen
             System.out.println("custom bedrag pinnen");
+            user.makeWithdrawal();
             changePanel(panelChooseAmount);
         }
-         if("yesBon".equalsIgnoreCase(e.getActionCommand()))   {
-             System.out.println("Bon printen");
-//             changePanel(panelPassword);
 
-            }
-         if("noBon".equalsIgnoreCase(e.getActionCommand()))   {
-                System.out.println("Bon niet printen");
-//                changePanel(panelPassword);
+        if("yesBon".equalsIgnoreCase(e.getActionCommand()))   {
+             System.out.println("Bon printen");
+             user.withdrawal.setReceipt(true);
+             changePanel(panelFinalizeTransaction);
+
         }
-         if("customBedrag1".equalsIgnoreCase(e.getActionCommand())){
+
+        if("noBon".equalsIgnoreCase(e.getActionCommand()))   {
+             System.out.println("Bon niet printen");
+             user.withdrawal.setReceipt(false);
+             changePanel(panelFinalizeTransaction);
+        }
+
+        if("customBedrag1".equalsIgnoreCase(e.getActionCommand())){
              System.out.println("20 euro");
-             changePanel(panelTransaction);
-         }
-         if("inlogScherm".equalsIgnoreCase((e.getActionCommand()))){
+             changePanel(panelBon);
+        }
+
+        if("inlogScherm".equalsIgnoreCase((e.getActionCommand()))){
              login.setRfidDetected(true);
              System.out.println("Naar inlogscherm");
              changePanel(panelPassword);
               //moet nog veranderd worden naar inlogscherm
-         }
+        }
+
         if("wachtwoord".equalsIgnoreCase((e.getActionCommand()))){
             System.out.println("login");
             login.requestLogin();
@@ -246,11 +258,16 @@ public class Gui extends JFrame implements ActionListener {
             changePanel(panelMain); //?moet nog veranderd worden naar inlogscherm?
             passwordField.setText("");
         }
+
         if("anderBedrag".equalsIgnoreCase((e.getActionCommand()))){
             System.out.println("ander bedrag invullen");
             customBedragField.setText("");
             changePanel(panelCustomAmount);
         }
 
+        if("custAmountToNext".equalsIgnoreCase((e.getActionCommand()))){
+            changePanel(panelBon);
+            //todo take input from the textField and use it in the transaction
+        }
     }
 }
