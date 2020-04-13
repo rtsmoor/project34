@@ -377,6 +377,7 @@ public class Network {
                 break;
             }
         }
+
         if (success && isConnected()) {
             try {
                 for (i = 0; i < numBytes; ++i) {
