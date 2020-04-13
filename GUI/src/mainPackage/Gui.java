@@ -114,6 +114,7 @@ public class Gui extends JFrame implements ActionListener {
         panelShowBal.add(naarHoofdMenu[4]);
 
         panelFinalizeTransaction.add(tempTa);
+        panelFinalizeTransaction.add(abort[6]);
 
         // code die ervoor zorgt dat er max 4 tekens ingevuld worden (van stackoverflow gepakt)
         PlainDocument document = (PlainDocument) passwordField.getDocument();
@@ -184,7 +185,6 @@ public class Gui extends JFrame implements ActionListener {
         nextPage[1].setActionCommand("wachtwoord");
         nextPage[2].addActionListener(this);
         nextPage[2].setActionCommand("custAmountToNext");
-
     }
 
     @Override

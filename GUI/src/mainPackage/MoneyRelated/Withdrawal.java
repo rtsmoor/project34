@@ -32,5 +32,4 @@ public class Withdrawal extends Balance {
 
         //todo add code that communicates this with arduino
     }
-
 }
