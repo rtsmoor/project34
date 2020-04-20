@@ -1,53 +1,56 @@
 package mainPackage.serialconnection;
-import gnu.io.*;
+
+import com.fazecast.jSerialComm.SerialPort;
+import mainPackage.App;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Scanner;
 import java.util.Vector;
 
-public class SerialConnection implements Network_iface{
-    // set the speed of the serial port
-    public static int speed = 115200;
-    private static Network network;
+import static java.lang.Thread.sleep;
 
-    private static boolean resend_active = false;
+public class SerialConnection {
+    private Scanner in;
+    private PrintWriter out;
 
-    public static void main(String[] args) {
-        network = new Network(0, new SerialConnection(), 255);
+    public SerialConnection(Scanner in, PrintWriter out){
+        this.in = in;
+        this.out = out;
+    }
 
-        // reading the speed if
-        if (args.length > 0) {
-            try {
-                speed = Integer.parseInt(args[0]);
-            } catch (NumberFormatException e) {
-                System.out.println("the speed must be an integer\n");
-                System.exit(1);
-            }
+    public void stringOut(String stringOut){ //string die naar de arduino gaat
+        out.print(stringOut);
+        out.flush();
+
+        try{
+            sleep(1000);
+        } catch (InterruptedException e){
+            e.printStackTrace();
+        }
+    }
+
+    public String stringIn(){ // string die van de arduino komt
+        String temp = "ERROR";
+
+        if(in.hasNextLine()) {
+            temp = in.nextLine();
+        }
+        System.out.println(temp);
+        return temp;
+    }
+
+    public int intIn(){
+        int temp = -1;
+
+        if(in.hasNextInt()){
+            temp = in.nextInt();
+            in.nextLine();
         }
 
-        // initializing reader from command line
-        int i, inp_num = 0;
-        String input;
-        BufferedReader in_stream = new BufferedReader(new InputStreamReader(
-                System.in));
-
-        // getting a list of the available serial ports
-        Vector<String> ports = network.getPortList();
+        return temp;
     }
 
-    @Override
-    public void writeLog(int id, String text) {
-
-    }
-
-    @Override
-    public void parseInput(int id, int numBytes, int[] message) {
-
-    }
-
-    @Override
-    public void networkDisconnected(int id) {
-
-    }
 }
