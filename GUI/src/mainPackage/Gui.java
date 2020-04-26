@@ -11,6 +11,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
+import java.util.Timer;
+
+import static javax.swing.JOptionPane.showMessageDialog;
 
 public class Gui extends JFrame implements ActionListener {
     int array_length = 10;
@@ -23,7 +26,6 @@ public class Gui extends JFrame implements ActionListener {
     }
 
     private JFrame frame = new JFrame("BankApp V" + version);
-
      public JPanel panelStart = new JPanel();
      public JPanel panelMain = new JPanel();
      public JPanel panelChooseAmount = new JPanel();
@@ -239,8 +241,13 @@ public class Gui extends JFrame implements ActionListener {
         }
 
         if("customBedrag1".equalsIgnoreCase(e.getActionCommand())){
-             System.out.println("20 euro");
-             changePanel(panelBon);
+            if(user.balance.getBalance() - 20 < 0){ //kijken of saldo lager is dan bedrag dat gepind wordt
+                JOptionPane.showMessageDialog(null, "U heeft niet genoeg saldo om deze actie uit te voeren", "Error", JOptionPane.ERROR_MESSAGE);
+                changePanel(panelChooseAmount);}
+            else {
+                System.out.println("20 euro");
+                changePanel(panelBon);
+            }
         }
 
         if("inlogScherm".equalsIgnoreCase((e.getActionCommand()))){
