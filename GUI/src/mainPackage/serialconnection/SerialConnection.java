@@ -27,7 +27,7 @@ public class SerialConnection {
         out.flush();
 
         try{
-            sleep(3000);
+            sleep(2000);
         } catch (InterruptedException e){
             e.printStackTrace();
         }
@@ -57,7 +57,7 @@ public class SerialConnection {
             temp = in.nextInt();
             in.nextLine();
         }
-
+        System.out.println(temp);
         return temp;
     }
 
