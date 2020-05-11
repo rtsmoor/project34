@@ -1,6 +1,7 @@
 package mainPackage;
 
 import mainPackage.User.*;
+import mainPackage.serialconnection.SerialConnection;
 
 import javax.swing.*;
 import javax.swing.text.AttributeSet;
@@ -18,11 +19,13 @@ import static javax.swing.JOptionPane.showMessageDialog;
 public class Gui extends JFrame implements ActionListener {
     int array_length = 10;
     private User user;
-    private String version = "1.0.6";
+    private String version = "1.0.7";
     private LogIn login;
+    public SerialConnection serialConnection;
 
-    Gui(){
+    Gui(SerialConnection serialConnection){
          login = new LogIn(this);
+         this.serialConnection = serialConnection;
     }
 
     private JFrame frame = new JFrame("BankApp V" + version);
@@ -57,7 +60,9 @@ public class Gui extends JFrame implements ActionListener {
     private JTextArea taShowBal = new JTextArea();
     private JTextArea taPanelStart = new JTextArea("Scan uw pas om verder te gaan");
 
-
+//    public void setSerialConnection(SerialConnection serialConnection){
+//        this.serialConnection = serialConnection;
+//    }
 
     private void createButonArrays(){
         for(int i = 0; i < array_length; i++){
@@ -195,9 +200,10 @@ public class Gui extends JFrame implements ActionListener {
         if("abort".equalsIgnoreCase(e.getActionCommand())){
             //code om uit te loggen en naar het startscherm te gaan
             System.out.println("aborting...");
-            user.userLogout();
+            if(user != null) user.userLogout();
             taShowBal.setText("");
             changePanel(panelStart);
+//            serialConnection.dataOut("abort"); // todo arduino code voor abort
         }
 
         if("hoofdmenu".equalsIgnoreCase(e.getActionCommand())){
@@ -205,19 +211,22 @@ public class Gui extends JFrame implements ActionListener {
             System.out.println("naar hoofdmenu");
             user.toMainMenu();
             changePanel(panelMain);
+//            serialConnection.dataOut("hoofdmenu"); //todo arduino code voor hoofdmenu
         }
 
         if("showBal".equalsIgnoreCase(e.getActionCommand())){
             //code om het saldo te laten zien
             System.out.println("showing balance");
-            changePanel(panelShowBal);
+
             taShowBal.setText(Integer.toString(user.balance.getBalance()));
+            changePanel(panelShowBal);
         }
 
         if("pin70".equalsIgnoreCase(e.getActionCommand())){
             //code om 70 euro te pinnen (kan via dezelfde methode als die voor hetzelfde bedrag)
             System.out.println("pin €70,-");
             user.makeWithdrawal();
+            serialConnection.stringOut("withdraw");
         }
 
         if("customPin".equalsIgnoreCase(e.getActionCommand())) {
@@ -262,8 +271,9 @@ public class Gui extends JFrame implements ActionListener {
             login.requestLogin();
             user.setPasswordCheck(passwordField.getPassword());
             System.out.println("passwd: " + Arrays.toString(user.getPasswordCheck()));
-            changePanel(panelMain); //?moet nog veranderd worden naar inlogscherm?
             passwordField.setText("");
+            user.setUserVariables();
+            changePanel(panelMain); //?moet nog veranderd worden naar inlogscherm?
         }
 
         if("anderBedrag".equalsIgnoreCase((e.getActionCommand()))){

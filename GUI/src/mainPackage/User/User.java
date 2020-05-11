@@ -8,6 +8,7 @@ public class User {
     public Balance balance = new Balance();
     public Gui gui;
     public Withdrawal withdrawal;
+    private String userName = "";
 
 //    private int inactivityTimer;
 //    private int maxtime = 30;
@@ -45,5 +46,12 @@ public class User {
         if(withdrawal != null) withdrawal = null;
         gui.customBedragField.setText("");
 
+    }
+    //todo fix this method: when trying to use the input it just breaks with an arrayOutOfIndexException
+    public void setUserVariables(){
+        gui.serialConnection.stringOut("getBal");
+//        balance.setBalance(gui.serialConnection.intIn()); //todo <---
+        gui.serialConnection.stringOut("getUser");
+//        userName = gui.serialConnection.stringIn(); //todo <---
     }
 }
