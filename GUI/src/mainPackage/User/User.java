@@ -58,5 +58,6 @@ public class User {
             userName = gui.serialConnection.stringIn(); //todo <---
             balance.setBalance(gui.serialConnection.intIn()); //todo <---
         }
+        else System.out.println("Error");
     }
 }
