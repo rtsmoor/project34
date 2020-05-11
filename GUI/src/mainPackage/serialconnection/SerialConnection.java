@@ -26,11 +26,12 @@ public class SerialConnection {
         System.out.println("command sent: " + stringOut);
         out.flush();
 
-        try{
-            sleep(2000);
-        } catch (InterruptedException e){
-            e.printStackTrace();
-        }
+//        try{
+//            sleep(2000);
+//        } catch (InterruptedException e){
+//            e.printStackTrace();
+//        }
+        if(in.hasNextLine());
     }
     public boolean hasString(){
         return in.hasNextLine();

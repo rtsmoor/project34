@@ -29,6 +29,7 @@ public class Gui extends JFrame implements ActionListener {
     }
 
     private JFrame frame = new JFrame("BankApp V" + version);
+     public JDialog dialog = new JDialog(frame, "Er is niet genoeg saldo om deze actie uit te voeren", true);
      public JPanel panelStart = new JPanel();
      public JPanel panelMain = new JPanel();
      public JPanel panelChooseAmount = new JPanel();
@@ -39,6 +40,7 @@ public class Gui extends JFrame implements ActionListener {
      public JPanel panelFinalizeTransaction = new JPanel();
      private JTextArea tempTa = new JTextArea("hier komt overzichtelijk de transactie informatie \nterwijl het geld uit de dispenser komt");
 
+    private JButton dialogClose = new JButton("Sluit");
     private JButton yesBon = new JButton("Yes");
     private JButton noBon = new JButton("No");
     private JButton quickPin = new JButton("Snel €70,- pinnen");
@@ -99,6 +101,8 @@ public class Gui extends JFrame implements ActionListener {
         panelChooseAmount.add(anderBedrag);
         panelChooseAmount.add(abort[1]);
         panelChooseAmount.add(naarHoofdMenu[1]);
+
+        dialog.add(dialogClose);
 
         panelBon.add(noBon);
         panelBon.add(yesBon);
@@ -192,6 +196,10 @@ public class Gui extends JFrame implements ActionListener {
         nextPage[1].setActionCommand("wachtwoord");
         nextPage[2].addActionListener(this);
         nextPage[2].setActionCommand("custAmountToNext");
+
+        dialogClose.addActionListener(this);
+        dialogClose.setActionCommand("dialogClose");
+
     }
 
     @Override
@@ -248,13 +256,52 @@ public class Gui extends JFrame implements ActionListener {
              user.withdrawal.setReceipt(false);
              changePanel(panelFinalizeTransaction);
         }
+        if("dialogClose".equalsIgnoreCase(e.getActionCommand())){
+            dialog.setVisible(false);
+            changePanel(panelChooseAmount);
+        }
 
         if("customBedrag1".equalsIgnoreCase(e.getActionCommand())){
-            if(user.balance.getBalance() - 20 < 0){ //kijken of saldo lager is dan bedrag dat gepind wordt
-                JOptionPane.showMessageDialog(null, "U heeft niet genoeg saldo om deze actie uit te voeren", "Error", JOptionPane.ERROR_MESSAGE);
-                changePanel(panelChooseAmount);}
-            else {
+            if(user.balance.getBalance() - 20 < 0) { //kijken of saldo lager is dan bedrag dat gepind wordt
+                dialog.setSize(350, 150);
+                dialog.setLocationRelativeTo(panelChooseAmount);
+                dialog.setVisible(true);
+            }
+            else{
                 System.out.println("20 euro");
+                changePanel(panelBon);
+            }
+        }
+        if("customBedrag2".equalsIgnoreCase(e.getActionCommand())){
+            if(user.balance.getBalance() - 50 < 0) { //kijken of saldo lager is dan bedrag dat gepind wordt
+                dialog.setSize(350, 150);
+                dialog.setLocationRelativeTo(panelChooseAmount);
+                dialog.setVisible(true);
+            }
+            else{
+                System.out.println("50 euro");
+                changePanel(panelBon);
+            }
+        }
+        if("customBedrag3".equalsIgnoreCase(e.getActionCommand())){
+            if(user.balance.getBalance() - 100 < 0) { //kijken of saldo lager is dan bedrag dat gepind wordt
+                dialog.setSize(350, 150);
+                dialog.setLocationRelativeTo(panelChooseAmount);
+                dialog.setVisible(true);
+            }
+            else{
+                System.out.println("100 euro");
+                changePanel(panelBon);
+            }
+        }
+        if("customBedrag4".equalsIgnoreCase(e.getActionCommand())){
+            if(user.balance.getBalance() - 150 < 0) { //kijken of saldo lager is dan bedrag dat gepind wordt
+                dialog.setSize(350, 150);
+                dialog.setLocationRelativeTo(panelChooseAmount);
+                dialog.setVisible(true);
+            }
+            else{
+                System.out.println("150 euro");
                 changePanel(panelBon);
             }
         }

@@ -32,12 +32,12 @@ public class App {
 
             @Override
             public void serialEvent(SerialPortEvent serialPortEvent) {
-                String input;
-
-                input = in.nextLine();
-
-                System.out.println("received: " + input);
-//                received = true;
+//                String input;
+//
+//                input = in.nextLine();
+//
+//                System.out.println("received: " + input);
+////                received = true;
             }
         });
 
