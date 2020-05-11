@@ -19,7 +19,7 @@ import static javax.swing.JOptionPane.showMessageDialog;
 public class Gui extends JFrame implements ActionListener {
     int array_length = 10;
     private User user;
-    private String version = "1.0.7";
+    private String version = "1.1.0";
     private LogIn login;
     public SerialConnection serialConnection;
 
@@ -234,19 +234,19 @@ public class Gui extends JFrame implements ActionListener {
             //code om 70 euro te pinnen (kan via dezelfde methode als die voor hetzelfde bedrag)
             System.out.println("pin €70,-");
             user.makeWithdrawal();
-            serialConnection.stringOut("withdraw");
+
         }
 
         if("customPin".equalsIgnoreCase(e.getActionCommand())) {
 
             System.out.println("custom bedrag pinnen");
-            user.makeWithdrawal();
             changePanel(panelChooseAmount);
         }
 
         if("yesBon".equalsIgnoreCase(e.getActionCommand()))   {
              System.out.println("Bon printen");
              user.withdrawal.setReceipt(true);
+             serialConnection.stringOut("printBon");
              changePanel(panelFinalizeTransaction);
 
         }
@@ -267,8 +267,10 @@ public class Gui extends JFrame implements ActionListener {
                 dialog.setLocationRelativeTo(panelChooseAmount);
                 dialog.setVisible(true);
             }
-            else{
+            else {
                 System.out.println("20 euro");
+                user.makeWithdrawal();
+                user.withdrawal.customWithdrawal(20);
                 changePanel(panelBon);
             }
         }
@@ -280,6 +282,8 @@ public class Gui extends JFrame implements ActionListener {
             }
             else{
                 System.out.println("50 euro");
+                user.makeWithdrawal();
+                user.withdrawal.customWithdrawal(50);
                 changePanel(panelBon);
             }
         }
@@ -291,6 +295,8 @@ public class Gui extends JFrame implements ActionListener {
             }
             else{
                 System.out.println("100 euro");
+                user.makeWithdrawal();
+                user.withdrawal.customWithdrawal(100);
                 changePanel(panelBon);
             }
         }
@@ -302,6 +308,8 @@ public class Gui extends JFrame implements ActionListener {
             }
             else{
                 System.out.println("150 euro");
+                user.makeWithdrawal();
+                user.withdrawal.customWithdrawal(150);
                 changePanel(panelBon);
             }
         }

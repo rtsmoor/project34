@@ -32,7 +32,7 @@ public class User {
     }
 
     public void makeWithdrawal(){
-        withdrawal = new Withdrawal();
+        withdrawal = new Withdrawal(gui, this);
     }
 
     public void userLogout(){
@@ -55,8 +55,8 @@ public class User {
     }
     public void setUserVariables(){
         if(gui.serialConnection.hasString()) {
-            userName = gui.serialConnection.stringIn(); //todo <---
-            balance.setBalance(gui.serialConnection.intIn()); //todo <---
+            userName = gui.serialConnection.stringIn();
+            balance.setBalance(gui.serialConnection.intIn());
         }
         else System.out.println("Error");
     }

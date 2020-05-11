@@ -13,7 +13,7 @@ import java.util.Vector;
 import static java.lang.Thread.sleep;
 
 public class SerialConnection {
-    private Scanner in;
+    public Scanner in;
     private PrintWriter out;
 
     public SerialConnection(Scanner in, PrintWriter out){
@@ -27,13 +27,14 @@ public class SerialConnection {
         out.flush();
 
 //        try{
-//            sleep(2000);
+//            sleep(1000);
 //        } catch (InterruptedException e){
 //            e.printStackTrace();
 //        }
         if(in.hasNextLine());
     }
-    public boolean hasString(){
+
+    public boolean hasString() {
         return in.hasNextLine();
     }
 
@@ -41,11 +42,11 @@ public class SerialConnection {
         String temp = "ERROR";
 
 
-            try {
-                temp = in.nextLine();
-            } catch (Exception e) {
-                System.out.println("An error has occured: " + e);
-            }
+        try {
+            temp = in.nextLine();
+        } catch (Exception e) {
+            System.out.println("An error has occured: " + e);
+        }
 
         System.out.println(temp);
         return temp;
@@ -62,4 +63,10 @@ public class SerialConnection {
         return temp;
     }
 
+    public void intOut(int intOut) {
+        out.print(intOut);
+        System.out.println("command sent: " + intOut);
+        out.flush();
+        if(in.hasNextLine());
+    }
 }

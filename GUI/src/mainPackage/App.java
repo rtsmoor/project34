@@ -38,6 +38,12 @@ public class App {
 //
 //                System.out.println("received: " + input);
 ////                received = true;
+//                String input;
+//
+//                input = in.nextLine();
+//
+//                System.out.println("received: " + input);
+//                received = true;
             }
         });
 
