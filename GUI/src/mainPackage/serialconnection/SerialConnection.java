@@ -23,21 +23,25 @@ public class SerialConnection {
 
     public void stringOut(String stringOut){ //string die naar de arduino gaat
         out.print(stringOut);
+        System.out.println("command sent: " + stringOut);
         out.flush();
 
         try{
-            sleep(1000);
+            sleep(3000);
         } catch (InterruptedException e){
             e.printStackTrace();
         }
+    }
+    public boolean hasString(){
+        return in.hasNextLine();
     }
 
     public String stringIn(){ // string die van de arduino komt
         String temp = "ERROR";
 
-        if(in.hasNextLine()) {
+
             temp = in.nextLine();
-        }
+
         System.out.println(temp);
         return temp;
     }
