@@ -40,7 +40,11 @@ public class SerialConnection {
         String temp = "ERROR";
 
 
-            temp = in.nextLine();
+            try {
+                temp = in.nextLine();
+            } catch (Exception e) {
+                System.out.println("An error has occured: " + e);
+            }
 
         System.out.println(temp);
         return temp;

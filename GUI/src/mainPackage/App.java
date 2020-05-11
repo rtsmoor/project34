@@ -58,9 +58,6 @@ public class App {
 
 //        gui.serialConnection.dataOut("withdraw");
 
-        String temp = in.nextLine();
-        System.out.println(temp);
-
 
     }
 }
