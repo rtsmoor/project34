@@ -261,12 +261,15 @@ public class Gui extends JFrame implements ActionListener {
 
         if("wachtwoord".equalsIgnoreCase((e.getActionCommand()))){
             System.out.println("login");
-            login.requestLogin();
-            user.setPasswordCheck(passwordField.getPassword());
-            System.out.println("passwd: " + Arrays.toString(user.getPasswordCheck()));
-            passwordField.setText("");
-            user.setUserVariables();
-            changePanel(panelMain); //?moet nog veranderd worden naar inlogscherm?
+            if(login.requestLogin()) {
+                user.setPasswordCheck(passwordField.getPassword());
+                System.out.println("passwd: " + Arrays.toString(user.getPasswordCheck()));
+                passwordField.setText("");
+                serialConnection.stringOut("getUser");
+                user.userName = serialConnection.stringIn();
+                // user.setUserVariables();
+                changePanel(panelMain); //?moet nog veranderd worden naar inlogscherm?
+            }
         }
 
         if("anderBedrag".equalsIgnoreCase((e.getActionCommand()))){

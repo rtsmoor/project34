@@ -8,7 +8,7 @@ public class User {
     public Balance balance = new Balance();
     public Gui gui;
     public Withdrawal withdrawal;
-    private String userName = "";
+    public String userName = "";
 
 //    private int inactivityTimer;
 //    private int maxtime = 30;
@@ -48,10 +48,15 @@ public class User {
 
     }
     //todo fix this method: when trying to use the input it just breaks with an arrayOutOfIndexException
-    public void setUserVariables(){
-        gui.serialConnection.stringOut("getBal");
-//        balance.setBalance(gui.serialConnection.intIn()); //todo <---
+    public void requestUserVariables(){
         gui.serialConnection.stringOut("getUser");
-//        userName = gui.serialConnection.stringIn(); //todo <---
+        gui.serialConnection.stringOut("getBal");
+
+    }
+    public void setUserVariables(){
+        if(gui.serialConnection.hasString()) {
+            userName = gui.serialConnection.stringIn(); //todo <---
+            balance.setBalance(gui.serialConnection.intIn()); //todo <---
+        }
     }
 }
