@@ -19,7 +19,7 @@ import static javax.swing.JOptionPane.showMessageDialog;
 public class Gui extends JFrame implements ActionListener {
     int array_length = 10;
     private User user;
-    private String version = "1.1.0";
+    private String version = "1.1.1";
     private LogIn login;
     public SerialConnection serialConnection;
 
@@ -342,7 +342,19 @@ public class Gui extends JFrame implements ActionListener {
         }
 
         if("custAmountToNext".equalsIgnoreCase((e.getActionCommand()))){
-            changePanel(panelBon);
+
+            int tempInt = Integer.parseInt(customBedragField.getText());
+            if(user.balance.getBalance() - tempInt < 0) { //kijken of saldo lager is dan bedrag dat gepind wordt
+                dialog.setSize(350, 150);
+                dialog.setLocationRelativeTo(panelChooseAmount);
+                dialog.setVisible(true);
+            }
+            else{
+                System.out.println("custom bedrag: " + tempInt);
+                user.makeWithdrawal();
+                user.withdrawal.customWithdrawal(tempInt);
+                changePanel(panelBon);
+            }
             //todo take input from the textField and use it in the transaction
         }
     }
