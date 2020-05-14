@@ -18,6 +18,7 @@ import static javax.swing.JOptionPane.showMessageDialog;
 
 public class Gui extends JFrame implements ActionListener {
     int array_length = 10;
+    public int amount4 = 3;
     private User user;
     private String version = "1.1.0";
     private LogIn login;
@@ -30,6 +31,7 @@ public class Gui extends JFrame implements ActionListener {
 
     private JFrame frame = new JFrame("BankApp V" + version);
      public JDialog dialog = new JDialog(frame, "Er is niet genoeg saldo om deze actie uit te voeren", true);
+     public JDialog dialog4 = new JDialog(frame, "Er zijn niet genoeg biljetten om deze actie uit te voeren", true);
      public JPanel panelStart = new JPanel();
      public JPanel panelMain = new JPanel();
      public JPanel panelChooseAmount = new JPanel();
@@ -41,6 +43,7 @@ public class Gui extends JFrame implements ActionListener {
      private JTextArea tempTa = new JTextArea("hier komt overzichtelijk de transactie informatie \nterwijl het geld uit de dispenser komt");
 
     private JButton dialogClose = new JButton("Sluit");
+    private JButton dialog4Close = new JButton("Sluit");
     private JButton yesBon = new JButton("Yes");
     private JButton noBon = new JButton("No");
     private JButton quickPin = new JButton("Snel €70,- pinnen");
@@ -55,7 +58,7 @@ public class Gui extends JFrame implements ActionListener {
     private JButton bedrag2 = new JButton("50");
     private JButton bedrag3 = new JButton("100");
     private JButton bedrag4 = new JButton("150");
-    private JButton anderBedrag = new JButton("ander bedrag");
+    private JButton anderBedrag = new JButton("Ander bedrag");
 
     public JPasswordField passwordField = new JPasswordField(4);
     public JTextField customBedragField = new JTextField(10);
@@ -69,7 +72,7 @@ public class Gui extends JFrame implements ActionListener {
     private void createButonArrays(){
         for(int i = 0; i < array_length; i++){
             naarHoofdMenu[i] = new JButton("Terug naar het hoofdmenu");
-            abort[i] = new JButton("afbreken");
+            abort[i] = new JButton("Afbreken");
             nextPage[i] = new JButton("Volgende");// temp array, zal wss niet nodig zijn bij het eindproduct
         }
     }
@@ -103,6 +106,7 @@ public class Gui extends JFrame implements ActionListener {
         panelChooseAmount.add(naarHoofdMenu[1]);
 
         dialog.add(dialogClose);
+        dialog4.add(dialog4Close);
 
         panelBon.add(noBon);
         panelBon.add(yesBon);
@@ -200,6 +204,9 @@ public class Gui extends JFrame implements ActionListener {
         dialogClose.addActionListener(this);
         dialogClose.setActionCommand("dialogClose");
 
+        dialog4Close.addActionListener(this);
+        dialog4Close.setActionCommand("dialog4Close");
+
     }
 
     @Override
@@ -260,6 +267,10 @@ public class Gui extends JFrame implements ActionListener {
             dialog.setVisible(false);
             changePanel(panelChooseAmount);
         }
+        if("dialog4Close".equalsIgnoreCase(e.getActionCommand())){
+            dialog4.setVisible(false);
+            changePanel(panelChooseAmount);
+        }
 
         if("customBedrag1".equalsIgnoreCase(e.getActionCommand())){
             if(user.balance.getBalance() - 20 < 0) { //kijken of saldo lager is dan bedrag dat gepind wordt
@@ -301,17 +312,24 @@ public class Gui extends JFrame implements ActionListener {
             }
         }
         if("customBedrag4".equalsIgnoreCase(e.getActionCommand())){
-            if(user.balance.getBalance() - 150 < 0) { //kijken of saldo lager is dan bedrag dat gepind wordt
-                dialog.setSize(350, 150);
-                dialog.setLocationRelativeTo(panelChooseAmount);
-                dialog.setVisible(true);
+            if(amount4 > 0) {
+                if (user.balance.getBalance() - 150 < 0) { //kijken of saldo lager is dan bedrag dat gepind wordt
+                    dialog.setSize(350, 150);
+                    dialog.setLocationRelativeTo(panelChooseAmount);
+                    dialog.setVisible(true);
+                } else {
+                    System.out.println("150 euro");
+                    user.makeWithdrawal();
+                    user.withdrawal.customWithdrawal(150);
+                    changePanel(panelBon);
+                    amount4--;
+                }
             }
             else{
-                System.out.println("150 euro");
-                user.makeWithdrawal();
-                user.withdrawal.customWithdrawal(150);
-                changePanel(panelBon);
-            }
+                 dialog4.setSize(350, 150);
+                 dialog4.setLocationRelativeTo(panelChooseAmount);
+                 dialog4.setVisible(true);
+                }
         }
 
         if("inlogScherm".equalsIgnoreCase((e.getActionCommand()))){
