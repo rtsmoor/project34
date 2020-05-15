@@ -6,6 +6,7 @@ import com.fazecast.jSerialComm.SerialPortEvent;
 import mainPackage.serialconnection.SerialConnection;
 
 import java.io.PrintWriter;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 import static java.lang.Thread.sleep;
@@ -17,7 +18,7 @@ public class App {
 
     public static void main(String[] args) {
 
-        SerialPort port = SerialPort.getCommPort("COM5");
+        SerialPort port = SerialPort.getCommPort("COM5"); // edit dit als je een andere com port gebruikt //todo maak een for loop om te checken op de juiste com port
         port.setComPortParameters(9600, 8, 1, 0);
         port.setComPortTimeouts(SerialPort.TIMEOUT_SCANNER, 0, 0);
         System.out.println("Open port: " + port.openPort());
@@ -48,11 +49,20 @@ public class App {
         });
 
         while(true) {
-            if (in.nextLine().equalsIgnoreCase("ready")) {
-                //in.nextLine();
-                System.out.println("ready");
-                arduinoReady = true; // alleen als de arduino gereed is, dan mogen er pas dingen gebeuren
-                break;
+            try {
+                if (in.nextLine().equalsIgnoreCase("ready")) {
+                    //in.nextLine();
+                    System.out.println("ready");
+                    arduinoReady = true; // alleen als de arduino gereed is, dan mogen er pas dingen gebeuren
+                    break;
+                }
+            } catch (NoSuchElementException e) {
+                System.out.println("ERROR connection to the arduino");
+                Scanner s = new Scanner(System.in);
+                System.out.print("GUI toch starten? y/n:");
+                String input = s.nextLine();
+                if("yes".equalsIgnoreCase(input) || "y".equalsIgnoreCase(input)) break;
+                if("no".equalsIgnoreCase(input) || "n".equalsIgnoreCase(input)) return;
             }
         }
 

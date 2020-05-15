@@ -19,7 +19,7 @@ import static javax.swing.JOptionPane.showMessageDialog;
 public class Gui extends JFrame implements ActionListener {
     int array_length = 10;
     private User user;
-    private String version = "1.1.1";
+    private String version = "1.1.2";
     private LogIn login;
     public SerialConnection serialConnection;
 
@@ -234,6 +234,8 @@ public class Gui extends JFrame implements ActionListener {
             //code om 70 euro te pinnen (kan via dezelfde methode als die voor hetzelfde bedrag)
             System.out.println("pin €70,-");
             user.makeWithdrawal();
+            user.withdrawal.customWithdrawal(70);
+            changePanel(panelFinalizeTransaction);
 
         }
 
@@ -245,15 +247,13 @@ public class Gui extends JFrame implements ActionListener {
 
         if("yesBon".equalsIgnoreCase(e.getActionCommand()))   {
              System.out.println("Bon printen");
-             user.withdrawal.setReceipt(true);
              serialConnection.stringOut("printBon");
-             changePanel(panelFinalizeTransaction);
+             changePanel(panelBon);
 
         }
 
         if("noBon".equalsIgnoreCase(e.getActionCommand()))   {
              System.out.println("Bon niet printen");
-             user.withdrawal.setReceipt(false);
              changePanel(panelFinalizeTransaction);
         }
         if("dialogClose".equalsIgnoreCase(e.getActionCommand())){
@@ -265,6 +265,7 @@ public class Gui extends JFrame implements ActionListener {
             if(user.balance.getBalance() - 20 < 0) { //kijken of saldo lager is dan bedrag dat gepind wordt
                 dialog.setSize(350, 150);
                 dialog.setLocationRelativeTo(panelChooseAmount);
+                serialConnection.stringOut("mainMenu");
                 dialog.setVisible(true);
             }
             else {
@@ -342,18 +343,18 @@ public class Gui extends JFrame implements ActionListener {
         }
 
         if("custAmountToNext".equalsIgnoreCase((e.getActionCommand()))){
-
-            int tempInt = Integer.parseInt(customBedragField.getText());
-            if(user.balance.getBalance() - tempInt < 0) { //kijken of saldo lager is dan bedrag dat gepind wordt
-                dialog.setSize(350, 150);
-                dialog.setLocationRelativeTo(panelChooseAmount);
-                dialog.setVisible(true);
-            }
-            else{
-                System.out.println("custom bedrag: " + tempInt);
-                user.makeWithdrawal();
-                user.withdrawal.customWithdrawal(tempInt);
-                changePanel(panelBon);
+            if(!("".equals(customBedragField.getText()))) {
+                int tempInt = Integer.parseInt(customBedragField.getText());
+                if (user.balance.getBalance() - tempInt < 0) { //kijken of saldo lager is dan bedrag dat gepind wordt
+                    dialog.setSize(350, 150);
+                    dialog.setLocationRelativeTo(panelChooseAmount);
+                    dialog.setVisible(true);
+                } else {
+                    System.out.println("custom bedrag: " + tempInt);
+                    user.makeWithdrawal();
+                    user.withdrawal.customWithdrawal(tempInt);
+                    changePanel(panelBon);
+                }
             }
             //todo take input from the textField and use it in the transaction
         }
