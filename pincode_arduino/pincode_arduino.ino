@@ -17,6 +17,10 @@
 long enteredCode = 0;
 char enteredCodeArray[4] = {'0', '0', '0', '0'};
 
+//serial communication variables
+String stringIn;
+bool received = false;
+
 
 //Hashing
 
@@ -105,7 +109,10 @@ void setup(){
 }
   
 void loop(){
-
+   if(received){
+    inputHandler();
+   }
+   
     // Look for new cards
    if(cardPresented == false){
     if ( ! mfrc522.PICC_IsNewCardPresent()) 
@@ -254,4 +261,52 @@ void resetting(){
     hashedCode = "";
     sendEvent();
     setup();
+}
+
+void serialEvent() { // To check if there is any data on the serial line
+  if (Serial.available()) {
+//    while (true) {
+      stringIn = Serial.readString();
+//      stringIn += inChar;
+
+//      if (inChar == '\n') break;
+//    }
+   if(stringIn != NULL) received = true;
+  }
+}
+
+//serial communication code
+void inputHandler() {
+ 
+//  stringOut = "ERROR: No (correct) input";
+  if(stringIn == "abort"){
+        //code voor het 'resetten' van ale gegevens
+        
+  }
+
+  if(stringIn == "withdraw"){
+    Serial.println("send withdrawal amount");
+
+    while(!Serial.available()){ 
+      //wait until more input comes
+      }
+      if(stringIn == "abort"){
+        Serial.println("aborting");
+        //code voor het 'resetten' van ale gegevens
+      }
+      else if (stringIn == "mainMenu"){
+    //code voor naar het hoofdmenu gaan (dit misschien verplaatsen)
+    
+    }
+    
+    else{
+      int amount = Serial.parseInt();
+      Serial.print(amount);
+      Serial.println("received");
+      }
+    }
+//outputString(stringIn);
+  
+  received = false;
+  stringIn = "";
 }
