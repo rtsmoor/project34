@@ -26,12 +26,7 @@ public class SerialConnection {
         System.out.println("command sent: " + stringOut);
         out.flush();
 
-//        try{
-//            sleep(1000);
-//        } catch (InterruptedException e){
-//            e.printStackTrace();
-//        }
-        if(in.hasNextLine());
+        if(in.hasNextLine()); // arduino moet altijd iets terugsturen, en dat moet ook worden opgevangen in de GUI
     }
 
     public boolean hasString() {
