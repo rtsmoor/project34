@@ -22,6 +22,7 @@ public class Gui extends JFrame implements ActionListener {
     private String version = "1.1.0";
     private LogIn login;
     public SerialConnection serialConnection;
+    private int passwordCharCount = 0;
 
     Gui(SerialConnection serialConnection){
          login = new LogIn(this);
@@ -150,6 +151,10 @@ public class Gui extends JFrame implements ActionListener {
 //        frame.getContentPane().add(BorderLayout.NORTH, taPanelMain);
         frame.getContentPane().add(BorderLayout.CENTER, panelStart);
         frame.setVisible(true);
+
+        while(true) {
+            inputHandler(serialConnection.stringIn());
+        }
     }
 
     public void changePanel(JPanel panel){
@@ -200,6 +205,22 @@ public class Gui extends JFrame implements ActionListener {
         dialogClose.addActionListener(this);
         dialogClose.setActionCommand("dialogClose");
 
+    }
+
+    public void inputHandler(String s){
+        if("enterPin".equalsIgnoreCase(s)){
+            login.setRfidDetected(true);
+            System.out.println("Naar inlogscherm");
+            changePanel(panelPassword);
+        }
+
+        if("success".equalsIgnoreCase(s)){
+
+        }
+
+        if("*".equalsIgnoreCase(s)){
+
+        }
     }
 
     @Override
@@ -330,7 +351,6 @@ public class Gui extends JFrame implements ActionListener {
                 //serialConnection.stringOut("getUser");
                // user.userName = serialConnection.stringIn();
                 user.requestUserVariables();
-                user.setUserVariables();
                 changePanel(panelMain); //?moet nog veranderd worden naar inlogscherm?
             }
         }
@@ -343,7 +363,7 @@ public class Gui extends JFrame implements ActionListener {
 
         if("custAmountToNext".equalsIgnoreCase((e.getActionCommand()))){
             changePanel(panelBon);
-            //todo take input from the textField and use it in the transaction
+            //todo take input from the textField and use it in the transaction (fixed in v1.1.2+ in test branch)
         }
     }
 }

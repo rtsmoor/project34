@@ -1,12 +1,9 @@
 #include <Keypad.h>
 #include <Wire.h>
-#include <MD5.h>
 #include <SPI.h>
 #include <MFRC522.h>
-#include <Crypto.h>
 #include <SHA512.h>
-#include <string.h>
-#include <avr/wdt.h>
+
 
 #define HASH_SIZE 32
 #define BLOCK_SIZE 128
@@ -103,9 +100,10 @@ void setup(){
   pinMode(11, OUTPUT);
   SPI.begin();
   mfrc522.PCD_Init();
+  Serial.println("ready");
 
   
-  Serial.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nPlease present your card: ");
+ // Serial.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nPlease present your card: ");
 }
   
 void loop(){
@@ -147,8 +145,8 @@ void loop(){
     }
     if(cardPresented){
     delay(2000);
-    Serial.print("Please enter pincode: "); 
-  }
+    Serial.println("enterPin");
+    }
   } 
   
   //Button is pressed
@@ -167,7 +165,7 @@ void loop(){
       hashMaker(&sha512, &pinHash, 4);
 
       //Start check
-      Serial.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nAuthorizing...");
+      Serial.println("authorizing");
       sendEvent();
       finished = true;
       delay(3000);
@@ -177,9 +175,10 @@ void loop(){
     if(customKey != '*' || customKey != 'D'){
     enteredCodeArray[keyCounter] = customKey;
     if(keyCounter >= 0){
-      Serial.print('*');
+      Serial.println('*');
+      }
     }
-    }
+    
     if(customKey == 'D'){   //char D is deleting the whole line
       if(keyCounter > 0){
         keyCounter = -1;
@@ -235,14 +234,14 @@ void passwordControl(String pincode){
     }
     if(checkCode == pincode){
       //Serial.print(checkCode); Serial.print(" : "); Serial.println(pincode);
-      Serial.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nSucces");
+      Serial.println("success"); // hier serialprint van dat ie goed is 
       for(int i = 0; i < 200; i++){
         delay(50);
       }
     }
     else{
       Serial.print(checkCode); Serial.print(" : "); Serial.println(pincode);
-      Serial.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nAccess denied");
+      Serial.println("denied"); // hier serialprint van dat er nog x aantal pogingen zijn en dat die fout is
     }
     resetting();
 
@@ -263,6 +262,7 @@ void resetting(){
     setup();
 }
 
+//serial communication code
 void serialEvent() { // To check if there is any data on the serial line
   if (Serial.available()) {
 //    while (true) {
@@ -275,7 +275,7 @@ void serialEvent() { // To check if there is any data on the serial line
   }
 }
 
-//serial communication code
+//handles serial input
 void inputHandler() {
  
 //  stringOut = "ERROR: No (correct) input";
