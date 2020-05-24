@@ -11,6 +11,7 @@ import javax.swing.text.PlainDocument;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.Timer;
 
@@ -58,7 +59,7 @@ public class Gui extends JFrame implements ActionListener {
     private JButton anderBedrag = new JButton("ander bedrag");
 
     public JPasswordField passwordField = new JPasswordField(4);
-    public JTextField customBedragField = new JTextField(10);
+    public JFormattedTextField customBedragField = new JFormattedTextField();
     private JTextArea taShowBal = new JTextArea();
     private JTextArea taPanelStart = new JTextArea("Scan uw pas om verder te gaan");
 
@@ -115,6 +116,7 @@ public class Gui extends JFrame implements ActionListener {
 
         panelCustomAmount.add(new JLabel("Voer aangepast bedrag in:"));
         panelCustomAmount.add(customBedragField);
+        customBedragField.setColumns(10);
         panelCustomAmount.add(nextPage[2]);
         panelCustomAmount.add(abort[3]);
         panelCustomAmount.add(naarHoofdMenu[3]);
@@ -128,8 +130,8 @@ public class Gui extends JFrame implements ActionListener {
         panelFinalizeTransaction.add(abort[6]);
 
         // code die ervoor zorgt dat er max 4 tekens ingevuld worden (van stackoverflow gepakt)
-        PlainDocument document = (PlainDocument) passwordField.getDocument();
-        document.setDocumentFilter(new DocumentFilter() {
+        PlainDocument documentPF = (PlainDocument) passwordField.getDocument();
+        documentPF.setDocumentFilter(new DocumentFilter() {
 
             @Override
             public void replace(DocumentFilter.FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
@@ -330,8 +332,8 @@ public class Gui extends JFrame implements ActionListener {
                 passwordField.setText("");
                 //serialConnection.stringOut("getUser");
                // user.userName = serialConnection.stringIn();
-                user.requestUserVariables();
-                user.setUserVariables();
+//                user.requestUserVariables(); // old methods (do not use)
+//                user.setUserVariables(); // old methods (do not use)
                 changePanel(panelMain); //?moet nog veranderd worden naar inlogscherm?
             }
         }
