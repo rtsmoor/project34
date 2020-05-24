@@ -12,17 +12,17 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
-import java.util.Timer;
 
 import static javax.swing.JOptionPane.showMessageDialog;
 
 public class Gui extends JFrame implements ActionListener {
     int array_length = 10;
     private User user;
-    private String version = "1.1.0";
+    private String version = "1.1.0b";
     private LogIn login;
     public SerialConnection serialConnection;
     private int passwordCharCount = 0;
+    public Timer logoutTimer = new Timer(30000, this);
 
     Gui(SerialConnection serialConnection){
          login = new LogIn(this);
@@ -205,6 +205,9 @@ public class Gui extends JFrame implements ActionListener {
         dialogClose.addActionListener(this);
         dialogClose.setActionCommand("dialogClose");
 
+        logoutTimer.setActionCommand("abort");
+        logoutTimer.start();
+
     }
 
     public void inputHandler(String s){
@@ -225,7 +228,7 @@ public class Gui extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
+        logoutTimer.restart();
         if("abort".equalsIgnoreCase(e.getActionCommand())){
             //code om uit te loggen en naar het startscherm te gaan
             System.out.println("aborting...");

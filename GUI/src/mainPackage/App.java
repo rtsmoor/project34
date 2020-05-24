@@ -6,6 +6,8 @@ import com.fazecast.jSerialComm.SerialPortEvent;
 import mainPackage.serialconnection.SerialConnection;
 
 import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.util.Scanner;
 
 import static java.lang.Thread.sleep;
@@ -54,6 +56,15 @@ public class App {
                 arduinoReady = true; // alleen als de arduino gereed is, dan mogen er pas dingen gebeuren
                 break;
             }
+        }
+
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            //Connection sqlConn = DriverManager.getConnection("jdbc:mysql://145.24.222.230:3306/bank", "administrator", "realestatedatabase");
+            Connection sqlConn = DriverManager.getConnection("jdbc:mysql://remotemysql.com:3306/gooHxZWiSx", "gooHxZWiSx", "r2Gf2810Tu");
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         Gui gui = new Gui(new SerialConnection(in, out));
