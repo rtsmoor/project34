@@ -20,7 +20,7 @@ import static javax.swing.JOptionPane.showMessageDialog;
 public class Gui extends JFrame implements ActionListener {
     int array_length = 10;
     private User user;
-    private String version = "1.1.2";
+    private String version = "1.1.3";
     private LogIn login;
     public SerialConnection serialConnection;
 
@@ -117,6 +117,8 @@ public class Gui extends JFrame implements ActionListener {
         panelCustomAmount.add(new JLabel("Voer aangepast bedrag in:"));
         panelCustomAmount.add(customBedragField);
         customBedragField.setColumns(10);
+
+
         panelCustomAmount.add(nextPage[2]);
         panelCustomAmount.add(abort[3]);
         panelCustomAmount.add(naarHoofdMenu[3]);
@@ -346,16 +348,23 @@ public class Gui extends JFrame implements ActionListener {
 
         if("custAmountToNext".equalsIgnoreCase((e.getActionCommand()))){
             if(!("".equals(customBedragField.getText()))) {
-                int tempInt = Integer.parseInt(customBedragField.getText());
-                if (user.balance.getBalance() - tempInt < 0) { //kijken of saldo lager is dan bedrag dat gepind wordt
-                    dialog.setSize(350, 150);
-                    dialog.setLocationRelativeTo(panelChooseAmount);
-                    dialog.setVisible(true);
-                } else {
-                    System.out.println("custom bedrag: " + tempInt);
-                    user.makeWithdrawal();
-                    user.withdrawal.customWithdrawal(tempInt);
-                    changePanel(panelBon);
+                try {
+                    int tempInt = Integer.parseInt(customBedragField.getText());
+
+                    if (user.balance.getBalance() - tempInt < 0) { //kijken of saldo lager is dan bedrag dat gepind wordt
+                        dialog.setSize(350, 150);
+                        dialog.setLocationRelativeTo(panelChooseAmount);
+                        dialog.setVisible(true);
+                    } else {
+                        System.out.println("custom bedrag: " + tempInt);
+                        user.makeWithdrawal();
+                        user.withdrawal.customWithdrawal(tempInt);
+                        changePanel(panelBon);
+                    }
+                } catch (NumberFormatException nfe) {
+                    System.out.println("ERROR: invalid input");
+                    customBedragField.setText("");
+                    //TODO: tell user that they cant enter anything other than numbers
                 }
             }
             //todo take input from the textField and use it in the transaction
