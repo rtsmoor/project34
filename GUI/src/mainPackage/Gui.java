@@ -402,6 +402,10 @@ public class Gui extends JFrame implements ActionListener {
             //code om naar het hoofdmenu te gaan
             System.out.println("naar hoofdmenu");
             user.toMainMenu();
+            taInvalidInput.setVisible(false);
+            taInsufficientBills.setVisible(false);
+            taInsufficientMoney.setVisible(false);
+            panelChooseAmount.add(taInsufficientMoney);
             changePanel(panelMain);
 //            serialConnection.dataOut("hoofdmenu"); //todo arduino code voor hoofdmenu
         }
@@ -430,8 +434,8 @@ public class Gui extends JFrame implements ActionListener {
 
         if("yesBon".equalsIgnoreCase(e.getActionCommand()))   {
              System.out.println("Bon printen");
-             serialConnection.stringOut("printBon");
-             changePanel(panelBon);
+             //serialConnection.stringOut("printBon"); //todo uncomment (was even voor de demo gecommented)
+             changePanel(panelFinalizeTransaction);
 
         }
 
@@ -530,6 +534,7 @@ public class Gui extends JFrame implements ActionListener {
         if("anderBedrag".equalsIgnoreCase((e.getActionCommand()))){
             System.out.println("ander bedrag invullen");
             customBedragField.setText("");
+            taInsufficientMoney.setVisible(false);
             changePanel(panelCustomAmount);
         }
 
@@ -539,7 +544,9 @@ public class Gui extends JFrame implements ActionListener {
                     int tempInt = Integer.parseInt(customBedragField.getText());
                     if(tempInt%5 != 0 || tempInt < 0) throw new NumberFormatException();
                     if (user.balance.getBalance() - tempInt < 0) { //kijken of saldo lager is dan bedrag dat gepind wordt, en of het getal eindigt met 0 of 5
+                        panelCustomAmount.add(taInsufficientMoney);
                         taInsufficientMoney.setVisible(true);
+
                     }
 
                     else {

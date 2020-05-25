@@ -5,7 +5,7 @@ import mainPackage.Gui;
 public class LogIn {
     boolean rfidDetected = false;
     private Gui gui;
-    private int pogingen = 3;
+    private int pogingen = 3; //todo dit uit database halen, en naar database sturen
 
     public LogIn(Gui gui){
         this.gui = gui;
@@ -18,8 +18,7 @@ public class LogIn {
     public boolean requestLogin(){
         //GUI vraagt om pas
         //wanneer pas is ingevoerd ga dan verder
-        if(checkLogin()) return true;
-        else return false;
+        return checkLogin();
     }
 
     public boolean checkLogin(){

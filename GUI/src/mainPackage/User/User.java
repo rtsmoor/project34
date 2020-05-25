@@ -8,19 +8,11 @@ public class User {
     public Balance balance = new Balance();
     public Gui gui;
     public Withdrawal withdrawal;
-    public String userName = "";
-
-//    private int inactivityTimer;
-//    private int maxtime = 30;
-    private boolean logout = false;
+    public String passNumber = "";
     private char[] passwordCheck = new char[4];
 
     User(Gui gui){
         this.gui = gui;
-    }
-
-    public void setLogout(boolean logout) {
-        this.logout = logout;
     }
 
     public char[] getPasswordCheck() {
@@ -38,8 +30,11 @@ public class User {
     public void userLogout(){
         gui.setUser(null); // deletes connections to the user, so the garbage collector deletes the user.
         gui.customBedragField.setText("");
-        Arrays.fill(passwordCheck, '0'); // zet het wachtwoord weer op 0000 voor security redenen.
+        Arrays.fill(passwordCheck, '0'); // zet het wachtwoord weer op 0000 voor security.
         System.out.println("user is logged out");
+        this.withdrawal = null;
+        this.balance = null;
+        this.gui = null;
     }
     //methode verwijdert alle gegevens die zijn ingevoerd en reset alle variabelen die zijn veranderd
     public void toMainMenu(){
@@ -54,11 +49,8 @@ public class User {
 
     }
     public void setUserVariables(){
-        if(gui.serialConnection.hasString()) {
-            userName = gui.serialConnection.stringIn();
-            balance.setBalance(gui.serialConnection.intIn());
-        }
-        else System.out.println("Error");
+
+
     }
     public void sendAmount(){
         gui.serialConnection.stringOut("sendAmount");
