@@ -60,8 +60,8 @@ public class App {
 
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            //Connection sqlConn = DriverManager.getConnection("jdbc:mysql://145.24.222.230:3306/bank", "administrator", "realestatedatabase");
-            Connection sqlConn = DriverManager.getConnection("jdbc:mysql://remotemysql.com:3306/gooHxZWiSx", "gooHxZWiSx", "r2Gf2810Tu");
+            Connection sqlConn = DriverManager.getConnection("jdbc:mysql://145.24.222.230:3306/bank", "administrator", "realestatedatabase");
+//            Connection sqlConn = DriverManager.getConnection("jdbc:mysql://remotemysql.com:3306/gooHxZWiSx", "gooHxZWiSx", "r2Gf2810Tu");
 
         } catch (Exception e) {
             e.printStackTrace();

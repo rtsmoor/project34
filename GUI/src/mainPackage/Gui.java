@@ -29,7 +29,7 @@ public class Gui extends JFrame implements ActionListener {
          this.serialConnection = serialConnection;
     }
 
-    private JFrame frame = new JFrame("BankApp V" + version);
+     private JFrame frame = new JFrame("BankApp V" + version);
      public JDialog dialog = new JDialog(frame, "Er is niet genoeg saldo om deze actie uit te voeren", true);
      public JPanel panelStart = new JPanel();
      public JPanel panelMain = new JPanel();
