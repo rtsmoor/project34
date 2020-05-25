@@ -13,7 +13,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.NumberFormat;
 import java.util.Arrays;
-import java.util.Timer;
 import static java.lang.Thread.sleep;
 
 
@@ -28,7 +27,7 @@ public class Gui extends JFrame implements ActionListener {
     public int[] amounts = {amount1, amount2, amount3, amount4}; // volgorde biljetten: 5, 10, 20, 50
 
     private User user;
-    private String version = "1.1.5";
+    private String version = "1.1.6";
     private LogIn login;
     public SerialConnection serialConnection;
 
@@ -68,6 +67,8 @@ public class Gui extends JFrame implements ActionListener {
     private JButton bedrag3 = new JButton("100");
     private JButton bedrag4 = new JButton("150");
     private JButton anderBedrag = new JButton("Ander bedrag");
+
+    public Timer logoutTimer = new Timer(30000, this);
 
     public JPasswordField passwordField = new JPasswordField(4);
     public JFormattedTextField customBedragField = new JFormattedTextField();
@@ -244,11 +245,15 @@ public class Gui extends JFrame implements ActionListener {
         option3.addActionListener(this);
         option3.setActionCommand("option3");
 
+        logoutTimer.setActionCommand("abort");
+        logoutTimer.start();
+
 
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        logoutTimer.restart();
         if("option1".equalsIgnoreCase(e.getActionCommand())){
            if(amounts[0] < 4){
                taInsufficientBills.setVisible(true);
@@ -387,6 +392,8 @@ public class Gui extends JFrame implements ActionListener {
             if(user != null) user.userLogout();
             taShowBal.setText("");
             taInvalidInput.setVisible(false);
+            taInsufficientBills.setVisible(false);
+            taInsufficientMoney.setVisible(false);
             changePanel(panelStart);
 //            serialConnection.dataOut("abort"); // todo arduino code voor abort
         }
