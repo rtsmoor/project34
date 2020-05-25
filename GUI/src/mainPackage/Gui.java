@@ -20,47 +20,15 @@ import static java.lang.Thread.sleep;
 import static javax.swing.JOptionPane.showMessageDialog;
 
 public class Gui extends JFrame implements ActionListener {
-    int array_length = 10;
-    int[] amounts = {10,10,10,10};
-    public int getAmount4() {
-        return amount4;
-    }
-
-    public void setAmount4(int amount4) {
-        this.amount4 = amount4;
-    }
-
-    public int getAmount3() {
-        return amount3;
-    }
-
-    public void setAmount3(int amount3) {
-        this.amount3 = amount3;
-    }
-
-    public int getAmount2() {
-        return amount2;
-    }
-
-    public void setAmount2(int amount2) {
-        this.amount2 = amount2;
-    }
-
-    public int getAmount1() {
-        return amount1;
-    }
-
-    public void setAmount1(int amount1) {
-        this.amount1 = amount1;
-    }
-
-    public int amount4 = 10; //
-    public int amount3 = 10;
-    public int amount2 = 10;
-    public int amount1 = 10;
+    public int array_length = 10;
+    private int amount4 = 10; //
+    private int amount3 = 10;
+    private int amount2 = 10;
+    private int amount1 = 10;
+    public int[] amounts = {amount1, amount2, amount3, amount4}; // volgorde biljetten: 5, 10, 20, 50
 
     private User user;
-    private String version = "1.1.4";
+    private String version = "1.1.5";
     private LogIn login;
     public SerialConnection serialConnection;
 
@@ -473,8 +441,8 @@ public class Gui extends JFrame implements ActionListener {
                     user.makeWithdrawal();
                     user.withdrawal.customWithdrawal(20);
                     changePanel(panelBon);
-                    this.setAmount1(getAmount1() - 1);
-                    System.out.println("Amount1:" + getAmount1());
+                    amount1 = amount1 - 1;
+                    System.out.println("Amount1:" + amount1);
                 }
             }
             else{
@@ -490,8 +458,8 @@ public class Gui extends JFrame implements ActionListener {
                     user.makeWithdrawal();
                     user.withdrawal.customWithdrawal(50);
                     changePanel(panelBon);
-                    this.setAmount2(getAmount2() - 1);
-                    System.out.println("Amount2:" + getAmount2());
+                    amount2 = amount2 - 1;
+                    System.out.println("Amount2:" + amount2);
                 }
             }
             else{
@@ -507,8 +475,8 @@ public class Gui extends JFrame implements ActionListener {
                     user.makeWithdrawal();
                     user.withdrawal.customWithdrawal(100);
                     changePanel(panelBon);
-                    this.setAmount3(getAmount3() - 1);
-                    System.out.println("Amount3:" + getAmount3());
+                    amount3 = amount3 - 1;
+                    System.out.println("Amount3:" + amount3);
                 }
             }
             else{
@@ -524,8 +492,8 @@ public class Gui extends JFrame implements ActionListener {
                     user.makeWithdrawal();
                     user.withdrawal.customWithdrawal(150);
                     changePanel(panelBon);
-                    this.setAmount4(getAmount4() - 1);
-                    System.out.println("Amount4:" + getAmount4());
+                    amount4 = amount4 - 1;
+                    System.out.println("Amount4:" + amount4);
                 }
             }
             else{
