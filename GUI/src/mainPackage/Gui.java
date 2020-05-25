@@ -278,134 +278,172 @@ public class Gui extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if("option1".equalsIgnoreCase(e.getActionCommand())){
-            System.out.println("20 euro");
-            user.makeWithdrawal();
-            //user.withdrawal.customWithdrawal(20);
-            changePanel(panelBon);
-//            user.sendAmount();
-//            serialConnection.stringIn();
-
-            try {
-                sleep(2000);
-            }
-            catch (Exception ex){
-                ex.printStackTrace();
-            }
-
-
-            for(int i = 4; i > 0; i--){
-                try {
-                    sleep(2000);
+           if(amounts[0] < 4){
+               dialog4.setSize(350, 150);
+               dialog4.setLocationRelativeTo(panelChooseAmount);
+               dialog4.setVisible(true);
+           }
+                if (user.balance.getBalance() - 20 < 0) { //kijken of saldo lager is dan bedrag dat gepind wordt
+                   dialog.setSize(350, 150);
+                   dialog.setLocationRelativeTo(panelChooseAmount);
+                   dialog.setVisible(true);
                 }
-                catch (Exception ez) {
-                    ez.printStackTrace();
-                }
-                    user.sendAmount1();
-            }
+                   else {
+                       amounts[0] = amounts[0] - 4;
+                       System.out.println("20 euro");
+                       user.makeWithdrawal();
+                       //user.withdrawal.customWithdrawal(20);
+                       changePanel(panelBon);
+        //            user.sendAmount();
+        //            serialConnection.stringIn();
 
-            serialConnection.stringIn();
-            serialConnection.stringIn();
-            serialConnection.stringIn();
-            serialConnection.stringIn();
+                       try {
+                           sleep(1000);
+                       } catch (Exception ex) {
+                           ex.printStackTrace();
+                       }
 
-//            user.complete();
 
+                       for (int i = 4; i > 0; i--) {
+                           try {
+                               sleep(2000);
+                           } catch (Exception ez) {
+                               ez.printStackTrace();
+                           }
+                           user.sendAmount1();
+                       }
+
+                       serialConnection.stringIn();
+                       serialConnection.stringIn();
+                       serialConnection.stringIn();
+                       serialConnection.stringIn();
+                       System.out.println("Array Amounts: " + amounts[0]);
+        //
+        //            user.complete();
+                   }
         }
         if("option2".equalsIgnoreCase(e.getActionCommand())){
-            System.out.println("20 euro");
-            user.makeWithdrawal();
-            //user.withdrawal.customWithdrawal(20);
-            changePanel(panelBon);
-//            user.sendAmount();
-//            serialConnection.stringIn();
-
-            try {
-                sleep(2000);
+            if(amounts[1] < 2){
+                dialog4.setSize(350, 150);
+                dialog4.setLocationRelativeTo(panelChooseAmount);
+                dialog4.setVisible(true);
             }
-            catch (Exception ex){
-                ex.printStackTrace();
-            }
-
-
-            for(int i = 2; i > 0; i--){
-                try {
-                    sleep(2000);
+                if (user.balance.getBalance() - 20 < 0) { //kijken of saldo lager is dan bedrag dat gepind wordt
+                    dialog.setSize(350, 150);
+                    dialog.setLocationRelativeTo(panelChooseAmount);
+                    dialog.setVisible(true);
                 }
-                catch (Exception ey) {
-                    ey.printStackTrace();
+                else {
+                    amounts[1] = amounts[1] - 2;
+                    System.out.println("20 euro");
+                    user.makeWithdrawal();
+                    //user.withdrawal.customWithdrawal(20);
+                    changePanel(panelBon);
+    //            user.sendAmount();
+    //            serialConnection.stringIn();
+
+                    try {
+                        sleep(1000);
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+
+
+                    for (int i = 2; i > 0; i--) {
+                        try {
+                            sleep(2000);
+                        } catch (Exception ey) {
+                            ey.printStackTrace();
+                        }
+                        user.sendAmount2();
+                    }
+
+                    serialConnection.stringIn();
+                    serialConnection.stringIn();
+
+
+                    System.out.println("Array Amounts: " + amounts[1]);
+
+
                 }
-                user.sendAmount2();
-            }
-
-            serialConnection.stringIn();
-            serialConnection.stringIn();
-            serialConnection.stringIn();
-            serialConnection.stringIn();
-
         }
         if("option3".equalsIgnoreCase(e.getActionCommand())){
-            System.out.println("20 euro");
-            user.makeWithdrawal();
-            //user.withdrawal.customWithdrawal(20);
-            changePanel(panelBon);
-//            user.sendAmount();
-//            serialConnection.stringIn();
-
-            try {
-                sleep(2000);
+            if(amounts[2] < 1){
+                dialog4.setSize(350, 150);
+                dialog4.setLocationRelativeTo(panelChooseAmount);
+                dialog4.setVisible(true);
             }
-            catch (Exception ex){
-                ex.printStackTrace();
-            }
-
-
-            for(int i = 1; i > 0; i--){
-                try {
-                    sleep(2000);
+                if (user.balance.getBalance() - 20 < 0) { //kijken of saldo lager is dan bedrag dat gepind wordt
+                    dialog.setSize(350, 150);
+                    dialog.setLocationRelativeTo(panelChooseAmount);
+                    dialog.setVisible(true);
                 }
-                catch (Exception ey) {
-                    ey.printStackTrace();
-                }
-                user.sendAmount3();
-            }
+                    else {
+                        amounts[3] = amounts[3] - 1;
+                        System.out.println("20 euro");
+                        user.makeWithdrawal();
+                        //user.withdrawal.customWithdrawal(20);
+                        changePanel(panelBon);
+        //            user.sendAmount();
+        //            serialConnection.stringIn();
 
-            serialConnection.stringIn();
-            serialConnection.stringIn();
-            serialConnection.stringIn();
-            serialConnection.stringIn();
+                        try {
+                            sleep(2000);
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                        }
 
+
+                        for (int i = 1; i > 0; i--) {
+                            try {
+                                sleep(2000);
+                            } catch (Exception ey) {
+                                ey.printStackTrace();
+                            }
+                            user.sendAmount3();
+                        }
+
+                        serialConnection.stringIn();
+
+                        System.out.println("Array Amounts: " + amounts[3]);
+                    }
         }
         if("option4".equalsIgnoreCase(e.getActionCommand())){
-            System.out.println("20 euro");
-            user.makeWithdrawal();
-            //user.withdrawal.customWithdrawal(20);
-            changePanel(panelBon);
+            if(amounts[3] < 1){
+                dialog4.setSize(350, 150);
+                dialog4.setLocationRelativeTo(panelChooseAmount);
+                dialog4.setVisible(true);
+            }
+            else {
+                System.out.println("20 euro");
+                user.makeWithdrawal();
+                //user.withdrawal.customWithdrawal(20);
+                changePanel(panelBon);
 //            user.sendAmount();
 //            serialConnection.stringIn();
 
-            try {
-                sleep(2000);
-            }
-            catch (Exception ex){
-                ex.printStackTrace();
-            }
-
-
-            for(int i = 1; i > 0; i--){
                 try {
                     sleep(2000);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
                 }
-                catch (Exception ey) {
-                    ey.printStackTrace();
+
+
+                for (int i = 1; i > 0; i--) {
+                    try {
+                        sleep(2000);
+                    } catch (Exception ey) {
+                        ey.printStackTrace();
+                    }
+                    user.sendAmount4();
                 }
-                user.sendAmount4();
+
+                serialConnection.stringIn();
+                serialConnection.stringIn();
+                serialConnection.stringIn();
+                serialConnection.stringIn();
+                System.out.println("Array Amounts: " + amounts[3]);
             }
-
-            serialConnection.stringIn();
-            serialConnection.stringIn();
-            serialConnection.stringIn();
-            serialConnection.stringIn();
-
         }
         if("test".equalsIgnoreCase(e.getActionCommand())){
             changePanel(options1);

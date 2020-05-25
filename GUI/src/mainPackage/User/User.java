@@ -72,10 +72,7 @@ public class User {
     public void sendAmount3(){
         gui.serialConnection.stringOut("20");
     }
-    public void sendAmount4(){
+    public void sendAmount4() {
         gui.serialConnection.stringOut("50");
-    }
-    public void complete(){
-        gui.serialConnection.stringOut("complete");
     }
 }
