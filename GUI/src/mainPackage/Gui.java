@@ -27,7 +27,7 @@ public class Gui extends JFrame implements ActionListener {
     public int[] amounts = {amount1, amount2, amount3, amount4}; // volgorde biljetten: 5, 10, 20, 50
 
     private User user;
-    private String version = "1.1.6";
+    private String version = "1.1.7";
     private LogIn login;
     public SerialConnection serialConnection;
 
@@ -537,7 +537,7 @@ public class Gui extends JFrame implements ActionListener {
             if(!("".equals(customBedragField.getText()))) {
                 try {
                     int tempInt = Integer.parseInt(customBedragField.getText());
-                    if(tempInt%5 != 0) throw new NumberFormatException();
+                    if(tempInt%5 != 0 || tempInt < 0) throw new NumberFormatException();
                     if (user.balance.getBalance() - tempInt < 0) { //kijken of saldo lager is dan bedrag dat gepind wordt, en of het getal eindigt met 0 of 5
                         taInsufficientMoney.setVisible(true);
                     }
