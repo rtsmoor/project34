@@ -60,7 +60,7 @@ public class Gui extends JFrame implements ActionListener {
     public int amount1 = 10;
 
     private User user;
-    private String version = "1.1.3";
+    private String version = "1.1.4";
     private LogIn login;
     public SerialConnection serialConnection;
 
@@ -109,6 +109,7 @@ public class Gui extends JFrame implements ActionListener {
     public JFormattedTextField customBedragField = new JFormattedTextField();
     private JTextArea taShowBal = new JTextArea();
     private JTextArea taPanelStart = new JTextArea("Scan uw pas om verder te gaan");
+    private JTextArea taInvalidInput = new JTextArea("Voer getallen in tussen 0-9,\nen waar het laatste getal 0 of 5 is. \nAndere karakters zijn niet toegestaan!");
 
 //    public void setSerialConnection(SerialConnection serialConnection){
 //        this.serialConnection = serialConnection;
@@ -165,7 +166,10 @@ public class Gui extends JFrame implements ActionListener {
         panelCustomAmount.add(new JLabel("Voer aangepast bedrag in:"));
         panelCustomAmount.add(customBedragField);
         customBedragField.setColumns(10);
-
+        panelCustomAmount.add(taInvalidInput);
+        taInvalidInput.setEditable(false);
+        taInvalidInput.setVisible(false);
+        taInvalidInput.setForeground(Color.RED);
 
         panelCustomAmount.add(nextPage[2]);
         panelCustomAmount.add(abort[3]);
@@ -454,6 +458,7 @@ public class Gui extends JFrame implements ActionListener {
             System.out.println("aborting...");
             if(user != null) user.userLogout();
             taShowBal.setText("");
+            taInvalidInput.setVisible(false);
             changePanel(panelStart);
 //            serialConnection.dataOut("abort"); // todo arduino code voor abort
         }
@@ -606,8 +611,6 @@ public class Gui extends JFrame implements ActionListener {
                 user.setPasswordCheck(passwordField.getPassword());
                 System.out.println("passwd: " + Arrays.toString(user.getPasswordCheck()));
                 passwordField.setText("");
-                //serialConnection.stringOut("getUser");
-               // user.userName = serialConnection.stringIn();
 //                user.requestUserVariables(); // old methods (do not use)
 //                user.setUserVariables(); // old methods (do not use)
                 changePanel(panelMain); //?moet nog veranderd worden naar inlogscherm?
@@ -624,12 +627,14 @@ public class Gui extends JFrame implements ActionListener {
             if(!("".equals(customBedragField.getText()))) {
                 try {
                     int tempInt = Integer.parseInt(customBedragField.getText());
-
-                    if (user.balance.getBalance() - tempInt < 0) { //kijken of saldo lager is dan bedrag dat gepind wordt
+                    if(tempInt%5 != 0) throw new NumberFormatException();
+                    if (user.balance.getBalance() - tempInt < 0) { //kijken of saldo lager is dan bedrag dat gepind wordt, en of het getal eindigt met 0 of 5
                         dialog.setSize(350, 150);
                         dialog.setLocationRelativeTo(panelChooseAmount);
                         dialog.setVisible(true);
-                    } else {
+                    }
+
+                    else {
                         System.out.println("custom bedrag: " + tempInt);
                         user.makeWithdrawal();
                         user.withdrawal.customWithdrawal(tempInt);
@@ -638,10 +643,9 @@ public class Gui extends JFrame implements ActionListener {
                 } catch (NumberFormatException nfe) {
                     System.out.println("ERROR: invalid input");
                     customBedragField.setText("");
-                    //TODO: tell user that they cant enter anything other than numbers
+                    taInvalidInput.setVisible(true);
                 }
             }
-            //todo take input from the textField and use it in the transaction
         }
     }
 }

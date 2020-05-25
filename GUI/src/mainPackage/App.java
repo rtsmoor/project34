@@ -24,7 +24,7 @@ public class App {
         System.out.println("Open port: " + port.openPort());
         Scanner in = new Scanner(port.getInputStream()); // dit is de input van de arduino
         PrintWriter out = new PrintWriter(port.getOutputStream(), true); // dit is de output wat naar arduino gaat
-        port.addDataListener(new SerialPortDataListener() { // deze methode is vgm optioneel, misschien nodig voor een interrupt?
+        port.addDataListener(new SerialPortDataListener() {
 
             @Override
             public int getListeningEvents() {
@@ -32,7 +32,7 @@ public class App {
             }
 
             @Override
-            public void serialEvent(SerialPortEvent serialPortEvent) {
+            public void serialEvent(SerialPortEvent serialPortEvent) { //ik denk dat deze methode activeert iedere keer dat er iets nieuws binnenkomt op de serial port
 //                String input;
 //
 //                input = in.nextLine();
