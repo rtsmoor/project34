@@ -60,4 +60,22 @@ public class User {
         }
         else System.out.println("Error");
     }
+    public void sendAmount(){
+        gui.serialConnection.stringOut("sendAmount");
+    }
+    public void sendAmount1(){
+        gui.serialConnection.stringOut("5");
+    }
+    public void sendAmount2(){
+        gui.serialConnection.stringOut("10");
+    }
+    public void sendAmount3(){
+        gui.serialConnection.stringOut("20");
+    }
+    public void sendAmount4(){
+        gui.serialConnection.stringOut("50");
+    }
+    public void complete(){
+        gui.serialConnection.stringOut("complete");
+    }
 }

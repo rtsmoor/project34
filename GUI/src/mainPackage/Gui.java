@@ -14,12 +14,51 @@ import java.awt.event.ActionListener;
 import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.Timer;
+import static java.lang.Thread.sleep;
+
 
 import static javax.swing.JOptionPane.showMessageDialog;
 
 public class Gui extends JFrame implements ActionListener {
     int array_length = 10;
-    public int amount4 = 3;
+    int[] amounts = {10,10,10,10};
+    public int getAmount4() {
+        return amount4;
+    }
+
+    public void setAmount4(int amount4) {
+        this.amount4 = amount4;
+    }
+
+    public int getAmount3() {
+        return amount3;
+    }
+
+    public void setAmount3(int amount3) {
+        this.amount3 = amount3;
+    }
+
+    public int getAmount2() {
+        return amount2;
+    }
+
+    public void setAmount2(int amount2) {
+        this.amount2 = amount2;
+    }
+
+    public int getAmount1() {
+        return amount1;
+    }
+
+    public void setAmount1(int amount1) {
+        this.amount1 = amount1;
+    }
+
+    public int amount4 = 10; //
+    public int amount3 = 10;
+    public int amount2 = 10;
+    public int amount1 = 10;
+
     private User user;
     private String version = "1.1.3";
     private LogIn login;
@@ -35,6 +74,11 @@ public class Gui extends JFrame implements ActionListener {
      public JDialog dialog4 = new JDialog(frame, "Er zijn niet genoeg biljetten om deze actie uit te voeren", true);
      public JPanel panelStart = new JPanel();
      public JPanel panelMain = new JPanel();
+     public JPanel options1 = new JPanel();
+     private JButton option1 = new JButton("4x5");
+     private JButton option2 = new JButton("2x10");
+     private JButton option3 = new JButton("1x20");
+     private JButton test = new JButton("TEST");
      public JPanel panelChooseAmount = new JPanel();
      public JPanel panelBon = new JPanel();
      public JPanel panelPassword = new JPanel();
@@ -135,6 +179,12 @@ public class Gui extends JFrame implements ActionListener {
         panelFinalizeTransaction.add(tempTa);
         panelFinalizeTransaction.add(abort[6]);
 
+        options1.add(option1);
+        options1.add(option2);
+        options1.add(option3);
+        panelMain.add(test);
+        options1.add(abort[5]);
+        options1.add(naarHoofdMenu[5]);
         // code die ervoor zorgt dat er max 4 tekens ingevuld worden (van stackoverflow gepakt)
         PlainDocument documentPF = (PlainDocument) passwordField.getDocument();
         documentPF.setDocumentFilter(new DocumentFilter() {
@@ -178,6 +228,7 @@ public class Gui extends JFrame implements ActionListener {
         for(int i = 0; i < array_length; i++){
             abort[i].addActionListener(this);
             abort[i].setActionCommand("abort");
+            abort[i].setBackground(Color.RED);
             naarHoofdMenu[i].addActionListener(this);
             naarHoofdMenu[i].setActionCommand("hoofdmenu");
         }
@@ -211,11 +262,155 @@ public class Gui extends JFrame implements ActionListener {
         dialog4Close.addActionListener(this);
         dialog4Close.setActionCommand("dialog4Close");
 
+        test.addActionListener(this);
+        test.setActionCommand("test");
+
+        option1.addActionListener(this);
+        option1.setActionCommand("option1");
+        option2.addActionListener(this);
+        option2.setActionCommand("option2");
+        option3.addActionListener(this);
+        option3.setActionCommand("option3");
+
+
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        if("option1".equalsIgnoreCase(e.getActionCommand())){
+            System.out.println("20 euro");
+            user.makeWithdrawal();
+            //user.withdrawal.customWithdrawal(20);
+            changePanel(panelBon);
+//            user.sendAmount();
+//            serialConnection.stringIn();
 
+            try {
+                sleep(2000);
+            }
+            catch (Exception ex){
+                ex.printStackTrace();
+            }
+
+
+            for(int i = 4; i > 0; i--){
+                try {
+                    sleep(2000);
+                }
+                catch (Exception ez) {
+                    ez.printStackTrace();
+                }
+                    user.sendAmount1();
+            }
+
+            serialConnection.stringIn();
+            serialConnection.stringIn();
+            serialConnection.stringIn();
+            serialConnection.stringIn();
+
+//            user.complete();
+
+        }
+        if("option2".equalsIgnoreCase(e.getActionCommand())){
+            System.out.println("20 euro");
+            user.makeWithdrawal();
+            //user.withdrawal.customWithdrawal(20);
+            changePanel(panelBon);
+//            user.sendAmount();
+//            serialConnection.stringIn();
+
+            try {
+                sleep(2000);
+            }
+            catch (Exception ex){
+                ex.printStackTrace();
+            }
+
+
+            for(int i = 2; i > 0; i--){
+                try {
+                    sleep(2000);
+                }
+                catch (Exception ey) {
+                    ey.printStackTrace();
+                }
+                user.sendAmount2();
+            }
+
+            serialConnection.stringIn();
+            serialConnection.stringIn();
+            serialConnection.stringIn();
+            serialConnection.stringIn();
+
+        }
+        if("option3".equalsIgnoreCase(e.getActionCommand())){
+            System.out.println("20 euro");
+            user.makeWithdrawal();
+            //user.withdrawal.customWithdrawal(20);
+            changePanel(panelBon);
+//            user.sendAmount();
+//            serialConnection.stringIn();
+
+            try {
+                sleep(2000);
+            }
+            catch (Exception ex){
+                ex.printStackTrace();
+            }
+
+
+            for(int i = 1; i > 0; i--){
+                try {
+                    sleep(2000);
+                }
+                catch (Exception ey) {
+                    ey.printStackTrace();
+                }
+                user.sendAmount3();
+            }
+
+            serialConnection.stringIn();
+            serialConnection.stringIn();
+            serialConnection.stringIn();
+            serialConnection.stringIn();
+
+        }
+        if("option4".equalsIgnoreCase(e.getActionCommand())){
+            System.out.println("20 euro");
+            user.makeWithdrawal();
+            //user.withdrawal.customWithdrawal(20);
+            changePanel(panelBon);
+//            user.sendAmount();
+//            serialConnection.stringIn();
+
+            try {
+                sleep(2000);
+            }
+            catch (Exception ex){
+                ex.printStackTrace();
+            }
+
+
+            for(int i = 1; i > 0; i--){
+                try {
+                    sleep(2000);
+                }
+                catch (Exception ey) {
+                    ey.printStackTrace();
+                }
+                user.sendAmount4();
+            }
+
+            serialConnection.stringIn();
+            serialConnection.stringIn();
+            serialConnection.stringIn();
+            serialConnection.stringIn();
+
+        }
+        if("test".equalsIgnoreCase(e.getActionCommand())){
+            changePanel(options1);
+
+        }
         if("abort".equalsIgnoreCase(e.getActionCommand())){
             //code om uit te loggen en naar het startscherm te gaan
             System.out.println("aborting...");
@@ -246,8 +441,7 @@ public class Gui extends JFrame implements ActionListener {
             System.out.println("pin €70,-");
             user.makeWithdrawal();
             user.withdrawal.customWithdrawal(70);
-            changePanel(panelFinalizeTransaction);
-
+            changePanel(panelBon);
         }
 
         if("customPin".equalsIgnoreCase(e.getActionCommand())) {
@@ -277,43 +471,66 @@ public class Gui extends JFrame implements ActionListener {
         }
 
         if("customBedrag1".equalsIgnoreCase(e.getActionCommand())){
-            if(user.balance.getBalance() - 20 < 0) { //kijken of saldo lager is dan bedrag dat gepind wordt
-                dialog.setSize(350, 150);
-                dialog.setLocationRelativeTo(panelChooseAmount);
-                serialConnection.stringOut("mainMenu");
-                dialog.setVisible(true);
+            if(amount1 > 0) {
+                if (user.balance.getBalance() - 20 < 0) { //kijken of saldo lager is dan bedrag dat gepind wordt
+                    dialog.setSize(350, 150);
+                    dialog.setLocationRelativeTo(panelChooseAmount);
+                    dialog.setVisible(true);
+                } else {
+                    System.out.println("20 euro");
+                    user.makeWithdrawal();
+                    user.withdrawal.customWithdrawal(20);
+                    changePanel(panelBon);
+                    this.setAmount1(getAmount1() - 1);
+                    System.out.println("Amount1:" + getAmount1());
+                }
             }
-            else {
-                System.out.println("20 euro");
-                user.makeWithdrawal();
-                user.withdrawal.customWithdrawal(20);
-                changePanel(panelBon);
+            else{
+                dialog4.setSize(350, 150);
+                dialog4.setLocationRelativeTo(panelChooseAmount);
+                dialog4.setVisible(true);
             }
         }
         if("customBedrag2".equalsIgnoreCase(e.getActionCommand())){
-            if(user.balance.getBalance() - 50 < 0) { //kijken of saldo lager is dan bedrag dat gepind wordt
-                dialog.setSize(350, 150);
-                dialog.setLocationRelativeTo(panelChooseAmount);
-                dialog.setVisible(true);
+            if(amount2 > 0) {
+                if (user.balance.getBalance() - 50 < 0) { //kijken of saldo lager is dan bedrag dat gepind wordt
+                    dialog.setSize(350, 150);
+                    dialog.setLocationRelativeTo(panelChooseAmount);
+                    dialog.setVisible(true);
+                } else {
+                    System.out.println("50 euro");
+                    user.makeWithdrawal();
+                    user.withdrawal.customWithdrawal(50);
+                    changePanel(panelBon);
+                    this.setAmount2(getAmount2() - 1);
+                    System.out.println("Amount2:" + getAmount2());
+                }
             }
             else{
-                System.out.println("50 euro");
-                user.makeWithdrawal();
-                user.withdrawal.customWithdrawal(50);
-                changePanel(panelBon);
+                dialog4.setSize(350, 150);
+                dialog4.setLocationRelativeTo(panelChooseAmount);
+                dialog4.setVisible(true);
             }
         }
         if("customBedrag3".equalsIgnoreCase(e.getActionCommand())){
-            if(user.balance.getBalance() - 100 < 0) { //kijken of saldo lager is dan bedrag dat gepind wordt
-                dialog.setSize(350, 150);
-                dialog.setLocationRelativeTo(panelChooseAmount);
-                dialog.setVisible(true);
+            if(amount3 > 0) {
+                if (user.balance.getBalance() - 100 < 0) { //kijken of saldo lager is dan bedrag dat gepind wordt
+                    dialog.setSize(350, 150);
+                    dialog.setLocationRelativeTo(panelChooseAmount);
+                    dialog.setVisible(true);
+                } else {
+                    System.out.println("100 euro");
+                    user.makeWithdrawal();
+                    user.withdrawal.customWithdrawal(100);
+                    changePanel(panelBon);
+                    this.setAmount3(getAmount3() - 1);
+                    System.out.println("Amount3:" + getAmount3());
+                }
             }
             else{
-                System.out.println("100 euro");
-                user.makeWithdrawal();
-                user.withdrawal.customWithdrawal(100);
-                changePanel(panelBon);
+                dialog4.setSize(350, 150);
+                dialog4.setLocationRelativeTo(panelChooseAmount);
+                dialog4.setVisible(true);
             }
         }
         if("customBedrag4".equalsIgnoreCase(e.getActionCommand())){
@@ -327,7 +544,8 @@ public class Gui extends JFrame implements ActionListener {
                     user.makeWithdrawal();
                     user.withdrawal.customWithdrawal(150);
                     changePanel(panelBon);
-                    amount4--;
+                    this.setAmount4(getAmount4() - 1);
+                    System.out.println("Amount4:" + getAmount4());
                 }
             }
             else{
