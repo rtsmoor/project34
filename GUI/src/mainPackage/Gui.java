@@ -394,6 +394,7 @@ public class Gui extends JFrame implements ActionListener {
             taInvalidInput.setVisible(false);
             taInsufficientBills.setVisible(false);
             taInsufficientMoney.setVisible(false);
+            panelChooseAmount.add(taInsufficientMoney);
             changePanel(panelStart);
 //            serialConnection.dataOut("abort"); // todo arduino code voor abort
         }
@@ -420,15 +421,22 @@ public class Gui extends JFrame implements ActionListener {
 
         if("pin70".equalsIgnoreCase(e.getActionCommand())){
             //code om 70 euro te pinnen (kan via dezelfde methode als die voor hetzelfde bedrag)
-            System.out.println("pin €70,-");
-            user.makeWithdrawal();
-            user.withdrawal.customWithdrawal(70);
-            changePanel(panelBon);
+            if (user.balance.getBalance() - 20 < 0) { //kijken of saldo lager is dan bedrag dat gepind wordt
+                panelMain.add(taInsufficientMoney);
+                taInsufficientMoney.setVisible(true);
+            } else {
+                System.out.println("70 euro");
+                user.makeWithdrawal();
+                user.withdrawal.customWithdrawal(70);
+                changePanel(panelBon);
+            }
         }
 
         if("customPin".equalsIgnoreCase(e.getActionCommand())) {
 
             System.out.println("custom bedrag pinnen");
+            taInsufficientMoney.setVisible(false);
+            panelChooseAmount.add(taInsufficientMoney);
             changePanel(panelChooseAmount);
         }
 
