@@ -11,6 +11,8 @@ import javax.swing.text.PlainDocument;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Arrays;
 
 import static javax.swing.JOptionPane.showMessageDialog;
@@ -18,14 +20,16 @@ import static javax.swing.JOptionPane.showMessageDialog;
 public class Gui extends JFrame implements ActionListener {
     int array_length = 10;
     private User user;
-    private String version = "1.1.0b";
+    public Connection conn;
+    private String version = "1.1.1b";
     private LogIn login;
     public SerialConnection serialConnection;
     private int passwordCharCount = 0;
     public Timer logoutTimer = new Timer(30000, this);
 
-    Gui(SerialConnection serialConnection){
-         login = new LogIn(this);
+    Gui(SerialConnection serialConnection, Connection conn){
+        this.conn = conn;
+        login = new LogIn(this, this.conn);
          this.serialConnection = serialConnection;
     }
 
@@ -85,6 +89,7 @@ public class Gui extends JFrame implements ActionListener {
         frame.setSize(400, 400);
 //        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 //        mainFrame.setUndecorated(true); // zorgt ervoor dat je niet zomaar uit het programma kan klikken
+
         frame.add(panelMain);
         panelMain.add(quickPin);
         panelMain.add(showBal);
@@ -234,6 +239,7 @@ public class Gui extends JFrame implements ActionListener {
             System.out.println("aborting...");
             if(user != null) user.userLogout();
             taShowBal.setText("");
+            login.clearLoginVariables();
             changePanel(panelStart);
 //            serialConnection.dataOut("abort"); // todo arduino code voor abort
         }
@@ -347,13 +353,17 @@ public class Gui extends JFrame implements ActionListener {
 
         if("wachtwoord".equalsIgnoreCase((e.getActionCommand()))){
             System.out.println("login");
-            if(login.requestLogin()) {
+            if(login.requestLogin("2A 9F 0D 0B")) {
                 user.setPasswordCheck(passwordField.getPassword());
                 System.out.println("passwd: " + Arrays.toString(user.getPasswordCheck()));
                 passwordField.setText("");
                 //serialConnection.stringOut("getUser");
                // user.userName = serialConnection.stringIn();
-                user.requestUserVariables();
+                try {
+                    user.requestUserVariables();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
                 changePanel(panelMain); //?moet nog veranderd worden naar inlogscherm?
             }
         }
