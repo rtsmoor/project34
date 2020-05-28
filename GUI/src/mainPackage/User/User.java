@@ -2,17 +2,24 @@ package mainPackage.User;
 import mainPackage.Gui;
 import mainPackage.MoneyRelated.*;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Arrays;
 
 public class User {
     public Balance balance = new Balance();
     public Gui gui;
+    private Connection conn;
     public Withdrawal withdrawal;
     public String passNumber = "";
+
     private char[] passwordCheck = new char[4];
 
-    User(Gui gui){
+    User(Gui gui, Connection conn){
         this.gui = gui;
+        this.conn = conn;
     }
 
     public char[] getPasswordCheck() {
@@ -43,11 +50,26 @@ public class User {
 
     }
     //todo fix this method: when trying to use the input it just breaks with an arrayOutOfIndexException
-    public void requestUserVariables(){
-        gui.serialConnection.stringOut("getUser");
-        gui.serialConnection.stringOut("getBal");
+    public void requestUserVariables() throws SQLException {
+        //todo compare passnumber sent by arduino with database
+        //todo use query to get balance
+//        Statement st = conn.createStatement();
+//        ResultSet rs = st.executeQuery("SELECT * FROM login");
+//        while (rs.next())
+//        {
+//
+//            String firstName = rs.getString("pass_number");
+//            String lastName = rs.getString("account_number");
+//            String dateCreated = rs.getString("pincode");
+//
+//
+//            // print the results
+//            System.out.format("%s, %s, %s\n",firstName, lastName, dateCreated);
+//        }
+//        st.close();
 
     }
+
     public void setUserVariables(){
 
 

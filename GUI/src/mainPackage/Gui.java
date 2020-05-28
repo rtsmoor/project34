@@ -11,6 +11,8 @@ import javax.swing.text.PlainDocument;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.text.NumberFormat;
 import java.util.Arrays;
 import static java.lang.Thread.sleep;
@@ -27,12 +29,14 @@ public class Gui extends JFrame implements ActionListener {
     public int[] amounts = {amount1, amount2, amount3, amount4}; // volgorde biljetten: 5, 10, 20, 50
 
     private User user;
-    private String version = "1.1.7";
+    private String version = "1.1.8";
     private LogIn login;
     public SerialConnection serialConnection;
+    public Connection conn;
 
-    Gui(SerialConnection serialConnection){
-         login = new LogIn(this);
+    Gui(SerialConnection serialConnection, Connection conn){
+        this.conn = conn;
+         login = new LogIn(this, conn);
          this.serialConnection = serialConnection;
     }
 
@@ -395,6 +399,7 @@ public class Gui extends JFrame implements ActionListener {
             taInsufficientBills.setVisible(false);
             taInsufficientMoney.setVisible(false);
             panelChooseAmount.add(taInsufficientMoney);
+            login.clearLoginVariables();
             changePanel(panelStart);
 //            serialConnection.dataOut("abort"); // todo arduino code voor abort
         }
@@ -529,12 +534,15 @@ public class Gui extends JFrame implements ActionListener {
 
         if("wachtwoord".equalsIgnoreCase((e.getActionCommand()))){
             System.out.println("login");
-            if(login.requestLogin()) {
+            if(login.requestLogin("2A 9F 0D 0B")) {//todo vervang met input arduino
                 user.setPasswordCheck(passwordField.getPassword());
                 System.out.println("passwd: " + Arrays.toString(user.getPasswordCheck()));
                 passwordField.setText("");
-//                user.requestUserVariables(); // old methods (do not use)
-//                user.setUserVariables(); // old methods (do not use)
+                try {
+                    user.requestUserVariables();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
                 changePanel(panelMain); //?moet nog veranderd worden naar inlogscherm?
             }
         }

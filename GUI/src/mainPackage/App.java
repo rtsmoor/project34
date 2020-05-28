@@ -3,9 +3,11 @@ package mainPackage;
 import com.fazecast.jSerialComm.SerialPort;
 import com.fazecast.jSerialComm.SerialPortDataListener;
 import com.fazecast.jSerialComm.SerialPortEvent;
+import com.jcraft.jsch.*;
 import mainPackage.serialconnection.SerialConnection;
 
 import java.io.PrintWriter;
+import java.sql.*;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
@@ -66,7 +68,52 @@ public class App {
             }
         }
 
-        Gui gui = new Gui(new SerialConnection(in, out));
+        int lport=5656;
+        String rhost="127.0.0.1";
+        String host="145.24.222.230";
+        int rport=3306;
+        String user="ubuntu-0997274";
+        String password="V883cY";
+        String dbuserName = "administrator";
+        String dbpassword = "realestatedatabase";
+        String url = "jdbc:mysql://localhost:"+lport+"/bank?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC";
+        Connection conn = null;
+        Session session= null;
+        try{
+            //Set StrictHostKeyChecking property to no to avoid UnknownHostKey issue
+            java.util.Properties config = new java.util.Properties();
+            config.put("StrictHostKeyChecking", "no");
+            JSch jsch = new JSch();
+            session=jsch.getSession(user, host, 22);
+            session.setPassword(password);
+            session.setConfig(config);
+            session.connect();
+            System.out.println("Connected");
+            int assinged_port=session.setPortForwardingL(lport, rhost, rport);
+            System.out.println("localhost:"+assinged_port+" -> "+rhost+":"+rport);
+            System.out.println("Port Forwarded");
+
+            //mysql database connectivity
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            conn =  DriverManager.getConnection (url, dbuserName, dbpassword);
+            System.out.println ("Database connection established");
+            System.out.println("DONE");
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+//        finally{
+//            if(conn != null && !conn.isClosed()){
+//                System.out.println("Closing Database Connection");
+//                conn.close();
+//            }
+//            if(session !=null && session.isConnected()){
+//                System.out.println("Closing SSH Connection");
+//                session.disconnect();
+//            }
+//        }
+
+        Gui gui = new Gui(new SerialConnection(in, out), conn);
         gui.createApp();
 //        gui.setSerialConnection(new SerialConnection(in, out));
 //        SerialConnection serialConnection = new SerialConnection(in, out);
