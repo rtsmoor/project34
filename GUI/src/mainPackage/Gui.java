@@ -255,6 +255,7 @@ public class Gui extends JFrame implements ActionListener {
 
     }
 
+    //TODO DEZE HELE METHODE VERVANGEN MET IETS ANDERS DAT DE ARDUINO KEYPAD INPUT GEBRUIKT (MISSCHIEN SWITCH CASE OF IF STATEMENTS)
     @Override
     public void actionPerformed(ActionEvent e) {
         logoutTimer.restart();

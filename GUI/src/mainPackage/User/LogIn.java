@@ -36,7 +36,7 @@ public class LogIn {
 
     public boolean checkLogin(String passNumber) throws SQLException {
         this.passnumber = passNumber;
-        String accountNumber = "";
+        int accountNumber = -1;
         //als login correct is ga dan door naar het volgende scherm
 
         String checkMistakeQuery = "SELECT mistakes, number FROM account INNER JOIN login ON account.number = login.account_number WHERE login.pass_number = '" + this.passnumber + "';";
@@ -47,24 +47,24 @@ public class LogIn {
         ResultSet rs = st.executeQuery(checkMistakeQuery);
         while(rs.next()) {
             pogingen = rs.getInt("mistakes");
-            accountNumber = rs.getString("number");
+            accountNumber = rs.getInt("number");
             System.out.println("aantal pogingen: " + pogingen + "\naccountNumber: " + accountNumber);
         }
 
-        if (true && pogingen < 3) {
+        if (true && pogingen < 3) {//todo verander true naar de waarde die de arduino doorstuurt als de login correct is, of zorg ervoor dat het java programma het checkt
             System.out.println("login successful");
             User user = new User(gui, conn, accountNumber); // creates a new user session every time you log in
             gui.setUser(user);
             //reset counter and send to DB
             pogingen = 0;
             //System.out.println(mistakeUpdate);
-            System.out.println("rows affected: " + st.executeUpdate(String.format("UPDATE account SET account.mistakes = %d WHERE number = '%s';", pogingen, accountNumber)));
+            System.out.println("rows affected: " + st.executeUpdate(String.format("UPDATE account SET account.mistakes = %d WHERE number = %d;", pogingen, accountNumber)));
             return true;
         }
 
         else if(pogingen <= 2){
             pogingen++;
-            System.out.println(st.executeUpdate(String.format("UPDATE account SET account.mistakes = %d WHERE number = '%s';", pogingen, accountNumber)));
+            System.out.println(st.executeUpdate(String.format("UPDATE account SET account.mistakes = %d WHERE number = %d;", pogingen, accountNumber)));
             System.out.println("Error: " + (3-pogingen) + " poging(en) over");
         }
 
