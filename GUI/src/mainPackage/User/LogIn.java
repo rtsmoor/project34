@@ -38,7 +38,7 @@ public class LogIn {
         this.passnumber = passNumber;
         String accountNumber = "";
         //als login correct is ga dan door naar het volgende scherm
-        //todo query die mistakes ophaald en passnumber vergelijkt
+
         String checkMistakeQuery = "SELECT mistakes, number FROM account INNER JOIN login ON account.number = login.account_number WHERE login.pass_number = '" + this.passnumber + "';";
 
 
@@ -61,7 +61,7 @@ public class LogIn {
             System.out.println("rows affected: " + st.executeUpdate(String.format("UPDATE account SET account.mistakes = %d WHERE number = '%s';", pogingen, accountNumber)));
             return true;
         }
-        //todo add counter for mistakes
+
         else if(pogingen <= 2){
             pogingen++;
             System.out.println(st.executeUpdate(String.format("UPDATE account SET account.mistakes = %d WHERE number = '%s';", pogingen, accountNumber)));

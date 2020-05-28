@@ -59,10 +59,9 @@ public class User {
         gui.customBedragField.setText("");
     }
 
-    //todo fix this method: when trying to use the input it just breaks with an arrayOutOfIndexException
+
     public void requestUserVariables() throws SQLException {
-        //todo compare accountnumber sent by arduino with database
-        //todo use query to get balance
+
 
         Statement st = conn.createStatement();
         ResultSet rs = st.executeQuery(String.format("SELECT balance FROM account WHERE number = '%s'", this.accountNumber));
