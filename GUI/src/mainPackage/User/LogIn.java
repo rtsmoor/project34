@@ -53,7 +53,7 @@ public class LogIn {
 
         if (true && pogingen < 3) {
             System.out.println("login successful");
-            User user = new User(gui, conn); // creates a new user session every time you log in
+            User user = new User(gui, conn, accountNumber); // creates a new user session every time you log in
             gui.setUser(user);
             //reset counter and send to DB
             pogingen = 0;

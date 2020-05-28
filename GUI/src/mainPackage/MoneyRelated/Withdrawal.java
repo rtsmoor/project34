@@ -3,7 +3,11 @@ package mainPackage.MoneyRelated;
 import mainPackage.Gui;
 import mainPackage.User.User;
 
-public class Withdrawal extends Balance {
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+public class Withdrawal {
     public Gui gui;
     public User user;
     private int withdrawalAmount = 0;
@@ -15,12 +19,26 @@ public class Withdrawal extends Balance {
 
     public void customWithdrawal(int withdrawalAmount){
         this.withdrawalAmount = withdrawalAmount;
-        user.balance.withdrawBalance(this.withdrawalAmount);
-
+        double balance = user.getBalance();
+        balance -= withdrawalAmount;
+        user.setBalance(balance);
         gui.serialConnection.stringOut("withdraw");
         gui.serialConnection.intOut(this.withdrawalAmount);
         gui.serialConnection.in.nextLine();
         //todo add code that communicates this with arduino
+
+        if(true) {//todo change true to whether or not the transaction worked (communicate with arduino)
+            try {
+                Statement st = user.conn.createStatement();
+                System.out.println(user.getBalance());
+                st.executeLargeUpdate(String.format("UPDATE account SET balance = (balance - %d) WHERE number = '%s';", this.withdrawalAmount, user.accountNumber));
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+        } else {
+            System.out.println("An error has occured");
+        }
     }
 
     public void algorithm(int withdrawalAmount) { //algoritme voor keuze van biljetten

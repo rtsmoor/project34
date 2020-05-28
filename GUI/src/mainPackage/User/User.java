@@ -9,17 +9,26 @@ import java.sql.Statement;
 import java.util.Arrays;
 
 public class User {
-    public Balance balance = new Balance();
+    private double balance;
     public Gui gui;
-    private Connection conn;
+    public Connection conn;
     public Withdrawal withdrawal;
-    public String passNumber = "";
+    public String accountNumber = "";
 
     private char[] passwordCheck = new char[4];
 
-    User(Gui gui, Connection conn){
+    User(Gui gui, Connection conn, String accountNumber){
         this.gui = gui;
         this.conn = conn;
+        this.accountNumber = accountNumber;
+    }
+
+    public double getBalance() {
+        return balance;
+    }
+
+    public void setBalance(double balance) {
+        this.balance = balance;
     }
 
     public char[] getPasswordCheck() {
@@ -40,40 +49,35 @@ public class User {
         Arrays.fill(passwordCheck, '0'); // zet het wachtwoord weer op 0000 voor security.
         System.out.println("user is logged out");
         this.withdrawal = null;
-        this.balance = null;
+        this.balance = 0;
         this.gui = null;
     }
+
     //methode verwijdert alle gegevens die zijn ingevoerd en reset alle variabelen die zijn veranderd
     public void toMainMenu(){
         if(withdrawal != null) withdrawal = null;
         gui.customBedragField.setText("");
-
     }
+
     //todo fix this method: when trying to use the input it just breaks with an arrayOutOfIndexException
     public void requestUserVariables() throws SQLException {
-        //todo compare passnumber sent by arduino with database
+        //todo compare accountnumber sent by arduino with database
         //todo use query to get balance
-//        Statement st = conn.createStatement();
-//        ResultSet rs = st.executeQuery("SELECT * FROM login");
-//        while (rs.next())
-//        {
-//
-//            String firstName = rs.getString("pass_number");
-//            String lastName = rs.getString("account_number");
-//            String dateCreated = rs.getString("pincode");
-//
-//
-//            // print the results
-//            System.out.format("%s, %s, %s\n",firstName, lastName, dateCreated);
-//        }
-//        st.close();
 
+        Statement st = conn.createStatement();
+        ResultSet rs = st.executeQuery(String.format("SELECT balance FROM account WHERE number = '%s'", this.accountNumber));
+        if(rs.next())
+        {
+
+            balance = rs.getDouble("balance");
+
+
+            // print the results
+            System.out.format("%f\n",balance);
+        }
+        st.close();
     }
 
-    public void setUserVariables(){
-
-
-    }
     public void sendAmount(){
         gui.serialConnection.stringOut("sendAmount");
     }

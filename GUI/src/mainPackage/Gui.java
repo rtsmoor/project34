@@ -262,7 +262,7 @@ public class Gui extends JFrame implements ActionListener {
            if(amounts[0] < 4){
                taInsufficientBills.setVisible(true);
            }
-                if (user.balance.getBalance() - 20 < 0) { //kijken of saldo lager is dan bedrag dat gepind wordt
+                if (user.getBalance() - 20 < 0) { //kijken of saldo lager is dan bedrag dat gepind wordt
                     taInsufficientMoney.setVisible(true);
                 }
                    else {
@@ -297,7 +297,7 @@ public class Gui extends JFrame implements ActionListener {
             if(amounts[1] < 2){
                 taInsufficientBills.setVisible(true);
             }
-                if (user.balance.getBalance() - 20 < 0) { //kijken of saldo lager is dan bedrag dat gepind wordt
+                if (user.getBalance() - 20 < 0) { //kijken of saldo lager is dan bedrag dat gepind wordt
                     taInsufficientMoney.setVisible(true);
                 }
                 else {
@@ -329,7 +329,7 @@ public class Gui extends JFrame implements ActionListener {
             if(amounts[2] < 1){
                 taInsufficientBills.setVisible(true);
             }
-                if (user.balance.getBalance() - 20 < 0) { //kijken of saldo lager is dan bedrag dat gepind wordt
+                if (user.getBalance() - 20 < 0) { //kijken of saldo lager is dan bedrag dat gepind wordt
                     taInsufficientMoney.setVisible(true);
                 }
                     else {
@@ -420,13 +420,13 @@ public class Gui extends JFrame implements ActionListener {
             //code om het saldo te laten zien
             System.out.println("showing balance");
 
-            taShowBal.setText(Integer.toString(user.balance.getBalance()));
+            taShowBal.setText(Double.toString(user.getBalance()));
             changePanel(panelShowBal);
         }
 
         if("pin70".equalsIgnoreCase(e.getActionCommand())){
             //code om 70 euro te pinnen (kan via dezelfde methode als die voor hetzelfde bedrag)
-            if (user.balance.getBalance() - 20 < 0) { //kijken of saldo lager is dan bedrag dat gepind wordt
+            if (user.getBalance() - 20 < 0) { //kijken of saldo lager is dan bedrag dat gepind wordt
                 panelMain.add(taInsufficientMoney);
                 taInsufficientMoney.setVisible(true);
             } else {
@@ -458,7 +458,7 @@ public class Gui extends JFrame implements ActionListener {
         }
         if("customBedrag1".equalsIgnoreCase(e.getActionCommand())){
             if(amount1 > 0) {
-                if (user.balance.getBalance() - 20 < 0) { //kijken of saldo lager is dan bedrag dat gepind wordt
+                if (user.getBalance() - 20 < 0) { //kijken of saldo lager is dan bedrag dat gepind wordt
                     taInsufficientMoney.setVisible(true);
                 } else {
                     System.out.println("20 euro");
@@ -475,7 +475,7 @@ public class Gui extends JFrame implements ActionListener {
         }
         if("customBedrag2".equalsIgnoreCase(e.getActionCommand())){
             if(amount2 > 0) {
-                if (user.balance.getBalance() - 50 < 0) { //kijken of saldo lager is dan bedrag dat gepind wordt
+                if (user.getBalance() - 50 < 0) { //kijken of saldo lager is dan bedrag dat gepind wordt
                     taInsufficientMoney.setVisible(true);
                 } else {
                     System.out.println("50 euro");
@@ -492,7 +492,7 @@ public class Gui extends JFrame implements ActionListener {
         }
         if("customBedrag3".equalsIgnoreCase(e.getActionCommand())){
             if(amount3 > 0) {
-                if (user.balance.getBalance() - 100 < 0) { //kijken of saldo lager is dan bedrag dat gepind wordt
+                if (user.getBalance() - 100 < 0) { //kijken of saldo lager is dan bedrag dat gepind wordt
                     taInsufficientMoney.setVisible(true);
                 } else {
                     System.out.println("100 euro");
@@ -509,7 +509,7 @@ public class Gui extends JFrame implements ActionListener {
         }
         if("customBedrag4".equalsIgnoreCase(e.getActionCommand())){
             if(amount4 > 0) {
-                if (user.balance.getBalance() - 150 < 0) { //kijken of saldo lager is dan bedrag dat gepind wordt
+                if (user.getBalance() - 150 < 0) { //kijken of saldo lager is dan bedrag dat gepind wordt
                     taInsufficientMoney.setVisible(true);
                 } else {
                     System.out.println("150 euro");
@@ -559,7 +559,7 @@ public class Gui extends JFrame implements ActionListener {
                 try {
                     int tempInt = Integer.parseInt(customBedragField.getText());
                     if(tempInt%5 != 0 || tempInt < 0) throw new NumberFormatException();
-                    if (user.balance.getBalance() - tempInt < 0) { //kijken of saldo lager is dan bedrag dat gepind wordt, en of het getal eindigt met 0 of 5
+                    if (user.getBalance() - tempInt < 0) { //kijken of saldo lager is dan bedrag dat gepind wordt, en of het getal eindigt met 0 of 5
                         panelCustomAmount.add(taInsufficientMoney);
                         taInsufficientMoney.setVisible(true);
 
