@@ -18,6 +18,7 @@ char enteredCodeArray[4] = {'0', '0', '0', '0'};
 String stringIn;
 bool received = false;
 bool withdraw = false;
+int moneyArray[4];
 
 
 //Hashing
@@ -281,6 +282,7 @@ void inputHandler() {
  
 //  stringOut = "ERROR: No (correct) input";
   if(stringIn == "abort"){
+    for(int i = 0; i < 4; i++) moneyArray[i] = 0;
         //code voor het 'resetten' van ale gegevens
         
   }
@@ -292,6 +294,19 @@ void inputHandler() {
   if(withdraw){
     //wait until more input comes
       
+      if(stringIn == "50"){
+        moneyArray[0]++;
+      }
+      if(stringIn == "20"){
+        moneyArray[1]++;
+      }
+      if(stringIn == "10"){
+        moneyArray[2]++;
+      }
+      if(stringIn == "5"){
+        moneyArray[3]++;
+      }
+      
       if(stringIn == "abort"){
         Serial.println("aborting");
         //code voor het 'resetten' van ale gegevens
@@ -302,9 +317,9 @@ void inputHandler() {
       
     } else {
       
-      int amount = Serial.parseInt();
-      Serial.println(amount);
-      Serial.println("sendMore");
+     // int amount = Serial.parseInt();
+     // Serial.println(amount);
+     // Serial.println("sendMore");
       
 //      printMoneys(amount);
       //TODO print moneys
