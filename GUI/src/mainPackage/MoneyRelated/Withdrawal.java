@@ -24,8 +24,9 @@ public class Withdrawal {
         gui.serialConnection.stringOut("withdraw");
 
         do{
-        gui.serialConnection.intOut(); //dit in stukies sturen en aan het eind "complete" sturen
+        gui.serialConnection.stringOut("50"); //dit in stukies sturen en aan het eind "complete" sturen
         System.out.println(gui.serialConnection.in.nextLine());
+        //if() stringOut
 
 
         if(gui.serialConnection.in.nextLine().equals("received")) {
@@ -49,60 +50,62 @@ public class Withdrawal {
     } while(gui.serialConnection.in.nextLine().equals("sendMore"));
     }
 
-    public void algorithm(int withdrawalAmount){ //algoritme voor keuze van biljetten
-       while(this.withdrawalAmount > 0) {
-           if (optie 1){
-               if (this.withdrawalAmount > 50) {
-                   this.withdrawalAmount = withdraw50(withdrawalAmount);
-               }
+    public void algorithm(int withdrawalAmount) { //algoritme voor keuze van biljetten
+        while (this.withdrawalAmount > 0) {
+            if (true){ //optie 1
+                if (this.withdrawalAmount > 50) {
+                    this.withdrawalAmount = withdraw50(withdrawalAmount);
+                }
 
-               if (this.withdrawalAmount > 20) {
-                   this.withdrawalAmount = withdraw20(withdrawalAmount);
-               }
+                if (this.withdrawalAmount > 20) {
+                    this.withdrawalAmount = withdraw20(withdrawalAmount);
+                }
 
-               if (this.withdrawalAmount > 10) {
-                   this.withdrawalAmount = withdraw10(withdrawalAmount);
-               }
+                if (this.withdrawalAmount > 10) {
+                    this.withdrawalAmount = withdraw10(withdrawalAmount);
+                }
 
-               if (this.withdrawalAmount > 5) {
-                   this.withdrawalAmount = withdraw5(withdrawalAmount);
-               }
-           }
-           if (optie 2){
-               if (this.withdrawalAmount > 20) {
-                   this.withdrawalAmount = withdraw20(withdrawalAmount);
-               }
+                if (this.withdrawalAmount > 5) {
+                    this.withdrawalAmount = withdraw5(withdrawalAmount);
+                }
+            }
+            if (true){ // optie 2
+                if (this.withdrawalAmount > 20) {
+                    this.withdrawalAmount = withdraw20(withdrawalAmount);
+                }
 
-               if (this.withdrawalAmount > 10) {
-                   this.withdrawalAmount = withdraw10(withdrawalAmount);
-               }
+                if (this.withdrawalAmount > 10) {
+                    this.withdrawalAmount = withdraw10(withdrawalAmount);
+                }
 
-               if (this.withdrawalAmount > 5) {
-                   this.withdrawalAmount = withdraw5(withdrawalAmount);
-               }
-           }
-           if (optie 3){
-               if (this.withdrawalAmount > 10) {
-                   this.withdrawalAmount = withdraw10(withdrawalAmount);
-               }
+                if (this.withdrawalAmount > 5) {
+                    this.withdrawalAmount = withdraw5(withdrawalAmount);
+                }
+            }
+            if (true){ //optie 3
+                if (this.withdrawalAmount > 10) {
+                    this.withdrawalAmount = withdraw10(withdrawalAmount);
+                }
 
-               if (this.withdrawalAmount > 5) {
-                   this.withdrawalAmount = withdraw5(withdrawalAmount);
-               }
-           }
+                if (this.withdrawalAmount > 5) {
+                    this.withdrawalAmount = withdraw5(withdrawalAmount);
+                }
+            }
 
-           if (optie 4){
-               if (this.withdrawalAmount > 5) {
-                   this.withdrawalAmount = withdraw5(withdrawalAmount);
-               }
-           }
-       }
+            if (true && withdrawalAmount <= 50){ //optie 4
+                if (this.withdrawalAmount > 5) {
+                    this.withdrawalAmount = withdraw5(withdrawalAmount);
+                }
+            }
+        }
+        //hier iets met string complete doen
     }
+
     private int withdraw50(int temp){
         if (gui.amounts[3] > 0) {
             temp = temp - 50;
             gui.amounts[3]--;
-            withdrawalArray[3]++;
+            withdrawalArray[0]++;
         }
         return temp;
     }
@@ -111,7 +114,7 @@ public class Withdrawal {
         if (gui.amounts[2] > 0) {
             temp = temp - 20;
             gui.amounts[2]--;
-            withdrawalArray[2]++;
+            withdrawalArray[1]++;
         }
         return temp;
     }
@@ -119,7 +122,7 @@ public class Withdrawal {
         if (gui.amounts[1] > 0) {
             temp = temp - 10;
             gui.amounts[1]--;
-            withdrawalArray[1]++;
+            withdrawalArray[2]++;
         }
         return temp;
     }
@@ -127,7 +130,7 @@ public class Withdrawal {
         if (gui.amounts[0] > 0) {
             temp = temp - 5;
             gui.amounts[0]--;
-            withdrawalArray[0]++;
+            withdrawalArray[3]++;
         }
         return temp;
     }
