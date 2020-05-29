@@ -22,7 +22,7 @@ import static javax.swing.JOptionPane.showMessageDialog;
 
 public class Gui extends JFrame implements ActionListener {
     public int array_length = 10;
-    private int amount4 = 10; //
+    private int amount4 = 10;
     private int amount3 = 10;
     private int amount2 = 10;
     private int amount1 = 10;
@@ -53,6 +53,7 @@ public class Gui extends JFrame implements ActionListener {
      public JPanel panelPassword = new JPanel();
      public JPanel panelCustomAmount = new JPanel();
      public JPanel panelShowBal = new JPanel();
+     public JPanel panel;
      public JPanel panelFinalizeTransaction = new JPanel();
      private JTextArea tempTa = new JTextArea("hier komt overzichtelijk de transactie informatie \nterwijl het geld uit de dispenser komt");
 

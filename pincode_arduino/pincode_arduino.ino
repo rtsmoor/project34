@@ -286,7 +286,7 @@ void inputHandler() {
   }
 
   if(stringIn == "withdraw"){
-    Serial.println("send withdrawal amount");
+    Serial.println("sendMore");
     withdraw = true;      
 
   if(withdraw){
@@ -300,11 +300,19 @@ void inputHandler() {
     //code voor naar het hoofdmenu gaan (dit misschien verplaatsen)
          
       
-    } else{
+    } else {
+      
       int amount = Serial.parseInt();
       Serial.println(amount);
-      withdraw = false;
+      Serial.println("sendMore");
+      
+//      printMoneys(amount);
       //TODO print moneys
+  }
+    
+  if(stringIn == "complete"){
+    withdraw = false;
+    Serial.println("received");
   }
   }
  

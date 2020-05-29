@@ -11,6 +11,7 @@ public class Withdrawal {
     public Gui gui;
     public User user;
     private int withdrawalAmount = 0;
+    private int[] withdrawalArray = new int[4];
 
     public Withdrawal(Gui gui, User user){
         this.gui = gui;
@@ -20,57 +21,88 @@ public class Withdrawal {
     public void customWithdrawal(int withdrawalAmount){
         this.withdrawalAmount = withdrawalAmount;
         double balance = user.getBalance();
-
-
         gui.serialConnection.stringOut("withdraw");
-        gui.serialConnection.intOut(this.withdrawalAmount);
+
+        do{
+        gui.serialConnection.intOut(); //dit in stukies sturen en aan het eind "complete" sturen
         System.out.println(gui.serialConnection.in.nextLine());
-        if(gui.serialConnection.in.nextLine().equals(Integer.toString(withdrawalAmount))) {
+
+
+        if(gui.serialConnection.in.nextLine().equals("received")) {
             balance -= withdrawalAmount;
             user.setBalance(balance);
             System.out.println("Transaction Complete");
-        }
 
         //todo add code that communicates this with arduino
 
-        if(true) {//todo change true to whether or not the transaction worked (communicate with arduino)
             try {
                 Statement st = user.conn.createStatement();
                 System.out.println(user.getBalance());
                 st.executeLargeUpdate(String.format("UPDATE account SET balance = (balance - %d) WHERE number = '%s';", this.withdrawalAmount, user.accountNumber));
+                break;
             } catch (SQLException e) {
                 e.printStackTrace();
+                break;
             }
 
-        } else {
-            System.out.println("An error has occured");
         }
+    } while(gui.serialConnection.in.nextLine().equals("sendMore"));
     }
 
-    public void algorithm(int withdrawalAmount) { //algoritme voor keuze van biljetten
-       while(withdrawalAmount > 0){
-           if(withdrawalAmount > 50){
-               withdrawalAmount = withdraw50(withdrawalAmount);
+    public void algorithm(int withdrawalAmount){ //algoritme voor keuze van biljetten
+       while(this.withdrawalAmount > 0) {
+           if (optie 1){
+               if (this.withdrawalAmount > 50) {
+                   this.withdrawalAmount = withdraw50(withdrawalAmount);
+               }
+
+               if (this.withdrawalAmount > 20) {
+                   this.withdrawalAmount = withdraw20(withdrawalAmount);
+               }
+
+               if (this.withdrawalAmount > 10) {
+                   this.withdrawalAmount = withdraw10(withdrawalAmount);
+               }
+
+               if (this.withdrawalAmount > 5) {
+                   this.withdrawalAmount = withdraw5(withdrawalAmount);
+               }
+           }
+           if (optie 2){
+               if (this.withdrawalAmount > 20) {
+                   this.withdrawalAmount = withdraw20(withdrawalAmount);
+               }
+
+               if (this.withdrawalAmount > 10) {
+                   this.withdrawalAmount = withdraw10(withdrawalAmount);
+               }
+
+               if (this.withdrawalAmount > 5) {
+                   this.withdrawalAmount = withdraw5(withdrawalAmount);
+               }
+           }
+           if (optie 3){
+               if (this.withdrawalAmount > 10) {
+                   this.withdrawalAmount = withdraw10(withdrawalAmount);
+               }
+
+               if (this.withdrawalAmount > 5) {
+                   this.withdrawalAmount = withdraw5(withdrawalAmount);
+               }
            }
 
-           if(withdrawalAmount > 20){
-               withdrawalAmount = withdraw20(withdrawalAmount);
+           if (optie 4){
+               if (this.withdrawalAmount > 5) {
+                   this.withdrawalAmount = withdraw5(withdrawalAmount);
+               }
            }
-
-           if(withdrawalAmount > 10){
-               withdrawalAmount = withdraw10(withdrawalAmount);
-           }
-
-           if(withdrawalAmount > 5){
-               withdrawalAmount = withdraw5(withdrawalAmount);
-           }
-
-        }
+       }
     }
     private int withdraw50(int temp){
         if (gui.amounts[3] > 0) {
             temp = temp - 50;
             gui.amounts[3]--;
+            withdrawalArray[3]++;
         }
         return temp;
     }
@@ -79,6 +111,7 @@ public class Withdrawal {
         if (gui.amounts[2] > 0) {
             temp = temp - 20;
             gui.amounts[2]--;
+            withdrawalArray[2]++;
         }
         return temp;
     }
@@ -86,6 +119,7 @@ public class Withdrawal {
         if (gui.amounts[1] > 0) {
             temp = temp - 10;
             gui.amounts[1]--;
+            withdrawalArray[1]++;
         }
         return temp;
     }
@@ -93,6 +127,7 @@ public class Withdrawal {
         if (gui.amounts[0] > 0) {
             temp = temp - 5;
             gui.amounts[0]--;
+            withdrawalArray[0]++;
         }
         return temp;
     }
