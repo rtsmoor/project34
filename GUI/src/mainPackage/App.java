@@ -20,8 +20,8 @@ public class App {
 
     public static void main(String[] args) {
 
-        SerialPort port = SerialPort.getCommPort("COM5"); // edit dit als je een andere com port gebruikt //todo maak een for loop om te checken op de juiste com port
-        port.setComPortParameters(9600, 8, 1, 0);
+        SerialPort port = SerialPort.getCommPort("COM4"); // edit dit als je een andere com port gebruikt //todo maak een for loop om te checken op de juiste com port
+        port.setComPortParameters(115200, 8, 1, 0);
         port.setComPortTimeouts(SerialPort.TIMEOUT_SCANNER, 0, 0);
         System.out.println("Open port: " + port.openPort());
         Scanner in = new Scanner(port.getInputStream()); // dit is de input van de arduino
@@ -52,13 +52,14 @@ public class App {
 
         while(true) {
             try {
+                sleep(2000);
                 if (in.nextLine().equalsIgnoreCase("ready")) {
                     //in.nextLine();
                     System.out.println("ready");
                     arduinoReady = true; // alleen als de arduino gereed is, dan mogen er pas dingen gebeuren
                     break;
                 }
-            } catch (NoSuchElementException e) {
+            } catch (Exception e) {
                 System.out.println("ERROR connection to the arduino");
                 Scanner s = new Scanner(System.in);
                 System.out.print("GUI toch starten? y/n:");

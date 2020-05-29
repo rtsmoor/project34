@@ -29,7 +29,7 @@ public class Gui extends JFrame implements ActionListener {
     public int[] amounts = {amount1, amount2, amount3, amount4}; // volgorde biljetten: 5, 10, 20, 50
 
     private User user;
-    private String version = "1.1.9";
+    private String version = "1.2.0";
     private LogIn login;
     public SerialConnection serialConnection;
     public Connection conn;

@@ -20,11 +20,17 @@ public class Withdrawal {
     public void customWithdrawal(int withdrawalAmount){
         this.withdrawalAmount = withdrawalAmount;
         double balance = user.getBalance();
-        balance -= withdrawalAmount;
-        user.setBalance(balance);
+
+
         gui.serialConnection.stringOut("withdraw");
         gui.serialConnection.intOut(this.withdrawalAmount);
-        gui.serialConnection.in.nextLine();
+        System.out.println(gui.serialConnection.in.nextLine());
+        if(gui.serialConnection.in.nextLine().equals(Integer.toString(withdrawalAmount))) {
+            balance -= withdrawalAmount;
+            user.setBalance(balance);
+            System.out.println("Transaction Complete");
+        }
+
         //todo add code that communicates this with arduino
 
         if(true) {//todo change true to whether or not the transaction worked (communicate with arduino)
@@ -43,7 +49,21 @@ public class Withdrawal {
 
     public void algorithm(int withdrawalAmount) { //algoritme voor keuze van biljetten
        while(withdrawalAmount > 0){
-            withdrawalAmount = withdraw50(withdrawalAmount);
+           if(withdrawalAmount > 50){
+               withdrawalAmount = withdraw50(withdrawalAmount);
+           }
+
+           if(withdrawalAmount > 20){
+               withdrawalAmount = withdraw20(withdrawalAmount);
+           }
+
+           if(withdrawalAmount > 10){
+               withdrawalAmount = withdraw10(withdrawalAmount);
+           }
+
+           if(withdrawalAmount > 5){
+               withdrawalAmount = withdraw5(withdrawalAmount);
+           }
 
         }
     }

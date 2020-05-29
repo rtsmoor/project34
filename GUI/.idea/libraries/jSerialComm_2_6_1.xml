@@ -1,7 +1,7 @@
 <component name="libraryTable">
   <library name="jSerialComm-2.6.1">
     <CLASSES>
-      <root url="jar://$USER_HOME$/Downloads/jSerialComm-2.6.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../external Libraries/jSerialComm-2.6.1.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
