@@ -91,9 +91,9 @@ byte colPins[COLS] = {4,3,2,1}; //connect to the column pinouts of the keypad
 Keypad customKeypad = Keypad( makeKeymap(hexaKeys), rowPins, colPins, ROWS, COLS); 
 
 void setup(){ 
-  Wire.begin(8);  //0x08 =8
-  Wire.onReceive(receiveEvent);
-  Wire.onRequest(sendEvent);
+  //Wire.begin(8);  //0x08 =8
+  //Wire.onReceive(receiveEvent);
+  //Wire.onRequest(sendEvent);
   Serial.begin(9600);
   pinMode(10, OUTPUT);
   pinMode(11, OUTPUT);
@@ -160,8 +160,14 @@ void loop(){
       hashMaker(&sha512, &pinHash, 4);
 
       //Start check
+      //Send hashed pincode and pass number to Java program
+      sendToJava();
+
+      
+      
+      
       Serial.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nAuthorizing...");
-      sendEvent();
+      //sendEvent();
       finished = true;
       delay(3000);
     }
@@ -170,16 +176,17 @@ void loop(){
     if(customKey != '*' || customKey != 'D'){
     enteredCodeArray[keyCounter] = customKey;
     if(keyCounter >= 0){
-      Serial.print('*');
+      //notify Java program
     }
     }
     if(customKey == 'D'){   //char D is deleting the whole line
-      if(keyCounter > 0){
-        keyCounter = -1;
-      }
       pinCount = 0;
       for(int x = 0; x < keyCounter; x++){
         enteredCodeArray[x] = 0;
+      }
+      if(keyCounter > 0){
+        keyCounter = -1;
+        //delete all from Java program line
       }
       enteredCode = 0;
     }
@@ -188,7 +195,7 @@ void loop(){
   }
 }
 
-
+/*
 //Send status
 void sendEvent(){
   byte response [11];
@@ -199,8 +206,10 @@ void sendEvent(){
     Wire.write(response, sizeof(response)); 
   }
 }
+*/
 
 
+/*
 //Receive hashed pincode from database via ESP8266
 void receiveEvent(int howMany){
   String receivedCode = "";
@@ -218,8 +227,9 @@ void receiveEvent(int howMany){
     passwordControl(receivedCode);
   }
 }
+*/
 
-
+/*
 //Compare hashed database pincode and hashed entered code
 void passwordControl(String pincode){
     String checkCode;
@@ -240,6 +250,15 @@ void passwordControl(String pincode){
     resetting();
 
 }
+*/
+
+void sendToJava(){
+  Serial.print("This part would send ");
+  Serial.print(passUID);
+  Serial.print(" as pass number and ");
+  Serial.print(hashedCode);
+  Serial.println(" as hashed pincode.");
+}
 
 void resetting(){
   int delaying = 0;
@@ -252,6 +271,6 @@ void resetting(){
     passUID = "00000000000";
     cardBlocked = false;
     hashedCode = "";
-    sendEvent();
+    //sendEvent();
     setup();
 }
