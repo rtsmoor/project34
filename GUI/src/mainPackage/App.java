@@ -20,7 +20,7 @@ public class App {
 
     public static void main(String[] args) {
 
-        SerialPort port = SerialPort.getCommPort("COM4"); // edit dit als je een andere com port gebruikt //todo maak een for loop om te checken op de juiste com port
+        SerialPort port = SerialPort.getCommPort("COM5"); // edit dit als je een andere com port gebruikt //todo maak een for loop om te checken op de juiste com port
         port.setComPortParameters(115200, 8, 1, 0);
         port.setComPortTimeouts(SerialPort.TIMEOUT_SCANNER, 0, 0);
         System.out.println("Open port: " + port.openPort());

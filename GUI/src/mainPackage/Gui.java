@@ -55,6 +55,7 @@ public class Gui extends JFrame implements ActionListener {
      public JPanel panelShowBal = new JPanel();
      public JPanel panel;
      public JPanel panelFinalizeTransaction = new JPanel();
+     public JPanel panelOptions = new JPanel();
      private JTextArea tempTa = new JTextArea("hier komt overzichtelijk de transactie informatie \nterwijl het geld uit de dispenser komt");
 
     private JButton yesBon = new JButton("Yes");
@@ -72,6 +73,11 @@ public class Gui extends JFrame implements ActionListener {
     private JButton bedrag3 = new JButton("100");
     private JButton bedrag4 = new JButton("150");
     private JButton anderBedrag = new JButton("Ander bedrag");
+
+    public JButton optie1 = new JButton("ERROR");
+    public JButton optie2 = new JButton("ERROR");
+    public JButton optie3 = new JButton("ERROR");
+    public JButton optie4 = new JButton("ERROR");
 
     public Timer logoutTimer = new Timer(30000, this);
 
@@ -157,6 +163,11 @@ public class Gui extends JFrame implements ActionListener {
         panelMain.add(test);
         options1.add(abort[5]);
         options1.add(naarHoofdMenu[5]);
+
+        panelOptions.add(optie1);
+        panelOptions.add(optie2);
+        panelOptions.add(optie3);
+        panelOptions.add(optie4);
 
         options1.add(taInsufficientBills);
         panelChooseAmount.add(taInsufficientBills);
@@ -249,6 +260,16 @@ public class Gui extends JFrame implements ActionListener {
         option2.setActionCommand("option2");
         option3.addActionListener(this);
         option3.setActionCommand("option3");
+
+
+        optie1.addActionListener(this);
+        optie1.setActionCommand("optie1");
+        optie2.addActionListener(this);
+        optie2.setActionCommand("optie2");
+        optie3.addActionListener(this);
+        optie3.setActionCommand("optie3");
+        optie4.addActionListener(this);
+        optie4.setActionCommand("optie4");
 
         logoutTimer.setActionCommand("abort");
         logoutTimer.start();
@@ -466,7 +487,8 @@ public class Gui extends JFrame implements ActionListener {
                     System.out.println("20 euro");
                     user.makeWithdrawal();
                     user.withdrawal.customWithdrawal(20);
-                    changePanel(panelBon);
+                    user.withdrawal.displayOptions();
+                    changePanel(panelOptions);
                     amount1 = amount1 - 1;
                     System.out.println("Amount1:" + amount1);
                 }
@@ -525,6 +547,10 @@ public class Gui extends JFrame implements ActionListener {
             else{
                 taInsufficientBills.setVisible(true);
                 }
+        }
+        if("optie1".equalsIgnoreCase(e.getActionCommand())){
+
+            changePanel(panelBon);
         }
 
         if("inlogScherm".equalsIgnoreCase((e.getActionCommand()))){

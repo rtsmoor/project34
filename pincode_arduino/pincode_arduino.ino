@@ -285,37 +285,28 @@ void inputHandler() {
     for(int i = 0; i < 4; i++) moneyArray[i] = 0;
         //code voor het 'resetten' van ale gegevens
         
-  }
-
-  if(stringIn == "withdraw"){
-    Serial.println("sendMore");
-    withdraw = true;      
+  } 
 
   if(withdraw){
     //wait until more input comes
-      
-      if(stringIn == "50"){
+      if(stringIn == "fifty"){
         moneyArray[0]++;
+        Serial.println("received_fifty");
       }
-      if(stringIn == "20"){
+      if(stringIn == "twenty"){
         moneyArray[1]++;
+        Serial.println("received_twenty");
       }
-      if(stringIn == "10"){
+      if(stringIn == "ten"){
         moneyArray[2]++;
+        Serial.println("received_ten");
       }
-      if(stringIn == "5"){
+      if(stringIn == "five"){
         moneyArray[3]++;
+        Serial.println("received_five");
       }
       
-      if(stringIn == "abort"){
-        Serial.println("aborting");
-        //code voor het 'resetten' van ale gegevens
-      }
-      else if (stringIn == "mainMenu"){
-    //code voor naar het hoofdmenu gaan (dit misschien verplaatsen)
-         
-      
-    } else {
+    //else {
       
      // int amount = Serial.parseInt();
      // Serial.println(amount);
@@ -323,18 +314,21 @@ void inputHandler() {
       
 //      printMoneys(amount);
       //TODO print moneys
-  }
+  //}
     
   if(stringIn == "complete"){
     withdraw = false;
     Serial.println("received");
   }
   }
- 
+  
+  if(stringIn == "withdraw"){
+    Serial.println("sendTransaction");
+    withdraw = true;     
+  }
 
 //outputString(stringIn);
   
   received = false;
   stringIn = "";
-}
 }
