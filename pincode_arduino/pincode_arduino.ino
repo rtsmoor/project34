@@ -1,18 +1,24 @@
-//#include <Keypad.h>
-#include <Wire.h>
+#include <Keypad.h>
 #include <SPI.h>
-//#include <MFRC522.h>
-//#include <SHA512.h>
-
+#include <MFRC522.h>
+#include <SHA512.h>
+#include <Stepper.h>
 
 #define HASH_SIZE 32
 #define BLOCK_SIZE 128
 
-#define SS_PIN 10
-#define RST_PIN 9
+#define SS_PIN 9
+#define RST_PIN 8
 
 long enteredCode = 0;
 char enteredCodeArray[4] = {'0', '0', '0', '0'};
+
+const int stepsPerRevolution = 200;
+
+Stepper myStepper1(stepsPerRevolution, 49, 47, 48, 46);
+Stepper myStepper2(stepsPerRevolution, 42, 43, 44, 45);
+Stepper myStepper3(stepsPerRevolution, 41, 39, 40, 38);
+Stepper myStepper4(stepsPerRevolution, 34, 36, 35, 37);
 
 //serial communication variables
 String stringIn;
@@ -87,16 +93,14 @@ int keyCounter = 0;
 int checkDatabase = 0;
 char *md5str;
 String passUID= "";
-byte rowPins[ROWS] = {8,7,6,5}; //connect to the row pinouts of the keypad
-byte colPins[COLS] = {4,3,2,1}; //connect to the column pinouts of the keypad
+byte colPins[COLS] = {29, 28, 24, 26}; //connect to the row pinouts of the keypad
+byte rowPins[ROWS] = {33, 31, 32, 30}; //connect to the column pinouts of the keypad
+
 
 //initialize an instance of class NewKeypad
 Keypad customKeypad = Keypad( makeKeymap(hexaKeys), rowPins, colPins, ROWS, COLS); 
 
 void setup(){ 
-  Wire.begin(8);  //0x08 =8
-  Wire.onReceive(receiveEvent);
-  Wire.onRequest(sendEvent);
   Serial.begin(115200);
   pinMode(10, OUTPUT);
   pinMode(11, OUTPUT);
@@ -168,7 +172,6 @@ void loop(){
 
       //Start check
       Serial.println("authorizing");
-      sendEvent();
       finished = true;
       delay(3000);
     }
@@ -196,59 +199,6 @@ void loop(){
   }
 }
 
-
-//Send status
-void sendEvent(){
-  byte response [11];
-  if(passUID != 0 || passUID != ""){
-    for(byte i = 0; i < 11; i++){
-      response[i] = (byte)passUID.charAt(i);
-    }
-    Wire.write(response, sizeof(response)); 
-  }
-}
-
-
-//Receive hashed pincode from database via ESP8266
-void receiveEvent(int howMany){
-  String receivedCode = "";
-  while(Wire.available()){
-    char b = Wire.read();
-    receivedCode += b;
-    
-  }
-  if(receivedCode.equals(cardBlockedCode)){
-    Serial.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nPass blocked, contact costumer support.");
-    cardBlocked = true;
-    resetting();
-  }
-  if(enteredCode != 0 && finished){
-    passwordControl(receivedCode);
-  }
-}
-
-
-//Compare hashed database pincode and hashed entered code
-void passwordControl(String pincode){
-    String checkCode;
-    for(int i = 0; i < 32; i++){
-      checkCode += (char)hashedCode.charAt(i);
-    }
-    if(checkCode == pincode){
-      //Serial.print(checkCode); Serial.print(" : "); Serial.println(pincode);
-      Serial.println("success"); // hier serialprint van dat ie goed is 
-      for(int i = 0; i < 200; i++){
-        delay(50);
-      }
-    }
-    else{
-      Serial.print(checkCode); Serial.print(" : "); Serial.println(pincode);
-      Serial.println("denied"); // hier serialprint van dat er nog x aantal pogingen zijn en dat die fout is
-    }
-    resetting();
-
-}
-
 void resetting(){
   int delaying = 0;
   if(keyCounter != 0){
@@ -260,7 +210,6 @@ void resetting(){
     passUID = "00000000000";
     cardBlocked = false;
     hashedCode = "";
-    sendEvent();
     setup();
 }
 
@@ -285,37 +234,30 @@ void inputHandler() {
     for(int i = 0; i < 4; i++) moneyArray[i] = 0;
         //code voor het 'resetten' van ale gegevens
         
-  }
-
-  if(stringIn == "withdraw"){
-    Serial.println("sendMore");
-    withdraw = true;      
+  } 
 
   if(withdraw){
     //wait until more input comes
-      
       if(stringIn == "fifty"){
         moneyArray[0]++;
+        Serial.println("received_fifty");
       }
       if(stringIn == "twenty"){
         moneyArray[1]++;
+        Serial.println("received_twenty");
+        myStepper3.setSpeed(60);
+        myStepper3.step(stepsPerRevolution);
       }
       if(stringIn == "ten"){
         moneyArray[2]++;
+        Serial.println("received_ten");
       }
       if(stringIn == "five"){
         moneyArray[3]++;
+        Serial.println("received_five");
       }
       
-      if(stringIn == "abort"){
-        Serial.println("aborting");
-        //code voor het 'resetten' van ale gegevens
-      }
-      else if (stringIn == "mainMenu"){
-    //code voor naar het hoofdmenu gaan (dit misschien verplaatsen)
-         
-      
-    } else {
+    //else {
       
      // int amount = Serial.parseInt();
      // Serial.println(amount);
@@ -323,49 +265,21 @@ void inputHandler() {
       
 //      printMoneys(amount);
       //TODO print moneys
-  }
+  //}
     
-      if(stringIn == "complete"){
-        withdraw = false;
-        Serial.println("received");
-        }
-      }
-   }
-} 
+  if(stringIn == "complete"){
+    withdraw = false;
+    Serial.println("received");
+  }
+  }
+  
+  if(stringIn == "withdraw"){
+    Serial.println("sendTransaction");
+    withdraw = true;     
+  }
 
 //outputString(stringIn);
   
   received = false;
   stringIn = "";
-
-
-void moneyPrinter(){
-    if(moneyArray[0] > 0){
-      for(int i = 0; moneyArray[0] > 0;{
-        //bepaalde pin aansturen
-        Serial.println("Printing: 50");
-        moneyArray[0]--;
-      }
-    }
-    if(moneyArray[1] > 0){
-      for(int i = 0; moneyArray[1] > 0;{
-        //bepaalde pin aansturen
-        Serial.println("Printing: 20");
-        moneyArray[1]--;
-      }
-    }
-    if(moneyArray[2] > 0){
-      for(int i = 0; moneyArray[1] > 0;{
-        //bepaalde pin aansturen
-        Serial.println("Printing: 10");
-        moneyArray[2]--;
-      }
-    }
-    if(moneyArray[3] > 0){
-      for(int i = 0; moneyArray[1] > 0;{
-        //bepaalde pin aansturen
-        Serial.println("Printing: 5");
-        moneyArray[3]--;
-      }
-   }
 }
