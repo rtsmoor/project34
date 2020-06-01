@@ -4,6 +4,7 @@ import mainPackage.User.*;
 import mainPackage.serialconnection.SerialConnection;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DocumentFilter;
@@ -61,6 +62,7 @@ public class Gui extends JFrame implements ActionListener {
      public JPanel panelShowBal = new JPanel();
      public JPanel panelFinalizeTransaction = new JPanel();
      public JPanel panelOptions = new JPanel();
+     public JPanel dispensing = new JPanel();
      private JTextArea tempTa = new JTextArea("hier komt overzichtelijk de transactie informatie \nterwijl het geld uit de dispenser komt");
 
     private JButton yesBon = new JButton("Yes");
@@ -93,6 +95,12 @@ public class Gui extends JFrame implements ActionListener {
     private JTextArea taInvalidInput = new JTextArea("Voer getallen in tussen 0-9,\nen waar het laatste getal 0 of 5 is. \nAndere karakters zijn niet toegestaan!");
     private JTextArea taInsufficientBills = new JTextArea("Er zijn niet genoeg biljetten om deze actie uit te voeren");
     private JTextArea taInsufficientMoney = new JTextArea("Er is niet genoeg saldo om deze actie uit te voeren");
+    private JTextArea welcomeText = new JTextArea("ItsFreeStÃ¸nÃ§ksÃ‰stÃ…te");
+    private JTextArea enterPin = new JTextArea("ENTER PIN");
+    private JTextArea taDispensing = new JTextArea("Dispensing...");
+    private Font font = new Font("Segoe Script", Font.BOLD, 30);
+    private ImageIcon img = new ImageIcon("/resources/background1.jpg");
+    private JLabel background1 = new JLabel("", img, JLabel.CENTER);
 //    public void setSerialConnection(SerialConnection serialConnection){
 //        this.serialConnection = serialConnection;
 //    }
@@ -112,18 +120,59 @@ public class Gui extends JFrame implements ActionListener {
     void createApp(){
         createButonArrays();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(400, 400);
-//        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+//        frame.setSize(new Dimension(600,600));
+        frame.setSize(new Dimension(1920,1080));
+        frame.setIconImage(Toolkit.getDefaultToolkit().getImage("icon.jpg"));
+        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 //        mainFrame.setUndecorated(true); // zorgt ervoor dat je niet zomaar uit het programma kan klikken
         frame.add(panelMain);
+        panelMain.setBackground(Color.CYAN);
+        panelStart.setBackground(Color.CYAN);
+        taPanelStart.setBackground(Color.CYAN);
+        panelPassword.setBackground(Color.CYAN);
+        passwordField.setBackground(Color.CYAN);
+        enterPin.setBackground(Color.CYAN);
         panelMain.add(quickPin);
         panelMain.add(showBal);
         panelMain.add(customPin);
         panelMain.add(abort[0]);
 
+        //achtergrond
+        background1.setBounds(0,0,1600,900);
+        frame.add(background1);
+        background1.setVisible(true);
+        //PanelStart
+        panelStart.setLayout(null);
+        panelStart.add(nextPage[0]);
+        panelStart.add(taPanelStart);
+        taPanelStart.setFont(font);
+        taPanelStart.setBounds(710,290,500,40);
+        nextPage[0].setBounds(860,340,200,200);
+        //PanelPassword
+        panelPassword.setLayout(null);
+        panelPassword.add(enterPin);
+        panelPassword.add(nextPage[1]);
+        panelPassword.add(passwordField);
+        enterPin.setFont(font);
+        passwordField.setFont(font);
+        enterPin.setBounds(860,290,200,40);
+        passwordField.setBounds(860,340,200,40);
+        nextPage[1].setBounds(860,540,200,200);
+        //PanelMain
+//        panelMain.setLayout(null);
+
+
+
         panelStart.add(taPanelStart);
         taPanelStart.setEditable(false);
         panelStart.add(nextPage[0]);
+        //panel dispensing
+        dispensing.add(taDispensing);
+        taDispensing.setFont(font);
+        taDispensing.setBounds(860,590,200,40);
+        taDispensing.setBackground(Color.CYAN);
+        dispensing.setBackground(Color.CYAN);
+
 
         panelChooseAmount.add(bedrag1);
         panelChooseAmount.add(bedrag2);
@@ -291,102 +340,102 @@ public class Gui extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         logoutTimer.restart();
         if("option1".equalsIgnoreCase(e.getActionCommand())){
-           if(amounts[0] < 4){
-               taInsufficientBills.setVisible(true);
-           }
-                if (user.getBalance() - 20 < 0) { //kijken of saldo lager is dan bedrag dat gepind wordt
-                    taInsufficientMoney.setVisible(true);
+            if(amounts[0] < 4){
+                taInsufficientBills.setVisible(true);
+            }
+            if (user.getBalance() - 20 < 0) { //kijken of saldo lager is dan bedrag dat gepind wordt
+                taInsufficientMoney.setVisible(true);
+            }
+            else {
+                amounts[0] = amounts[0] - 4;
+                System.out.println("20 euro");
+                user.makeWithdrawal();
+                //user.withdrawal.customWithdrawal(20);
+                changePanel(panelBon);
+                try {
+                    sleep(1000);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
                 }
-                   else {
-                       amounts[0] = amounts[0] - 4;
-                       System.out.println("20 euro");
-                       user.makeWithdrawal();
-                       //user.withdrawal.customWithdrawal(20);
-                       changePanel(panelBon);
-                       try {
-                           sleep(1000);
-                       } catch (Exception ex) {
-                           ex.printStackTrace();
-                       }
 
 
-                       for (int i = 4; i > 0; i--) {
-                           try {
-                               sleep(2000);
-                           } catch (Exception ez) {
-                               ez.printStackTrace();
-                           }
-                           user.sendAmount1();
-                       }
-                       serialConnection.stringIn();
-                       serialConnection.stringIn();
-                       serialConnection.stringIn();
-                       serialConnection.stringIn();
-                       System.out.println("Array Amounts: " + amounts[0]);
-                   }
+                for (int i = 4; i > 0; i--) {
+                    try {
+                        sleep(2000);
+                    } catch (Exception ez) {
+                        ez.printStackTrace();
+                    }
+                    user.sendAmount1();
+                }
+                serialConnection.stringIn();
+                serialConnection.stringIn();
+                serialConnection.stringIn();
+                serialConnection.stringIn();
+                System.out.println("Array Amounts: " + amounts[0]);
+            }
         }
         if("option2".equalsIgnoreCase(e.getActionCommand())){
             if(amounts[1] < 2){
                 taInsufficientBills.setVisible(true);
             }
-                if (user.getBalance() - 20 < 0) { //kijken of saldo lager is dan bedrag dat gepind wordt
-                    taInsufficientMoney.setVisible(true);
+            if (user.getBalance() - 20 < 0) { //kijken of saldo lager is dan bedrag dat gepind wordt
+                taInsufficientMoney.setVisible(true);
+            }
+            else {
+                amounts[1] = amounts[1] - 2;
+                System.out.println("20 euro");
+                user.makeWithdrawal();
+                //user.withdrawal.customWithdrawal(20);
+                changePanel(panelBon);
+                try {
+                    sleep(1000);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
                 }
-                else {
-                    amounts[1] = amounts[1] - 2;
-                    System.out.println("20 euro");
-                    user.makeWithdrawal();
-                    //user.withdrawal.customWithdrawal(20);
-                    changePanel(panelBon);
-                    try {
-                        sleep(1000);
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                    }
 
-                    for (int i = 2; i > 0; i--) {
-                        try {
-                            sleep(2000);
-                        } catch (Exception ey) {
-                            ey.printStackTrace();
-                        }
-                        user.sendAmount2();
+                for (int i = 2; i > 0; i--) {
+                    try {
+                        sleep(2000);
+                    } catch (Exception ey) {
+                        ey.printStackTrace();
                     }
-                    serialConnection.stringIn();
-                    serialConnection.stringIn();
-                    System.out.println("Array Amounts: " + amounts[1]);
+                    user.sendAmount2();
                 }
+                serialConnection.stringIn();
+                serialConnection.stringIn();
+                System.out.println("Array Amounts: " + amounts[1]);
+            }
         }
         if("option3".equalsIgnoreCase(e.getActionCommand())){
             if(amounts[2] < 1){
                 taInsufficientBills.setVisible(true);
             }
-                if (user.getBalance() - 20 < 0) { //kijken of saldo lager is dan bedrag dat gepind wordt
-                    taInsufficientMoney.setVisible(true);
+            if (user.getBalance() - 20 < 0) { //kijken of saldo lager is dan bedrag dat gepind wordt
+                taInsufficientMoney.setVisible(true);
+            }
+            else {
+                amounts[3] = amounts[3] - 1;
+                System.out.println("20 euro");
+                user.makeWithdrawal();
+                //user.withdrawal.customWithdrawal(20);
+                changePanel(panelBon);
+                try {
+                    sleep(2000);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
                 }
-                    else {
-                        amounts[3] = amounts[3] - 1;
-                        System.out.println("20 euro");
-                        user.makeWithdrawal();
-                        //user.withdrawal.customWithdrawal(20);
-                        changePanel(panelBon);
-                        try {
-                            sleep(2000);
-                        } catch (Exception ex) {
-                            ex.printStackTrace();
-                        }
 
-                        for (int i = 1; i > 0; i--) {
-                            try {
-                                sleep(2000);
-                            } catch (Exception ey) {
-                                ey.printStackTrace();
-                            }
-                            user.sendAmount3();
-                        }
-                        serialConnection.stringIn();
-                        System.out.println("Array Amounts: " + amounts[3]);
+                for (int i = 1; i > 0; i--) {
+                    try {
+                        sleep(2000);
+                    } catch (Exception ey) {
+                        ey.printStackTrace();
                     }
+                    user.sendAmount3();
+                }
+                serialConnection.stringIn();
+                System.out.println("Array Amounts: " + amounts[3]);
+            }
         }
         if("option4".equalsIgnoreCase(e.getActionCommand())){
             if(amounts[3] < 1){
@@ -478,15 +527,15 @@ public class Gui extends JFrame implements ActionListener {
         }
 
         if("yesBon".equalsIgnoreCase(e.getActionCommand()))   {
-             System.out.println("Bon printen");
-             //serialConnection.stringOut("printBon"); //todo uncomment (was even voor de demo gecommented)
-             changePanel(panelFinalizeTransaction);
+            System.out.println("Bon printen");
+            //serialConnection.stringOut("printBon"); //todo uncomment (was even voor de demo gecommented)
+            changePanel(panelFinalizeTransaction);
 
         }
 
         if("noBon".equalsIgnoreCase(e.getActionCommand()))   {
-             System.out.println("Bon niet printen");
-             changePanel(panelFinalizeTransaction);
+            System.out.println("Bon niet printen");
+            changePanel(panelFinalizeTransaction);
         }
         if("customBedrag1".equalsIgnoreCase(e.getActionCommand())){
             if(amount1 > 0) {
@@ -555,20 +604,20 @@ public class Gui extends JFrame implements ActionListener {
             }
             else{
                 taInsufficientBills.setVisible(true);
-                }
+            }
         }
         if("optie1".equalsIgnoreCase(e.getActionCommand())){
 
-            changePanel(panelBon);
+            changePanel(dispensing);
         }
 
         if("inlogScherm".equalsIgnoreCase((e.getActionCommand()))){
-             login.setRfidDetected(true);
-             System.out.println("Naar inlogscherm");
-             changePanel(panelPassword);
-              //moet nog veranderd worden naar inlogscherm
+            login.setRfidDetected(true);
+            System.out.println("Naar inlogscherm");
+            changePanel(panelPassword);
+            //moet nog veranderd worden naar inlogscherm
         }
-
+        //if statement met string van arduino
         if("wachtwoord".equalsIgnoreCase((e.getActionCommand()))){
             System.out.println("login");
             if(login.requestLogin("2A 9F 0D 0B")) {//todo vervang met input arduino

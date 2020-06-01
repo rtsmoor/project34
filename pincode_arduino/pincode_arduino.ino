@@ -1,8 +1,8 @@
-#include <Keypad.h>
+//#include <Keypad.h>
 #include <Wire.h>
 #include <SPI.h>
-#include <MFRC522.h>
-#include <SHA512.h>
+//#include <MFRC522.h>
+//#include <SHA512.h>
 
 
 #define HASH_SIZE 32
@@ -285,28 +285,37 @@ void inputHandler() {
     for(int i = 0; i < 4; i++) moneyArray[i] = 0;
         //code voor het 'resetten' van ale gegevens
         
-  } 
+  }
+
+  if(stringIn == "withdraw"){
+    Serial.println("sendMore");
+    withdraw = true;      
 
   if(withdraw){
     //wait until more input comes
+      
       if(stringIn == "fifty"){
         moneyArray[0]++;
-        Serial.println("received_fifty");
       }
       if(stringIn == "twenty"){
         moneyArray[1]++;
-        Serial.println("received_twenty");
       }
       if(stringIn == "ten"){
         moneyArray[2]++;
-        Serial.println("received_ten");
       }
       if(stringIn == "five"){
         moneyArray[3]++;
-        Serial.println("received_five");
       }
       
-    //else {
+      if(stringIn == "abort"){
+        Serial.println("aborting");
+        //code voor het 'resetten' van ale gegevens
+      }
+      else if (stringIn == "mainMenu"){
+    //code voor naar het hoofdmenu gaan (dit misschien verplaatsen)
+         
+      
+    } else {
       
      // int amount = Serial.parseInt();
      // Serial.println(amount);
@@ -314,21 +323,49 @@ void inputHandler() {
       
 //      printMoneys(amount);
       //TODO print moneys
-  //}
+  }
     
-  if(stringIn == "complete"){
-    withdraw = false;
-    Serial.println("received");
-  }
-  }
-  
-  if(stringIn == "withdraw"){
-    Serial.println("sendTransaction");
-    withdraw = true;     
-  }
+      if(stringIn == "complete"){
+        withdraw = false;
+        Serial.println("received");
+        }
+      }
+   }
+} 
 
 //outputString(stringIn);
   
   received = false;
   stringIn = "";
+
+
+void moneyPrinter(){
+    if(moneyArray[0] > 0){
+      for(int i = 0; moneyArray[0] > 0;{
+        //bepaalde pin aansturen
+        Serial.println("Printing: 50");
+        moneyArray[0]--;
+      }
+    }
+    if(moneyArray[1] > 0){
+      for(int i = 0; moneyArray[1] > 0;{
+        //bepaalde pin aansturen
+        Serial.println("Printing: 20");
+        moneyArray[1]--;
+      }
+    }
+    if(moneyArray[2] > 0){
+      for(int i = 0; moneyArray[1] > 0;{
+        //bepaalde pin aansturen
+        Serial.println("Printing: 10");
+        moneyArray[2]--;
+      }
+    }
+    if(moneyArray[3] > 0){
+      for(int i = 0; moneyArray[1] > 0;{
+        //bepaalde pin aansturen
+        Serial.println("Printing: 5");
+        moneyArray[3]--;
+      }
+   }
 }
