@@ -23,10 +23,10 @@ import static javax.swing.JOptionPane.showMessageDialog;
 
 public class Gui extends JFrame implements ActionListener {
     public int array_length = 10;
-    private int amount4 = 10;
-    private int amount3 = 10;
-    private int amount2 = 10;
-    private int amount1 = 10;
+    private int amount4 = 100;
+    private int amount3 = 100;
+    private int amount2 = 100;
+    private int amount1 = 100;
     public int[] amounts = {amount1, amount2, amount3, amount4}; // volgorde biljetten: 5, 10, 20, 50
 
     private boolean menuMain = false;
@@ -36,7 +36,7 @@ public class Gui extends JFrame implements ActionListener {
     private boolean menuChooseAmounts = false;
 
     private User user;
-    private String version = "1.2.0";
+    private String version = "1.2.1";
     private LogIn login;
     public SerialConnection serialConnection;
     public Connection conn;
@@ -86,7 +86,7 @@ public class Gui extends JFrame implements ActionListener {
     public JButton optie3 = new JButton("ERROR");
     public JButton optie4 = new JButton("ERROR");
 
-    public Timer logoutTimer = new Timer(30000, this);
+    public Timer logoutTimer = new Timer(300000, this); //todo naar 30000 zetten na het testen
 
     public JPasswordField passwordField = new JPasswordField(4);
     public JFormattedTextField customBedragField = new JFormattedTextField();
@@ -123,7 +123,7 @@ public class Gui extends JFrame implements ActionListener {
 //        frame.setSize(new Dimension(600,600));
         frame.setSize(new Dimension(1920,1080));
         frame.setIconImage(Toolkit.getDefaultToolkit().getImage("icon.jpg"));
-        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+//        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 //        mainFrame.setUndecorated(true); // zorgt ervoor dat je niet zomaar uit het programma kan klikken
         frame.add(panelMain);
         panelMain.setBackground(Color.CYAN);
@@ -328,10 +328,6 @@ public class Gui extends JFrame implements ActionListener {
         logoutTimer.setActionCommand("abort");
         logoutTimer.start();
 
-
-    }
-
-    public void inputHandler(String input){
 
     }
 
@@ -545,7 +541,12 @@ public class Gui extends JFrame implements ActionListener {
                     System.out.println("20 euro");
                     user.makeWithdrawal();
                     user.withdrawal.customWithdrawal(20);
-                    user.withdrawal.displayOptions();
+                    try{
+                        user.withdrawal.displayOptions();
+                    }catch (Exception ex){
+                        ex.printStackTrace();
+                    }
+
                     changePanel(panelOptions);
                     amount1 = amount1 - 1;
                     System.out.println("Amount1:" + amount1);
@@ -607,7 +608,19 @@ public class Gui extends JFrame implements ActionListener {
             }
         }
         if("optie1".equalsIgnoreCase(e.getActionCommand())){
-
+            user.withdrawal.sendArray(1);
+            changePanel(dispensing);
+        }
+        if("optie2".equalsIgnoreCase(e.getActionCommand())){
+            user.withdrawal.sendArray(2);
+            changePanel(dispensing);
+        }
+        if("optie3".equalsIgnoreCase(e.getActionCommand())){
+            user.withdrawal.sendArray(3);
+            changePanel(dispensing);
+        }
+        if("optie4".equalsIgnoreCase(e.getActionCommand())){
+            user.withdrawal.sendArray(4);
             changePanel(dispensing);
         }
 

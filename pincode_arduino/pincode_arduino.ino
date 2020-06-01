@@ -244,9 +244,9 @@ void inputHandler() {
       }
       if(stringIn == "twenty"){
         moneyArray[1]++;
-        Serial.println("received_twenty");
         myStepper3.setSpeed(60);
-        myStepper3.step(stepsPerRevolution);
+        myStepper3.step(1000);
+        Serial.println("received_twenty");
       }
       if(stringIn == "ten"){
         moneyArray[2]++;
@@ -256,16 +256,6 @@ void inputHandler() {
         moneyArray[3]++;
         Serial.println("received_five");
       }
-      
-    //else {
-      
-     // int amount = Serial.parseInt();
-     // Serial.println(amount);
-     // Serial.println("sendMore");
-      
-//      printMoneys(amount);
-      //TODO print moneys
-  //}
     
   if(stringIn == "complete"){
     withdraw = false;
