@@ -36,7 +36,7 @@ public class Gui extends JFrame implements ActionListener {
     private boolean menuChooseAmounts = false;
 
     private User user;
-    private String version = "1.2.1";
+    private String version = "1.2.2";
     private LogIn login;
     public SerialConnection serialConnection;
     public Connection conn;
@@ -564,7 +564,13 @@ public class Gui extends JFrame implements ActionListener {
                     System.out.println("50 euro");
                     user.makeWithdrawal();
                     user.withdrawal.customWithdrawal(50);
-                    changePanel(panelBon);
+                    try{
+                        user.withdrawal.displayOptions();
+                    }catch (Exception ex){
+                        ex.printStackTrace();
+                    }
+
+                    changePanel(panelOptions);
                     amount2 = amount2 - 1;
                     System.out.println("Amount2:" + amount2);
                 }
@@ -581,7 +587,13 @@ public class Gui extends JFrame implements ActionListener {
                     System.out.println("100 euro");
                     user.makeWithdrawal();
                     user.withdrawal.customWithdrawal(100);
-                    changePanel(panelBon);
+                    try{
+                        user.withdrawal.displayOptions();
+                    }catch (Exception ex){
+                        ex.printStackTrace();
+                    }
+
+                    changePanel(panelOptions);
                     amount3 = amount3 - 1;
                     System.out.println("Amount3:" + amount3);
                 }
@@ -598,7 +610,13 @@ public class Gui extends JFrame implements ActionListener {
                     System.out.println("150 euro");
                     user.makeWithdrawal();
                     user.withdrawal.customWithdrawal(150);
-                    changePanel(panelBon);
+                    try{
+                        user.withdrawal.displayOptions();
+                    }catch (Exception ex){
+                        ex.printStackTrace();
+                    }
+
+                    changePanel(panelOptions);
                     amount4 = amount4 - 1;
                     System.out.println("Amount4:" + amount4);
                 }
@@ -668,7 +686,13 @@ public class Gui extends JFrame implements ActionListener {
                         System.out.println("custom bedrag: " + tempInt);
                         user.makeWithdrawal();
                         user.withdrawal.customWithdrawal(tempInt);
-                        changePanel(panelBon);
+                        try{
+                            user.withdrawal.displayOptions();
+                        }catch (Exception ex){
+                            ex.printStackTrace();
+                        }
+
+                        changePanel(panelOptions);
                     }
                 } catch (NumberFormatException nfe) {
                     System.out.println("ERROR: invalid input");

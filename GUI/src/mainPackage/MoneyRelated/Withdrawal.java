@@ -16,7 +16,6 @@ public class Withdrawal {
     public int[] withdrawalArray2 = new int[4];
     public int[] withdrawalArray3 = new int[4];
     public int[] withdrawalArray4 = new int[4];
-    private boolean algorithmDone = false;
     short option;
     StringBuilder option1 = new StringBuilder("Optie 1:\n");
     StringBuilder option2 = new StringBuilder("Optie 2:\n");
@@ -28,58 +27,152 @@ public class Withdrawal {
         this.user = user;
     }
 
-    public void customWithdrawal(int withdrawalAmount){
+    public void customWithdrawal(int withdrawalAmount){ //restant van een oude methode: niet verwijderen
         this.withdrawalAmount = withdrawalAmount;
 
 
     }
 
     public void sendArray(int arrayNumber){
+        gui.serialConnection.stringOut("withdraw");
+        gui.serialConnection.stringIn();
+//todo in gui hier een laadscherm toevoegen omdat deze code tering lang duurt om te runnen (i.v.m. communicatie java->arduino, niet door de slechte code)
         if(arrayNumber == 1){
             for(int i = 0; i < withdrawalArray1.length; i++) {
                 while (withdrawalArray1[i] > 0){
-                    //print shit
+                    if(i == 0) {
+                        gui.serialConnection.stringOut("fifty");
+                        gui.serialConnection.stringIn();
+                        withdrawalArray1[i]--;
+                    }
+                    if(i == 1) {
+                        gui.serialConnection.stringOut("twenty");
+                        gui.serialConnection.stringIn();
+                        withdrawalArray1[i]--;
+                    }
+                    if(i == 2) {
+                        gui.serialConnection.stringOut("ten");
+                        gui.serialConnection.stringIn();
+                        withdrawalArray1[i]--;
+                    }
+                    if(i == 3) {
+                        gui.serialConnection.stringOut("five");
+                        gui.serialConnection.stringIn();
+                        withdrawalArray1[i]--;
+                    }
                 }
             }
+
+            gui.serialConnection.stringOut("complete");
         }
 
-        gui.serialConnection.stringOut("withdraw");
-        gui.serialConnection.stringIn();
-
-        do{
-
-            gui.serialConnection.stringOut("twenty"); //dit in stukies sturen en aan het eind "complete" sturen
-            //if() stringOut
-            String temp = gui.serialConnection.stringIn();
-
-            if(temp.equals("received")) {
-                double balance = user.getBalance();
-                balance -= withdrawalAmount;
-                user.setBalance(balance);
-                System.out.println("Transaction Complete");
-                gui.changePanel(gui.panelBon);//na het dispensen
-
-
-                //todo add code that communicates this with arduino
-
-                try {
-                    Statement st = user.conn.createStatement();
-                    System.out.println(user.getBalance());
-                    st.executeLargeUpdate(String.format("UPDATE account SET balance = (balance - %d) WHERE number = '%s';", this.withdrawalAmount, user.accountNumber));
-                    break;
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                    break;
+        if(arrayNumber == 2){
+            for(int i = 0; i < withdrawalArray2.length; i++) {
+                while (withdrawalArray2[i] > 0){
+                    if(i == 0) {
+                        gui.serialConnection.stringOut("fifty");
+                        gui.serialConnection.stringIn();
+                        withdrawalArray2[i]--;
+                    }
+                    if(i == 1) {
+                        gui.serialConnection.stringOut("twenty");
+                        gui.serialConnection.stringIn();
+                        withdrawalArray2[i]--;
+                    }
+                    if(i == 2) {
+                        gui.serialConnection.stringOut("ten");
+                        gui.serialConnection.stringIn();
+                        withdrawalArray2[i]--;
+                    }
+                    if(i == 3) {
+                        gui.serialConnection.stringOut("five");
+                        gui.serialConnection.stringIn();
+                        withdrawalArray2[i]--;
+                    }
                 }
-
             }
-        } while(true);
-        algorithmDone = false;
+
+            gui.serialConnection.stringOut("complete");
+        }
+
+        if(arrayNumber == 3){
+            for(int i = 0; i < withdrawalArray3.length; i++) {
+                while (withdrawalArray3[i] > 0){
+                    if(i == 0) {
+                        gui.serialConnection.stringOut("fifty");
+                        gui.serialConnection.stringIn();
+                        withdrawalArray3[i]--;
+                    }
+                    if(i == 1) {
+                        gui.serialConnection.stringOut("twenty");
+                        gui.serialConnection.stringIn();
+                        withdrawalArray3[i]--;
+                    }
+                    if(i == 2) {
+                        gui.serialConnection.stringOut("ten");
+                        gui.serialConnection.stringIn();
+                        withdrawalArray3[i]--;
+                    }
+                    if(i == 3) {
+                        gui.serialConnection.stringOut("five");
+                        gui.serialConnection.stringIn();
+                        withdrawalArray3[i]--;
+                    }
+                }
+            }
+
+            gui.serialConnection.stringOut("complete");
+        }
+
+        if(arrayNumber == 4){
+            for(int i = 0; i < withdrawalArray4.length; i++) {
+                while (withdrawalArray4[i] > 0){
+                    if(i == 0) {
+                        gui.serialConnection.stringOut("fifty");
+                        gui.serialConnection.stringIn();
+                        withdrawalArray4[i]--;
+                    }
+                    if(i == 1) {
+                        gui.serialConnection.stringOut("twenty");
+                        gui.serialConnection.stringIn();
+                        withdrawalArray4[i]--;
+                    }
+                    if(i == 2) {
+                        gui.serialConnection.stringOut("ten");
+                        gui.serialConnection.stringIn();
+                        withdrawalArray4[i]--;
+                    }
+                    if(i == 3) {
+                        gui.serialConnection.stringOut("five");
+                        gui.serialConnection.stringIn();
+                        withdrawalArray4[i]--;
+                    }
+                }
+            }
+
+            gui.serialConnection.stringOut("complete");
+        }
+
+        if(gui.serialConnection.stringIn().equals("received")) {//todo toevoegen dat de dispenser aangeeft wanneer het geld gedispenst is
+            double balance = user.getBalance();
+            balance -= withdrawalAmount;
+            user.setBalance(balance);
+            System.out.println("Transaction Complete");
+            gui.changePanel(gui.panelBon);//na het dispensen
+
+            try {
+                Statement st = user.conn.createStatement();
+                System.out.println(user.getBalance());
+                st.executeLargeUpdate(String.format("UPDATE account SET balance = (balance - %d) WHERE number = '%s';", this.withdrawalAmount, user.accountNumber));
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public void algorithm(int withdrawalAmount, int[] withdrawalArray) throws Exception { //algoritme voor keuze van biljetten
 
-            if (option == 1) { //optie 1
+            if (option == 1) { //bereken optie 1
                 while (withdrawalAmount > 0) {
                     if (withdrawalAmount >= 50) {
                         withdrawalAmount = withdraw50(withdrawalAmount, withdrawalArray);
@@ -98,7 +191,7 @@ public class Withdrawal {
                     }
                 }
             }
-            if (option == 2) { // optie 2
+            if (option == 2) { // bereken optie 2
                 while (withdrawalAmount > 0) {
                     if (withdrawalAmount >= 20) {
                         withdrawalAmount = withdraw20(withdrawalAmount, withdrawalArray);
@@ -113,7 +206,7 @@ public class Withdrawal {
                     }
                 }
             }
-            if (option == 3 && withdrawalAmount <= 150) { //optie 3
+            if (option == 3 && withdrawalAmount <= 150) { //bereken optie 3
                 while (withdrawalAmount > 0) {
                     if (withdrawalAmount >= 10) {
                         withdrawalAmount = withdraw10(withdrawalAmount, withdrawalArray);
@@ -125,18 +218,15 @@ public class Withdrawal {
                 }
             }
 
-            if (option == 4 && withdrawalAmount <= 50) { //optie 4
+            if (option == 4 && withdrawalAmount <= 50) { //bereken optie 4
                 while (withdrawalAmount > 0) {
                     if (withdrawalAmount >= 5) {
                             withdrawalAmount = withdraw5(withdrawalAmount, withdrawalArray);
                     }
                 }
             }
-
-        algorithmDone = true;//todo ???
-        //hier iets met string complete doen ???
     }
-
+//todo ervoor zorgen dat hij niet gelijk gui.amounts dingen veranderd hier, misschien opschuiven naar de sendArrays methode?
     private int withdraw50(int temp, int[] withdrawalArray)throws Exception{
         if (gui.amounts[3] > 0) {
             temp = temp - 50;
@@ -173,29 +263,39 @@ public class Withdrawal {
     }
 
     public void displayOptions()throws Exception {
-        gui.optie1.setText("");
-        gui.optie2.setText("");
-        gui.optie3.setText("");
-        gui.optie4.setText("");
+        gui.optie1.setText("Optie 1:\n");
+        gui.optie2.setText("Optie 2:\n");
+        gui.optie3.setText("Optie 3:\n");
+        gui.optie4.setText("Optie 4:\n");
         Arrays.fill(withdrawalArray1, 0);
         Arrays.fill(withdrawalArray2, 0);
         Arrays.fill(withdrawalArray3, 0);
         Arrays.fill(withdrawalArray4, 0);
+
         option = 1;
         algorithm(withdrawalAmount, withdrawalArray1);
-        if(withdrawalArray1[0] > 0) option1.append(withdrawalArray1[0]).append("x50\n"); // als de JButtons naar JTextField of JTextArea worden veranderd, dan werkt dit
-        if(withdrawalArray1[1] > 0) option1.append(withdrawalArray1[1]).append("x20\n");
+        if(withdrawalArray1[0] > 0)option1.append(withdrawalArray1[0]).append("x50\n"); // als de JButtons naar JTextField of JTextArea worden veranderd, dan werkt dit
+        if(withdrawalArray1[1] > 0)option1.append(withdrawalArray1[1]).append("x20\n");
         if(withdrawalArray1[2] > 0)option1.append(withdrawalArray1[2]).append("x10\n");
         if(withdrawalArray1[3] > 0)option1.append(withdrawalArray1[3]).append("x5\n");
-        gui.optie1.setText(option1.toString());
+        if(option1.toString().equalsIgnoreCase("Optie 1:\n")) gui.optie1.setVisible(false);
+        else {
+            gui.optie1.setText(option1.toString());
+            gui.optie1.setVisible(true);
+        }
+
 
         option = 2;
         algorithm(withdrawalAmount, withdrawalArray2);
         if(withdrawalArray2[0] > 0)option2.append(withdrawalArray2[0]).append("x50\n");
-        if(withdrawalArray2[1] > 0) option2.append(withdrawalArray2[1]).append("x20\n");
-        if(withdrawalArray2[2] > 0) option2.append(withdrawalArray2[2]).append("x10\n");
+        if(withdrawalArray2[1] > 0)option2.append(withdrawalArray2[1]).append("x20\n");
+        if(withdrawalArray2[2] > 0)option2.append(withdrawalArray2[2]).append("x10\n");
         if(withdrawalArray2[3] > 0)option2.append(withdrawalArray2[3]).append("x5\n");
-        gui.optie2.setText(option2.toString());
+        if(option2.toString().equalsIgnoreCase("Optie 2:\n")) gui.optie2.setVisible(false);
+        else {
+            gui.optie2.setText(option2.toString());
+            gui.optie2.setVisible(true);
+        }
 
 
         option = 3;
@@ -204,7 +304,11 @@ public class Withdrawal {
         if(withdrawalArray3[1] > 0)option3.append(withdrawalArray3[1]).append("x20\n");
         if(withdrawalArray3[2] > 0)option3.append(withdrawalArray3[2]).append("x10\n");
         if(withdrawalArray3[3] > 0)option3.append(withdrawalArray3[3]).append("x5\n");
-        gui.optie3.setText(option3.toString());
+        if(option3.toString().equalsIgnoreCase("Optie 3:\n")) gui.optie3.setVisible(false);
+        else {
+            gui.optie3.setText(option3.toString());
+            gui.optie3.setVisible(true);
+        }
 
         option = 4;
         algorithm(withdrawalAmount, withdrawalArray4);
@@ -212,8 +316,10 @@ public class Withdrawal {
         if(withdrawalArray4[1] > 0)option4.append(withdrawalArray4[1]).append("x20\n");
         if(withdrawalArray4[2] > 0)option4.append(withdrawalArray4[2]).append("x10\n");
         if(withdrawalArray4[3] > 0)option4.append(withdrawalArray4[3]).append("x5\n");
-        gui.optie4.setText(option4.toString());
-
-
+        if(option4.toString().equalsIgnoreCase("Optie 4:\n")) gui.optie4.setVisible(false);
+        else {
+            gui.optie4.setText(option4.toString());
+            gui.optie4.setVisible(true);
+        }
     }
 }
