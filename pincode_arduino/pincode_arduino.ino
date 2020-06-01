@@ -1,14 +1,8 @@
 #include <Keypad.h>
-#include <Wire.h>
-//#include <MD5.h>
 #include <SPI.h>
 #include <MFRC522.h>
-//#include <Crypto.h>
 #include <SHA512.h>
 #include <Stepper.h>
-
-//#include <string.h>
-//#include <avr/wdt.h>
 
 #define HASH_SIZE 32
 #define BLOCK_SIZE 128
@@ -25,6 +19,12 @@ Stepper myStepper1(stepsPerRevolution, 49, 47, 48, 46);
 Stepper myStepper2(stepsPerRevolution, 42, 43, 44, 45);
 Stepper myStepper3(stepsPerRevolution, 41, 39, 40, 38);
 Stepper myStepper4(stepsPerRevolution, 34, 36, 35, 37);
+
+//serial communication variables
+String stringIn;
+bool received = false;
+bool withdraw = false;
+int moneyArray[4];
 
 
 //Hashing
@@ -91,31 +91,32 @@ String cardBlockedCode = "11111111111111111111111111111111";
 int pinCount = 0;
 int keyCounter = 0;
 int checkDatabase = 0;
-//int noOfWrongCodes = 0;
 char *md5str;
 String passUID= "";
 byte colPins[COLS] = {29, 28, 24, 26}; //connect to the row pinouts of the keypad
 byte rowPins[ROWS] = {33, 31, 32, 30}; //connect to the column pinouts of the keypad
 
+
 //initialize an instance of class NewKeypad
 Keypad customKeypad = Keypad( makeKeymap(hexaKeys), rowPins, colPins, ROWS, COLS); 
 
 void setup(){ 
-  Wire.begin(8);  //0x08 =8
-  Wire.onReceive(receiveEvent);
-  Wire.onRequest(sendEvent);
-  Serial.begin(9600);
+  Serial.begin(115200);
   pinMode(10, OUTPUT);
   pinMode(11, OUTPUT);
   SPI.begin();
   mfrc522.PCD_Init();
+  Serial.println("ready");
 
   
-  Serial.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nPlease present your card: ");
+ // Serial.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nPlease present your card: ");
 }
   
 void loop(){
-
+   if(received){
+    inputHandler();
+   }
+   
     // Look for new cards
    if(cardPresented == false){
     if ( ! mfrc522.PICC_IsNewCardPresent()) 
@@ -137,19 +138,23 @@ void loop(){
        content.concat(String(mfrc522.uid.uidByte[i] < 0x10 ? " 0" : " "));
        content.concat(String(mfrc522.uid.uidByte[i], HEX));
     }
+  
     content.toUpperCase();
     passUID = content.substring(1);
     Serial.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
     cardPresented = true;
 
-    
+    if(cardBlocked){
+      setup();
+      exit;
+      return;
+    }
     if(cardPresented){
-    buttonRegistration();
-  }
+    delay(2000);
+    Serial.println("enterPin");
+    }
   } 
-}
-void buttonRegistration(){
-  Serial.print("Please enter pincode: "); 
+  
   //Button is pressed
   char customKey = customKeypad.getKey();
   if (customKey){
@@ -166,8 +171,7 @@ void buttonRegistration(){
       hashMaker(&sha512, &pinHash, 4);
 
       //Start check
-      Serial.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nAuthorizing...");
-      sendEvent();
+      Serial.println("authorizing");
       finished = true;
       delay(3000);
     }
@@ -176,9 +180,10 @@ void buttonRegistration(){
     if(customKey != '*' || customKey != 'D'){
     enteredCodeArray[keyCounter] = customKey;
     if(keyCounter >= 0){
-      Serial.print('*');
+      Serial.println('*');
+      }
     }
-    }
+    
     if(customKey == 'D'){   //char D is deleting the whole line
       if(keyCounter > 0){
         keyCounter = -1;
@@ -194,65 +199,6 @@ void buttonRegistration(){
   }
 }
 
-
-//Send status
-void sendEvent(){
-  byte response [11];
-  if(passUID != 0 || passUID != ""){
-    for(byte i = 0; i < 11; i++){
-      response[i] = (byte)passUID.charAt(i);
-    }
-    Wire.write(response, sizeof(response)); 
-  }
-}
-
-
-//Receive hashed pincode from database via ESP8266
-void receiveEvent(int howMany){
-  String receivedCode = "";
-  while(Wire.available()){
-    char b = Wire.read();
-    receivedCode += b;
-    
-  }
-  if(receivedCode.equals(cardBlockedCode)){
-    setup();
-    Serial.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nPass blocked, contact costumer support.");
-    delay(2000);
-    cardBlocked = true;
-    resetting();
-  }
-  if(enteredCode != 0 && finished){
-    passwordControl(receivedCode);
-  }
-}
-
-
-//Compare hashed database pincode and hashed entered code
-void passwordControl(String pincode){
-    String checkCode;
-    for(int i = 0; i < 32; i++){
-      checkCode += (char)hashedCode.charAt(i);
-    }
-    if(checkCode == pincode){
-      //Serial.print(checkCode); Serial.print(" : "); Serial.println(pincode);
-      Serial.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nSucces");
-      for(int i = 0; i < 200; i++){
-        delay(50);
-      }
-      resetting();
-    }
-    else{
-      Serial.print(checkCode); Serial.print(" : "); Serial.println(pincode);
-      Serial.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nAccess denied");
-      noOfWrongCodes++;
-    }
-    if(noOfWrongCodes == 3){
-      Serial.print("\n\n\n\n\n\n\n\n\nTo many wrong mistakes, card blocked. Contact costumer support");
-    }
-
-}
-
 void resetting(){
   int delaying = 0;
   if(keyCounter != 0){
@@ -260,12 +206,80 @@ void resetting(){
       }
     checkDatabase = 0;
     enteredCode = 0;
-    noOfWrongCodes = 0;
     cardPresented = false;
     passUID = "00000000000";
     cardBlocked = false;
     hashedCode = "";
-    sendEvent();
-    delay(5000);
     setup();
+}
+
+//serial communication code
+void serialEvent() { // To check if there is any data on the serial line
+  if (Serial.available()) {
+//    while (true) {
+      stringIn = Serial.readString();
+//      stringIn += inChar;
+
+//      if (inChar == '\n') break;
+//    }
+   if(stringIn != NULL) received = true;
+  }
+}
+
+//handles serial input
+void inputHandler() {
+ 
+//  stringOut = "ERROR: No (correct) input";
+  if(stringIn == "abort"){
+    for(int i = 0; i < 4; i++) moneyArray[i] = 0;
+        //code voor het 'resetten' van ale gegevens
+        
+  } 
+
+  if(withdraw){
+    //wait until more input comes
+      if(stringIn == "fifty"){
+        moneyArray[0]++;
+        Serial.println("received_fifty");
+      }
+      if(stringIn == "twenty"){
+        moneyArray[1]++;
+        Serial.println("received_twenty");
+        myStepper3.setSpeed(60);
+        myStepper3.step(stepsPerRevolution);
+      }
+      if(stringIn == "ten"){
+        moneyArray[2]++;
+        Serial.println("received_ten");
+      }
+      if(stringIn == "five"){
+        moneyArray[3]++;
+        Serial.println("received_five");
+      }
+      
+    //else {
+      
+     // int amount = Serial.parseInt();
+     // Serial.println(amount);
+     // Serial.println("sendMore");
+      
+//      printMoneys(amount);
+      //TODO print moneys
+  //}
+    
+  if(stringIn == "complete"){
+    withdraw = false;
+    Serial.println("received");
+  }
+  }
+  
+  if(stringIn == "withdraw"){
+    Serial.println("sendTransaction");
+    withdraw = true;     
+  }
+
+//outputString(stringIn);
+  
+  received = false;
+  stringIn = "";
 }
