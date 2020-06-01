@@ -2,8 +2,10 @@
   <library name="jsch-0.1.55">
     <CLASSES>
       <root url="jar://$PROJECT_DIR$/external Libraries/jsch-0.1.55.jar!/" />
+      <root url="file://$PROJECT_DIR$/external Libraries" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
+    <jarDirectory url="file://$PROJECT_DIR$/external Libraries" recursive="false" />
   </library>
 </component>
