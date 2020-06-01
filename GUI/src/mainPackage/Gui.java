@@ -28,6 +28,12 @@ public class Gui extends JFrame implements ActionListener {
     private int amount1 = 10;
     public int[] amounts = {amount1, amount2, amount3, amount4}; // volgorde biljetten: 5, 10, 20, 50
 
+    private boolean menuMain = false;
+    private boolean menuBalance = false;
+    private boolean menuLogin = false;
+    private boolean menuStart = false;
+    private boolean menuChooseAmounts = false;
+
     private User user;
     private String version = "1.2.0";
     private LogIn login;
@@ -53,7 +59,6 @@ public class Gui extends JFrame implements ActionListener {
      public JPanel panelPassword = new JPanel();
      public JPanel panelCustomAmount = new JPanel();
      public JPanel panelShowBal = new JPanel();
-     public JPanel panel;
      public JPanel panelFinalizeTransaction = new JPanel();
      public JPanel panelOptions = new JPanel();
      private JTextArea tempTa = new JTextArea("hier komt overzichtelijk de transactie informatie \nterwijl het geld uit de dispenser komt");
@@ -274,6 +279,10 @@ public class Gui extends JFrame implements ActionListener {
         logoutTimer.setActionCommand("abort");
         logoutTimer.start();
 
+
+    }
+
+    public void inputHandler(String input){
 
     }
 
