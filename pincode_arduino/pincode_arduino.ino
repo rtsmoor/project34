@@ -11,8 +11,8 @@
 #define HASH_SIZE 32
 #define BLOCK_SIZE 128
 
-#define SS_PIN 10
-#define RST_PIN 9
+#define SS_PIN 37
+#define RST_PIN 35
 
 long enteredCode = 0;
 char enteredCodeArray[4] = {'0', '0', '0', '0'};
@@ -66,7 +66,7 @@ void hashMaker(Hash *hash, const struct hashVector *updateHash, size_t inc)
 
 MFRC522 mfrc522(SS_PIN, RST_PIN);   // Create MFRC522 instance.
 
-const byte ROWS = 4; //four rows
+const byte ROWS = 4; //zfour rows
 const byte COLS = 4; //four columns
 //define the cymbols on the buttons of the keypads
 char hexaKeys[ROWS][COLS] = {
@@ -140,7 +140,7 @@ void loop(){
     }
     if(cardPresented){
     delay(2000);
-    Serial.print("Please enter pincode: "); 
+    Serial.print(passUID); 
   }
   } 
   
