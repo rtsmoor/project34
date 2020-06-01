@@ -44,7 +44,8 @@ public class Withdrawal {
             balance -= withdrawalAmount;
             user.setBalance(balance);
             System.out.println("Transaction Complete");
-            gui.changePanel(gui.panelBon);
+            gui.changePanel(gui.panelBon);//na het dispensen
+
 
         //todo add code that communicates this with arduino
 
