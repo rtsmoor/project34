@@ -8,6 +8,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Arrays;
 
+import static java.lang.Thread.sleep;
+
 public class Withdrawal {
     public Gui gui;
     public User user;
@@ -32,38 +34,36 @@ public class Withdrawal {
 
 
     }
-
-    public void sendArray(int arrayNumber){
+//TODO !!!kijken of je gewoon de hele array kan doorsturen!!! VEEL SNELLER!!! ALS HET KAN!!!
+    public void sendArray(int arrayNumber) throws InterruptedException{
         gui.serialConnection.stringOut("withdraw");
-        gui.serialConnection.stringIn();
-//todo in gui hier een laadscherm toevoegen omdat deze code tering lang duurt om te runnen (i.v.m. communicatie java->arduino, niet door de slechte code)
+        sleep(2000);
+//todo in gui hier een laadscherm toevoegen omdat deze code tering lang duurt om te runnen (i.v.m. communicatie java->arduino, niet door de slechte code (waarschijnlijk beide))
         if(arrayNumber == 1){
             for(int i = 0; i < withdrawalArray1.length; i++) {
                 while (withdrawalArray1[i] > 0){
                     if(i == 0) {
                         gui.serialConnection.stringOut("fifty");
-                        gui.serialConnection.stringIn();
                         withdrawalArray1[i]--;
                     }
                     if(i == 1) {
                         gui.serialConnection.stringOut("twenty");
-                        gui.serialConnection.stringIn();
                         withdrawalArray1[i]--;
                     }
                     if(i == 2) {
                         gui.serialConnection.stringOut("ten");
-                        gui.serialConnection.stringIn();
                         withdrawalArray1[i]--;
                     }
                     if(i == 3) {
                         gui.serialConnection.stringOut("five");
-                        gui.serialConnection.stringIn();
                         withdrawalArray1[i]--;
                     }
+                    sleep(2500);
                 }
             }
 
             gui.serialConnection.stringOut("complete");
+            sleep(2500);
         }
 
         if(arrayNumber == 2){
@@ -71,28 +71,26 @@ public class Withdrawal {
                 while (withdrawalArray2[i] > 0){
                     if(i == 0) {
                         gui.serialConnection.stringOut("fifty");
-                        gui.serialConnection.stringIn();
                         withdrawalArray2[i]--;
                     }
                     if(i == 1) {
                         gui.serialConnection.stringOut("twenty");
-                        gui.serialConnection.stringIn();
                         withdrawalArray2[i]--;
                     }
                     if(i == 2) {
                         gui.serialConnection.stringOut("ten");
-                        gui.serialConnection.stringIn();
                         withdrawalArray2[i]--;
                     }
                     if(i == 3) {
                         gui.serialConnection.stringOut("five");
-                        gui.serialConnection.stringIn();
                         withdrawalArray2[i]--;
                     }
+                    sleep(2500);
                 }
             }
 
             gui.serialConnection.stringOut("complete");
+            sleep(2500);
         }
 
         if(arrayNumber == 3){
@@ -100,28 +98,26 @@ public class Withdrawal {
                 while (withdrawalArray3[i] > 0){
                     if(i == 0) {
                         gui.serialConnection.stringOut("fifty");
-                        gui.serialConnection.stringIn();
                         withdrawalArray3[i]--;
                     }
                     if(i == 1) {
                         gui.serialConnection.stringOut("twenty");
-                        gui.serialConnection.stringIn();
                         withdrawalArray3[i]--;
                     }
                     if(i == 2) {
                         gui.serialConnection.stringOut("ten");
-                        gui.serialConnection.stringIn();
                         withdrawalArray3[i]--;
                     }
                     if(i == 3) {
                         gui.serialConnection.stringOut("five");
-                        gui.serialConnection.stringIn();
                         withdrawalArray3[i]--;
                     }
+                    sleep(2500);
                 }
             }
 
             gui.serialConnection.stringOut("complete");
+            sleep(2500);
         }
 
         if(arrayNumber == 4){
@@ -129,31 +125,29 @@ public class Withdrawal {
                 while (withdrawalArray4[i] > 0){
                     if(i == 0) {
                         gui.serialConnection.stringOut("fifty");
-                        gui.serialConnection.stringIn();
                         withdrawalArray4[i]--;
                     }
                     if(i == 1) {
                         gui.serialConnection.stringOut("twenty");
-                        gui.serialConnection.stringIn();
                         withdrawalArray4[i]--;
                     }
                     if(i == 2) {
                         gui.serialConnection.stringOut("ten");
-                        gui.serialConnection.stringIn();
                         withdrawalArray4[i]--;
                     }
                     if(i == 3) {
                         gui.serialConnection.stringOut("five");
-                        gui.serialConnection.stringIn();
                         withdrawalArray4[i]--;
                     }
+                    sleep(2500);
                 }
             }
 
             gui.serialConnection.stringOut("complete");
+            sleep(2500);
         }
 
-        if(gui.serialConnection.stringIn().equals("received")) {//todo toevoegen dat de dispenser aangeeft wanneer het geld gedispenst is
+        if(gui.serialConnection.input.equals("received")) {//todo toevoegen dat de dispenser aangeeft wanneer het geld gedispenst is
             double balance = user.getBalance();
             balance -= withdrawalAmount;
             user.setBalance(balance);

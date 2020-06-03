@@ -26,29 +26,7 @@ public class App {
         System.out.println("Open port: " + port.openPort());
         Scanner in = new Scanner(port.getInputStream()); // dit is de input van de arduino
         PrintWriter out = new PrintWriter(port.getOutputStream(), true); // dit is de output wat naar arduino gaat
-        port.addDataListener(new SerialPortDataListener() {
 
-            @Override
-            public int getListeningEvents() {
-                return SerialPort.LISTENING_EVENT_DATA_AVAILABLE;
-            }
-
-            @Override
-            public void serialEvent(SerialPortEvent serialPortEvent) { //ik denk dat deze methode activeert iedere keer dat er iets nieuws binnenkomt op de serial port
-//                String input;
-//
-//                input = in.nextLine();
-//
-//                System.out.println("received: " + input);
-////                received = true;
-//                String input;
-//
-//                input = in.nextLine();
-//
-//                System.out.println("received: " + input);
-//                received = true;
-            }
-        });
 
         while(true) {
             try {
@@ -75,8 +53,8 @@ public class App {
         int rport=3306;
         String user="ubuntu-0997274";
         String password="V883cY";
-        String dbuserName = "administrator";
-        String dbpassword = "realestatedatabase";
+        String dbuserName = "dispenser";
+        String dbpassword = "0NfYC0jfNteUAZj4$";
         String url = "jdbc:mysql://localhost:"+lport+"/bank?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC";
         Connection conn = null;
         Session session= null;
@@ -116,11 +94,37 @@ public class App {
 
         Gui gui = new Gui(new SerialConnection(in, out), conn);
         gui.createApp();
-//        gui.setSerialConnection(new SerialConnection(in, out));
-//        SerialConnection serialConnection = new SerialConnection(in, out);
 
+        port.addDataListener(new SerialPortDataListener() {
 
-//        gui.serialConnection.dataOut("withdraw");
+            @Override
+            public int getListeningEvents() {
+                return SerialPort.LISTENING_EVENT_DATA_AVAILABLE;
+            }
+
+            @Override
+            public void serialEvent(SerialPortEvent serialPortEvent) { //ik denk dat deze methode activeert iedere keer dat er iets nieuws binnenkomt op de serial port
+                String input;
+//
+                input = in.nextLine();
+                // ArdSend word gebruikt als java niet eerder om input heeft gevraagd.
+                // Omdat veel methodes gebruik maken van serialConnection.stringIn() doe ik het op deze manier zodat ook zij de juiste input zullen krijgen
+                if(input.contains("ArdSend")){
+                    gui.arduinoInputHandler(input);
+                } else {
+                    gui.serialConnection.stringIn(input);
+                }
+//
+//                System.out.println("received: " + input);
+////                received = true;
+//                String input;
+//
+//                input = in.nextLine();
+//
+//                System.out.println("received: " + input);
+//                received = true;
+            }
+        });
 
 
     }

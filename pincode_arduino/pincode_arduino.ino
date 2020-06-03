@@ -244,8 +244,8 @@ void inputHandler() {
       }
       if(stringIn == "twenty"){
         moneyArray[1]++;
-        myStepper3.setSpeed(60);
-        myStepper3.step(1000);
+        //myStepper3.setSpeed(60);
+        //myStepper3.step(1000); //deze code van de steppermotor in een aparte functie die word aangeroepen als hij alles heeft ontvangen, anders loopt het hele javaprogramma ook vast
         Serial.println("received_twenty");
       }
       if(stringIn == "ten"){

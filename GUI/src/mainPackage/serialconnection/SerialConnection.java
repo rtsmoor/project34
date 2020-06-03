@@ -15,6 +15,7 @@ import static java.lang.Thread.sleep;
 public class SerialConnection {
     public Scanner in;
     private PrintWriter out;
+    public String input = "";
 
     public SerialConnection(Scanner in, PrintWriter out) {
         this.in = in;
@@ -26,42 +27,24 @@ public class SerialConnection {
         System.out.println("command sent: " + stringOut);
         out.flush();
 
-        if (in.hasNextLine()) ; // arduino moet altijd iets terugsturen, en dat moet ook worden opgevangen in de GUI
+        //if (in.hasNextLine()) ; // arduino moet altijd iets terugsturen, en dat moet ook worden opgevangen in de GUI //redundant na v1.2.2
     }
 
     public boolean hasString() {
         return in.hasNextLine();
     }
 
-    public String stringIn() { // string die van de arduino komt
-        String temp = "ERROR";
+    public void stringIn(String input) { // string die van de arduino komt
+//        String input = "ERROR"; //oude code (pre-v1.2.2)
 
 
-        try {
-            temp = in.nextLine();
-        } catch (Exception e) {
-            System.out.println("An error has occured: " + e);
-        }
+//        try {                         //oude code (pre-v1.2.2)
+//            input = in.nextLine();
+//        } catch (Exception e) {
+//            System.out.println("An error has occured: " + e);
+//        }
+        this.input = input;
+        System.out.println(this.input);
 
-        System.out.println(temp);
-        return temp;
-    }
-
-    public int intIn() {
-        int temp = -1;
-
-        if (in.hasNextInt()) {
-            temp = in.nextInt();
-            in.nextLine();
-        }
-        System.out.println(temp);
-        return temp;
-    }
-
-    public void intOut(int intOut) {
-        out.print(intOut);
-        System.out.println("command sent: " + intOut);
-        out.flush();
-        if (in.hasNextLine()) ;
     }
 }

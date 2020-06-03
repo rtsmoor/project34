@@ -13,7 +13,7 @@ public class User {
     public Gui gui;
     public Connection conn;
     public Withdrawal withdrawal;
-    public int accountNumber; //todo string accountnumber omzetten naar int
+    public int accountNumber;
 
     private char[] passwordCheck = new char[4];
 

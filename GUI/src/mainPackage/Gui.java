@@ -29,14 +29,18 @@ public class Gui extends JFrame implements ActionListener {
     private int amount1 = 100;
     public int[] amounts = {amount1, amount2, amount3, amount4}; // volgorde biljetten: 5, 10, 20, 50
 
-    private boolean menuMain = false;
-    private boolean menuBalance = false;
-    private boolean menuLogin = false;
-    private boolean menuStart = false;
-    private boolean menuChooseAmounts = false;
+    private boolean menuStart = true; //startscherm, is true aan het begin en nadat de gebruiker is uitgelogt
+    private boolean menuLogin = false; //inlogmenu waar je je wachtwoord invult
+    private boolean menuMain = false; //hoofdmenu(1ste scherm nadat je bent ingelogd)
+    private boolean menuBalance = false; //geen uitleg nodig
+    private boolean menuChooseAmounts = false; // keuzemenu voor 20,50,100,150 of ander bedrag
+    private boolean menuCustomAmount = false; //menu waar je het bedrag invult dat je wilt hebben
+    private boolean menuMoneyOptions = false; // menu waar je kiest in welke biljetten je je geld wilt hebben
+    private boolean menuDispensing = false; // scherm die laat zien dat de automaat aan het dispensen is
+    private boolean menuBon = false; //menu waar je kan kiezen voor een bon
 
     private User user;
-    private String version = "1.2.2";
+    private String version = "1.2.3";
     private LogIn login;
     public SerialConnection serialConnection;
     public Connection conn;
@@ -50,11 +54,6 @@ public class Gui extends JFrame implements ActionListener {
     private JFrame frame = new JFrame("BankApp V" + version);
      public JPanel panelStart = new JPanel();
      public JPanel panelMain = new JPanel();
-     public JPanel options1 = new JPanel();
-     private JButton option1 = new JButton("4x5");
-     private JButton option2 = new JButton("2x10");
-     private JButton option3 = new JButton("1x20");
-     private JButton test = new JButton("TEST");
      public JPanel panelChooseAmount = new JPanel();
      public JPanel panelBon = new JPanel();
      public JPanel panelPassword = new JPanel();
@@ -86,7 +85,7 @@ public class Gui extends JFrame implements ActionListener {
     public JButton optie3 = new JButton("ERROR");
     public JButton optie4 = new JButton("ERROR");
 
-    public Timer logoutTimer = new Timer(300000, this); //todo naar 30000 zetten na het testen
+    public Timer logoutTimer = new Timer(300000, this); //todo !!!naar 30000 zetten na het testen!!!
 
     public JPasswordField passwordField = new JPasswordField(4);
     public JFormattedTextField customBedragField = new JFormattedTextField();
@@ -211,25 +210,16 @@ public class Gui extends JFrame implements ActionListener {
         panelFinalizeTransaction.add(tempTa);
         panelFinalizeTransaction.add(abort[6]);
 
-        options1.add(option1);
-        options1.add(option2);
-        options1.add(option3);
-        panelMain.add(test);
-        options1.add(abort[5]);
-        options1.add(naarHoofdMenu[5]);
-
         panelOptions.add(optie1);
         panelOptions.add(optie2);
         panelOptions.add(optie3);
         panelOptions.add(optie4);
 
-        options1.add(taInsufficientBills);
         panelChooseAmount.add(taInsufficientBills);
         taInsufficientBills.setEditable(false);
         taInsufficientBills.setVisible(false);
         taInsufficientBills.setForeground(Color.RED);
 
-        options1.add(taInsufficientMoney);
         panelChooseAmount.add(taInsufficientMoney);
         taInsufficientMoney.setEditable(false);
         taInsufficientMoney.setVisible(false);
@@ -305,17 +295,6 @@ public class Gui extends JFrame implements ActionListener {
         nextPage[2].addActionListener(this);
         nextPage[2].setActionCommand("custAmountToNext");
 
-        test.addActionListener(this);
-        test.setActionCommand("test");
-
-        option1.addActionListener(this);
-        option1.setActionCommand("option1");
-        option2.addActionListener(this);
-        option2.setActionCommand("option2");
-        option3.addActionListener(this);
-        option3.setActionCommand("option3");
-
-
         optie1.addActionListener(this);
         optie1.setActionCommand("optie1");
         optie2.addActionListener(this);
@@ -331,142 +310,78 @@ public class Gui extends JFrame implements ActionListener {
 
     }
 
+    private void resetFlags(){
+        menuBalance = false;
+        menuLogin = false;
+        menuStart = false;
+        menuMain = false;
+        menuBon = false;
+        menuChooseAmounts = false;
+        menuCustomAmount = false;
+        menuDispensing = false;
+        menuMoneyOptions = false;
+    }
+
+    public void arduinoInputHandler(String input){
+        logoutTimer.restart(); //resets the 30 second logout timer
+
+        if(!menuStart) {
+        if("ArdSend_D".equals(input)){
+            //code voor abort
+            resetFlags();
+            menuStart = true;
+
+
+        }
+            if(!menuLogin) {
+                if ("ArdSend_E".equals(input)) {
+                    //code voor mainMenu
+                    resetFlags();
+                    menuMain = true;
+                }
+            }
+        }
+
+        if(menuStart && !("".equals(input))){
+            login.setRfidDetected(true);
+            login.setPassnumber(input);
+            System.out.println("Naar inlogscherm");
+            changePanel(panelPassword);
+        }
+
+        //dit is voor de pincode invoeren
+        if(menuLogin){
+            if("ArdSend_*".equals(input)){
+                //voeg een * toe op de display
+            }
+            if("ArdSend_<remove_key>".equals(input)){
+                //remove een * op de display
+            }
+            if("ArdSend_<confirm_code_key>".equals(input)){
+                //check of de pincode overeenkomt met wat in de DB staat
+            }
+        }
+
+        if(menuMain){
+            if("ArdSend_1".equals(input)){
+                //70 euro pinnen
+            }
+
+            if("ArdSend_2".equals(input)){
+                //saldo checken
+            }
+
+             if("ArdSend_3".equals(input)){
+                 //pinnen
+             }
+         }
+    }
+
     //TODO DEZE HELE METHODE VERVANGEN MET IETS ANDERS DAT DE ARDUINO KEYPAD INPUT GEBRUIKT (MISSCHIEN SWITCH CASE OF IF STATEMENTS)
     @Override
     public void actionPerformed(ActionEvent e) {
         logoutTimer.restart();
-        if("option1".equalsIgnoreCase(e.getActionCommand())){
-            if(amounts[0] < 4){
-                taInsufficientBills.setVisible(true);
-            }
-            if (user.getBalance() - 20 < 0) { //kijken of saldo lager is dan bedrag dat gepind wordt
-                taInsufficientMoney.setVisible(true);
-            }
-            else {
-                amounts[0] = amounts[0] - 4;
-                System.out.println("20 euro");
-                user.makeWithdrawal();
-                //user.withdrawal.customWithdrawal(20);
-                changePanel(panelBon);
-                try {
-                    sleep(1000);
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
 
-
-                for (int i = 4; i > 0; i--) {
-                    try {
-                        sleep(2000);
-                    } catch (Exception ez) {
-                        ez.printStackTrace();
-                    }
-                    user.sendAmount1();
-                }
-                serialConnection.stringIn();
-                serialConnection.stringIn();
-                serialConnection.stringIn();
-                serialConnection.stringIn();
-                System.out.println("Array Amounts: " + amounts[0]);
-            }
-        }
-        if("option2".equalsIgnoreCase(e.getActionCommand())){
-            if(amounts[1] < 2){
-                taInsufficientBills.setVisible(true);
-            }
-            if (user.getBalance() - 20 < 0) { //kijken of saldo lager is dan bedrag dat gepind wordt
-                taInsufficientMoney.setVisible(true);
-            }
-            else {
-                amounts[1] = amounts[1] - 2;
-                System.out.println("20 euro");
-                user.makeWithdrawal();
-                //user.withdrawal.customWithdrawal(20);
-                changePanel(panelBon);
-                try {
-                    sleep(1000);
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-
-                for (int i = 2; i > 0; i--) {
-                    try {
-                        sleep(2000);
-                    } catch (Exception ey) {
-                        ey.printStackTrace();
-                    }
-                    user.sendAmount2();
-                }
-                serialConnection.stringIn();
-                serialConnection.stringIn();
-                System.out.println("Array Amounts: " + amounts[1]);
-            }
-        }
-        if("option3".equalsIgnoreCase(e.getActionCommand())){
-            if(amounts[2] < 1){
-                taInsufficientBills.setVisible(true);
-            }
-            if (user.getBalance() - 20 < 0) { //kijken of saldo lager is dan bedrag dat gepind wordt
-                taInsufficientMoney.setVisible(true);
-            }
-            else {
-                amounts[3] = amounts[3] - 1;
-                System.out.println("20 euro");
-                user.makeWithdrawal();
-                //user.withdrawal.customWithdrawal(20);
-                changePanel(panelBon);
-                try {
-                    sleep(2000);
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-
-                for (int i = 1; i > 0; i--) {
-                    try {
-                        sleep(2000);
-                    } catch (Exception ey) {
-                        ey.printStackTrace();
-                    }
-                    user.sendAmount3();
-                }
-                serialConnection.stringIn();
-                System.out.println("Array Amounts: " + amounts[3]);
-            }
-        }
-        if("option4".equalsIgnoreCase(e.getActionCommand())){
-            if(amounts[3] < 1){
-                taInsufficientBills.setVisible(true);
-            }
-            else {
-                System.out.println("20 euro");
-                user.makeWithdrawal();
-                //user.withdrawal.customWithdrawal(20);
-                changePanel(panelBon);
-                try {
-                    sleep(2000);
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-
-                for (int i = 1; i > 0; i--) {
-                    try {
-                        sleep(2000);
-                    } catch (Exception ey) {
-                        ey.printStackTrace();
-                    }
-                    user.sendAmount4();
-                }
-                serialConnection.stringIn();
-                serialConnection.stringIn();
-                serialConnection.stringIn();
-                serialConnection.stringIn();
-                System.out.println("Array Amounts: " + amounts[3]);
-            }
-        }
-        if("test".equalsIgnoreCase(e.getActionCommand())){
-            changePanel(options1);
-
-        }
         if("abort".equalsIgnoreCase(e.getActionCommand())){
             //code om uit te loggen en naar het startscherm te gaan
             System.out.println("aborting...");
@@ -478,7 +393,12 @@ public class Gui extends JFrame implements ActionListener {
             panelChooseAmount.add(taInsufficientMoney);
             login.clearLoginVariables();
             changePanel(panelStart);
-//            serialConnection.dataOut("abort"); // todo arduino code voor abort
+//            serialConnection.stringOut("abort"); // todo arduino code voor abort
+//            try {
+//                sleep(100);
+//            } catch (InterruptedException ex) {
+//                ex.printStackTrace();
+//            }
         }
 
         if("hoofdmenu".equalsIgnoreCase(e.getActionCommand())){
@@ -490,7 +410,12 @@ public class Gui extends JFrame implements ActionListener {
             taInsufficientMoney.setVisible(false);
             panelChooseAmount.add(taInsufficientMoney);
             changePanel(panelMain);
-//            serialConnection.dataOut("hoofdmenu"); //todo arduino code voor hoofdmenu
+//            serialConnection.stringOut("mainMenu"); //todo arduino code voor hoofdmenu
+//            try {
+//                sleep(100);
+//            } catch (InterruptedException ex) {
+//                ex.printStackTrace();
+//            }
         }
 
         if("showBal".equalsIgnoreCase(e.getActionCommand())){
@@ -626,19 +551,35 @@ public class Gui extends JFrame implements ActionListener {
             }
         }
         if("optie1".equalsIgnoreCase(e.getActionCommand())){
-            user.withdrawal.sendArray(1);
+            try{
+                user.withdrawal.sendArray(1);
+            } catch (InterruptedException ex){
+                ex.printStackTrace();
+            }
             changePanel(dispensing);
         }
         if("optie2".equalsIgnoreCase(e.getActionCommand())){
-            user.withdrawal.sendArray(2);
+            try{
+                user.withdrawal.sendArray(2);
+            } catch(InterruptedException ex){
+                ex.printStackTrace();
+            }
             changePanel(dispensing);
         }
         if("optie3".equalsIgnoreCase(e.getActionCommand())){
-            user.withdrawal.sendArray(3);
+            try{
+                user.withdrawal.sendArray(3);
+            } catch (InterruptedException ex){
+                ex.printStackTrace();
+            }
             changePanel(dispensing);
         }
         if("optie4".equalsIgnoreCase(e.getActionCommand())){
-            user.withdrawal.sendArray(4);
+            try{
+                user.withdrawal.sendArray(4);
+            }catch(InterruptedException ex){
+                ex.printStackTrace();
+            }
             changePanel(dispensing);
         }
 
@@ -651,7 +592,7 @@ public class Gui extends JFrame implements ActionListener {
         //if statement met string van arduino
         if("wachtwoord".equalsIgnoreCase((e.getActionCommand()))){
             System.out.println("login");
-            if(login.requestLogin("2A 9F 0D 0B")) {//todo vervang met input arduino
+            if(login.requestLogin("2A 9F 0D 0B")) {//todo  //test string: "2A 9F 0D 0B" //juiste code is: login.getPassnumber()
                 user.setPasswordCheck(passwordField.getPassword());
                 System.out.println("passwd: " + Arrays.toString(user.getPasswordCheck()));
                 passwordField.setText("");
