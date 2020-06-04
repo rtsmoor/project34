@@ -38,7 +38,7 @@ public class Gui extends JFrame implements ActionListener {
     private boolean menuBon = false; //menu waar je kan kiezen voor een bon
 
     private User user;
-    private String version = "1.2.3";
+    private String version = "1.2.4";
     private LogIn login;
     public SerialConnection serialConnection;
     public Connection conn;
@@ -87,7 +87,7 @@ public class Gui extends JFrame implements ActionListener {
 
     public Timer logoutTimer = new Timer(300000, this); //todo !!!naar 30000 zetten na het testen!!!
 
-    public JPasswordField passwordField = new JPasswordField(4);
+    public JTextField passwordTextField = new JTextField(4);
     public JFormattedTextField customBedragField = new JFormattedTextField();
     private JTextArea taShowBal = new JTextArea();
     private JTextArea taPanelStart = new JTextArea("Scan uw pas om verder te gaan");
@@ -138,6 +138,7 @@ public class Gui extends JFrame implements ActionListener {
             afbreken[i].setBounds(1650,700, 300,70);
         }
     }
+
     void createApp(){
         createLayout();
         createButonArrays();
@@ -173,16 +174,16 @@ public class Gui extends JFrame implements ActionListener {
         panelPassword.setLayout(null);
         panelPassword.add(enterPin);
         panelPassword.add(nextPage[1]);
-        panelPassword.add(passwordField);
+        panelPassword.add(passwordTextField);
         panelPassword.add(title[1]);
         panelPassword.setBackground(Color.CYAN);
         enterPin.setFont(font);
         enterPin.setEditable(false);
         enterPin.setBackground(Color.CYAN);
-        passwordField.setFont(font);
-        passwordField.setBackground(Color.CYAN);
+        passwordTextField.setFont(font);
+        passwordTextField.setBackground(Color.CYAN);
         enterPin.setBounds(820,270,400,70);
-        passwordField.setBounds(860,340,200,40);
+        passwordTextField.setBounds(860,340,200,40);
         nextPage[1].setBounds(860,540,200,200);
         //PanelMain
         panelMain.setLayout(null);
@@ -267,7 +268,7 @@ public class Gui extends JFrame implements ActionListener {
         panelBon.add(naarHoofdMenu[2]);
 
         panelPassword.add(new JLabel("Enter PIN:"));
-        panelPassword.add(passwordField);
+        panelPassword.add(passwordTextField);
         panelPassword.add(nextPage[1]);
 
         panelCustomAmount.add(new JLabel("Voer aangepast bedrag in:"));
@@ -305,19 +306,19 @@ public class Gui extends JFrame implements ActionListener {
         taInsufficientMoney.setVisible(false);
         taInsufficientMoney.setForeground(Color.RED);
         // code die ervoor zorgt dat er max 4 tekens ingevuld worden (van stackoverflow gepakt)
-        PlainDocument documentPF = (PlainDocument) passwordField.getDocument();
-        documentPF.setDocumentFilter(new DocumentFilter() {
-
-            @Override
-            public void replace(DocumentFilter.FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
-                String string = fb.getDocument().getText(0, fb.getDocument().getLength()) + text;
-
-                if (string.length() <= 4) {
-                    super.replace(fb, offset, length, text, attrs); //To change body of generated methods, choose Tools | Templates.
-                }
-            }
-
-        });
+//        PlainDocument documentPF = (PlainDocument) passwordTextField.getDocument();
+//        documentPF.setDocumentFilter(new DocumentFilter() {
+//
+//            @Override
+//            public void replace(DocumentFilter.FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
+//                String string = fb.getDocument().getText(0, fb.getDocument().getLength()) + text;
+//
+//                if (string.length() <= 4) {
+//                    super.replace(fb, offset, length, text, attrs); //To change body of generated methods, choose Tools | Templates.
+//                }
+//            }
+//
+//        });
 
         eventHandler();
 
@@ -406,39 +407,90 @@ public class Gui extends JFrame implements ActionListener {
         logoutTimer.restart(); //resets the 30 second logout timer
 
         if(!menuStart) {
-        if("ArdSend_D".equals(input)){
-            //code voor abort
+        if("ArdSend_B".equals(input)){
+            //code om uit te loggen en naar het startscherm te gaan
+            System.out.println("aborting...");
+            if(user != null) user.userLogout();
+            taShowBal.setText("");
+            taInvalidInput.setVisible(false);
+            taInsufficientBills.setVisible(false);
+            taInsufficientMoney.setVisible(false);
+            panelChooseAmount.add(taInsufficientMoney);
+            login.clearLoginVariables();
             resetFlags();
             menuStart = true;
+            changePanel(panelStart);
+//            serialConnection.stringOut("abort"); // todo arduino code voor abort
+//            try {
+//                sleep(100);
+//            } catch (InterruptedException ex) {
+//                ex.printStackTrace();
+//            }
+
 
 
         }
             if(!menuLogin) {
-                if ("ArdSend_E".equals(input)) {
-                    //code voor mainMenu
+                if ("ArdSend_C".equals(input)) {
+                    //code om naar het hoofdmenu te gaan
+                    System.out.println("naar hoofdmenu");
+                    user.toMainMenu();
+                    taInvalidInput.setVisible(false);
+                    taInsufficientBills.setVisible(false);
+                    taInsufficientMoney.setVisible(false);
+                    panelChooseAmount.add(taInsufficientMoney);
                     resetFlags();
                     menuMain = true;
+                    changePanel(panelMain);
+//            serialConnection.stringOut("mainMenu"); //todo arduino code voor hoofdmenu
+//            try {
+//                sleep(100);
+//            } catch (InterruptedException ex) {
+//                ex.printStackTrace();
+//            }
                 }
             }
         }
 
-        if(menuStart && !("".equals(input))){
+        if(menuStart && input.contains("ArdPassNr_")){
+            String temp = input.replace("ArdPassNr_", "");
             login.setRfidDetected(true);
-            login.setPassnumber(input);
+            login.setPassnumber(temp);
             System.out.println("Naar inlogscherm");
+            menuLogin = true;
+            menuStart = false;
+            passwordTextField.setText("");
             changePanel(panelPassword);
         }
 
         //dit is voor de pincode invoeren
         if(menuLogin){
             if("ArdSend_*".equals(input)){
-                //voeg een * toe op de display
+                passwordTextField.setText(passwordTextField.getText() + "*");
             }
-            if("ArdSend_<remove_key>".equals(input)){
-                //remove een * op de display
+
+            if("ArdSend_#".equals(input)){
+                System.out.println("attempt login");
+                if(login.requestLogin(login.getPassnumber())) {//todo  //test string: "2A 9F 0D 0B" //juiste code is: login.getPassnumber()
+                    // user.setPasswordCheck(passwordField.getPassword()); //oude code
+                    //System.out.println("passwd: " + Arrays.toString(user.getPasswordCheck()));
+                    passwordTextField.setText("");
+                    try {
+                        user.requestUserVariables();
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
+                    }
+                    changePanel(panelMain); //?moet nog veranderd worden naar inlogscherm?
+                }
             }
-            if("ArdSend_<confirm_code_key>".equals(input)){
-                //check of de pincode overeenkomt met wat in de DB staat
+            if("ArdSend_D".equals(input)){
+                passwordTextField.setText("");
+            }
+
+            if(input.contains("ArdPinHashed_")){
+                String temp = input.replace("ArdPinHashed_", "");
+                login.setHashedPIN(temp); //hier een sout om te testen of het werkt
+                System.out.println("hashed pin: " + temp);
             }
         }
 
@@ -448,12 +500,15 @@ public class Gui extends JFrame implements ActionListener {
             }
 
             if("ArdSend_2".equals(input)){
-                //saldo checken
+                System.out.println("showing balance");
+
+                taShowBal.setText(Double.toString(user.getBalance()));
+                changePanel(panelShowBal);
             }
 
-             if("ArdSend_3".equals(input)){
-                 //pinnen
-             }
+            if("ArdSend_3".equals(input)){
+                //pin menu
+            }
          }
     }
 
@@ -515,6 +570,11 @@ public class Gui extends JFrame implements ActionListener {
                 System.out.println("70 euro");
                 user.makeWithdrawal();
                 user.withdrawal.customWithdrawal(70);
+                try{
+                    user.withdrawal.displayOptions();
+                }catch (Exception ex){
+                    ex.printStackTrace();
+                }
                 changePanel(panelBon);
             }
         }
@@ -631,36 +691,36 @@ public class Gui extends JFrame implements ActionListener {
             }
         }
         if("optie1".equalsIgnoreCase(e.getActionCommand())){
+            changePanel(dispensing);
             try{
                 user.withdrawal.sendArray(1);
             } catch (InterruptedException ex){
                 ex.printStackTrace();
             }
-            changePanel(dispensing);
         }
         if("optie2".equalsIgnoreCase(e.getActionCommand())){
+            changePanel(dispensing);
             try{
                 user.withdrawal.sendArray(2);
             } catch(InterruptedException ex){
                 ex.printStackTrace();
             }
-            changePanel(dispensing);
         }
         if("optie3".equalsIgnoreCase(e.getActionCommand())){
+            changePanel(dispensing);
             try{
                 user.withdrawal.sendArray(3);
             } catch (InterruptedException ex){
                 ex.printStackTrace();
             }
-            changePanel(dispensing);
         }
         if("optie4".equalsIgnoreCase(e.getActionCommand())){
+            changePanel(dispensing);
             try{
                 user.withdrawal.sendArray(4);
             }catch(InterruptedException ex){
                 ex.printStackTrace();
             }
-            changePanel(dispensing);
         }
 
         if("inlogScherm".equalsIgnoreCase((e.getActionCommand()))){
@@ -673,9 +733,9 @@ public class Gui extends JFrame implements ActionListener {
         if("wachtwoord".equalsIgnoreCase((e.getActionCommand()))){
             System.out.println("login");
             if(login.requestLogin("2A 9F 0D 0B")) {//todo  //test string: "2A 9F 0D 0B" //juiste code is: login.getPassnumber()
-                user.setPasswordCheck(passwordField.getPassword());
-                System.out.println("passwd: " + Arrays.toString(user.getPasswordCheck()));
-                passwordField.setText("");
+               // user.setPasswordCheck(passwordField.getPassword()); //oude code
+                //System.out.println("passwd: " + Arrays.toString(user.getPasswordCheck()));
+                passwordTextField.setText("");
                 try {
                     user.requestUserVariables();
                 } catch (SQLException ex) {

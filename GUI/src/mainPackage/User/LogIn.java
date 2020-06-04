@@ -12,6 +12,7 @@ public class LogIn {
     private Gui gui;
     private Connection conn;
     private String passnumber = "";
+    private String hashedPIN = "";
     private int pogingen = 0;
 
     public LogIn(Gui gui, Connection conn){
@@ -21,6 +22,14 @@ public class LogIn {
 
     public void setRfidDetected(boolean rfidDetected) {
         this.rfidDetected = rfidDetected;
+    }
+
+    public String getHashedPIN() {
+        return hashedPIN;
+    }
+
+    public void setHashedPIN(String hashedPIN) {
+        this.hashedPIN = hashedPIN;
     }
 
     public String getPassnumber() {
@@ -87,6 +96,7 @@ public class LogIn {
 
     public void clearLoginVariables(){
         passnumber = "";
+        hashedPIN = "";
         pogingen = 0;
         rfidDetected = false;
     }

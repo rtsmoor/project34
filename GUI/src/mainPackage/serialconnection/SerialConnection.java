@@ -44,7 +44,7 @@ public class SerialConnection {
 //            System.out.println("An error has occured: " + e);
 //        }
         this.input = input;
-        System.out.println(this.input);
+        System.out.println("input: " + this.input);
 
     }
 }

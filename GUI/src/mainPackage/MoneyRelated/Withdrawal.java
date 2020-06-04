@@ -44,18 +44,22 @@ public class Withdrawal {
                 while (withdrawalArray1[i] > 0){
                     if(i == 0) {
                         gui.serialConnection.stringOut("fifty");
+                        gui.amounts[3]--;
                         withdrawalArray1[i]--;
                     }
                     if(i == 1) {
                         gui.serialConnection.stringOut("twenty");
+                        gui.amounts[2]--;
                         withdrawalArray1[i]--;
                     }
                     if(i == 2) {
                         gui.serialConnection.stringOut("ten");
+                        gui.amounts[1]--;
                         withdrawalArray1[i]--;
                     }
                     if(i == 3) {
                         gui.serialConnection.stringOut("five");
+                        gui.amounts[0]--;
                         withdrawalArray1[i]--;
                     }
                     sleep(2500);
@@ -71,18 +75,22 @@ public class Withdrawal {
                 while (withdrawalArray2[i] > 0){
                     if(i == 0) {
                         gui.serialConnection.stringOut("fifty");
+                        gui.amounts[3]--;
                         withdrawalArray2[i]--;
                     }
                     if(i == 1) {
                         gui.serialConnection.stringOut("twenty");
+                        gui.amounts[2]--;
                         withdrawalArray2[i]--;
                     }
                     if(i == 2) {
                         gui.serialConnection.stringOut("ten");
+                        gui.amounts[1]--;
                         withdrawalArray2[i]--;
                     }
                     if(i == 3) {
                         gui.serialConnection.stringOut("five");
+                        gui.amounts[0]--;
                         withdrawalArray2[i]--;
                     }
                     sleep(2500);
@@ -98,18 +106,22 @@ public class Withdrawal {
                 while (withdrawalArray3[i] > 0){
                     if(i == 0) {
                         gui.serialConnection.stringOut("fifty");
+                        gui.amounts[3]--;
                         withdrawalArray3[i]--;
                     }
                     if(i == 1) {
                         gui.serialConnection.stringOut("twenty");
+                        gui.amounts[2]--;
                         withdrawalArray3[i]--;
                     }
                     if(i == 2) {
                         gui.serialConnection.stringOut("ten");
+                        gui.amounts[1]--;
                         withdrawalArray3[i]--;
                     }
                     if(i == 3) {
                         gui.serialConnection.stringOut("five");
+                        gui.amounts[0]--;
                         withdrawalArray3[i]--;
                     }
                     sleep(2500);
@@ -125,18 +137,22 @@ public class Withdrawal {
                 while (withdrawalArray4[i] > 0){
                     if(i == 0) {
                         gui.serialConnection.stringOut("fifty");
+                        gui.amounts[3]--;
                         withdrawalArray4[i]--;
                     }
                     if(i == 1) {
                         gui.serialConnection.stringOut("twenty");
+                        gui.amounts[2]--;
                         withdrawalArray4[i]--;
                     }
                     if(i == 2) {
                         gui.serialConnection.stringOut("ten");
+                        gui.amounts[1]--;
                         withdrawalArray4[i]--;
                     }
                     if(i == 3) {
                         gui.serialConnection.stringOut("five");
+                        gui.amounts[0]--;
                         withdrawalArray4[i]--;
                     }
                     sleep(2500);
@@ -224,7 +240,6 @@ public class Withdrawal {
     private int withdraw50(int temp, int[] withdrawalArray)throws Exception{
         if (gui.amounts[3] > 0) {
             temp = temp - 50;
-            gui.amounts[3]--; // houd bij hoeveel biljetten er in de dispenser zit
             withdrawalArray[0]++; // houd bij hoeveel biljetten hij straks moet gaan printen
         } else throw new Exception();
         return temp;
@@ -233,7 +248,6 @@ public class Withdrawal {
     private int withdraw20(int temp, int[] withdrawalArray)throws Exception{
         if (gui.amounts[2] > 0) {
             temp = temp - 20;
-            gui.amounts[2]--;
             withdrawalArray[1]++;
         } else throw new Exception();
         return temp;
@@ -241,7 +255,6 @@ public class Withdrawal {
     private int withdraw10(int temp, int[] withdrawalArray)throws Exception{
         if (gui.amounts[1] > 0) {
             temp = temp - 10;
-            gui.amounts[1]--;
             withdrawalArray[2]++;
         } else throw new Exception();
         return temp;
@@ -249,7 +262,6 @@ public class Withdrawal {
     private int withdraw5(int temp, int[] withdrawalArray) throws Exception{
         if (gui.amounts[0] > 0) {
             temp = temp - 5;
-            gui.amounts[0]--;
             withdrawalArray[3]++;
         } else throw new Exception();
 
