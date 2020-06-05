@@ -3,6 +3,7 @@ package mainPackage;
 import mainPackage.User.*;
 import mainPackage.serialconnection.SerialConnection;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
@@ -11,6 +12,8 @@ import javax.swing.text.PlainDocument;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Arrays;
@@ -103,13 +106,19 @@ public class Gui extends JFrame implements ActionListener {
     private JTextArea taNoBon = new JTextArea("No []");
     private JTextArea taYesBon = new JTextArea("Yes []");
     private JTextArea receipt = new JTextArea("Do you want a receipt?");
+    private JTextArea taBedrag1 = new JTextArea("20 []");
+    private JTextArea taBedrag2 = new JTextArea("50 []");
+    private JTextArea taBedrag3 = new JTextArea("100 []");
+    private JTextArea taBedrag4 = new JTextArea("150 []");
+    private JTextArea taNaarHoofdmenu = new JTextArea("Back to main menu [C]");
+    private JTextArea taOtherAmount = new JTextArea("Other Amount []");
     private JTextArea wrongPassword = new JTextArea("The pin that you entered is incorrect, please try again");
     public JTextArea numberAttempts = new JTextArea("Attempts left:");
     private JTextArea errorPassNotFound = new JTextArea("Can't read the pass: put the pass close to the scanner \n " +
             "If this problem persists, please contact your bank");
     private Font font = new Font("Comic Sans MS", Font.BOLD, 50);
     private Font fontTitle = new Font("Segoe Script", Font.BOLD, 70);
-//    private ImageIcon img = new ImageIcon("/resources/background1.jpg");
+    private Image icon = getToolkit().getImage(("resources/icon.jpg"));
 //    private JLabel background1 = new JLabel("", img, JLabel.CENTER);
 //    public void setSerialConnection(SerialConnection serialConnection){
 //        this.serialConnection = serialConnection;
@@ -135,12 +144,12 @@ public class Gui extends JFrame implements ActionListener {
             title[i].setBackground(Color.CYAN);
             title[i].setBounds(610,10,800,100);
 
-            afbreken[i] = new JTextArea("Break []");
+            afbreken[i] = new JTextArea("Abort [B]");
             afbreken[i].setEditable(false);
             afbreken[i].setBackground(Color.CYAN);
             afbreken[i].setFont(font);
             afbreken[i].setForeground(Color.RED);
-            afbreken[i].setBounds(1650,700, 300,70);
+            afbreken[i].setBounds(1400,700, 300,70);
         }
     }
 
@@ -154,6 +163,7 @@ public class Gui extends JFrame implements ActionListener {
 //        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 //        mainFrame.setUndecorated(true); // zorgt ervoor dat je niet zomaar uit het programma kan klikken
         frame.add(panelMain);
+        frame.setIconImage(icon);
         panelMain.add(quickPin);
         panelMain.add(showBal);
         panelMain.add(customPin);
@@ -174,7 +184,7 @@ public class Gui extends JFrame implements ActionListener {
         taPanelStart.setBackground(Color.CYAN);
         errorPassNotFound.setBounds(360,600,1400,140);
         taPanelStart.setBounds(620,250,800,70);
-        nextPage[0].setBounds(860,340,200,200);
+        nextPage[0].setBounds(860,340,200,200); //temp
         title[0].setBounds(610,10,800,100);
         //PanelPassword
         panelPassword.setLayout(null);
@@ -203,7 +213,7 @@ public class Gui extends JFrame implements ActionListener {
         wrongPassword.setBounds(300, 500, 1400,70);
         enterPin.setBounds(820,270,400,70);
         passwordTextField.setBounds(860,340,200,40);
-        nextPage[1].setBounds(860,740,200,200);
+        nextPage[1].setBounds(860,740,200,200); //temp
         //PanelMain
         panelMain.setLayout(null);
         panelMain.setBackground(Color.CYAN);
@@ -241,8 +251,91 @@ public class Gui extends JFrame implements ActionListener {
         dispensing.setBackground(Color.CYAN);
         //panelChooseAmount
         panelChooseAmount.setBackground(Color.CYAN);
+        panelChooseAmount.setLayout(null);
+        panelChooseAmount.add(abort[5]);
+        panelChooseAmount.add(afbreken[3]);
+        panelChooseAmount.add(taNaarHoofdmenu);
+        panelChooseAmount.add(title[5]);
+        panelChooseAmount.add(naarHoofdMenu[1]);//temp
+        panelChooseAmount.add(bedrag1);//temp
+        panelChooseAmount.add(bedrag2);//temp
+        panelChooseAmount.add(bedrag3);//temp
+        panelChooseAmount.add(bedrag4);//temp
+        panelChooseAmount.add(anderBedrag);//temp
+        panelChooseAmount.add(taBedrag1);
+        panelChooseAmount.add(taBedrag2);
+        panelChooseAmount.add(taBedrag3);
+        panelChooseAmount.add(taBedrag4);
+        panelChooseAmount.add(taOtherAmount);
+        taBedrag1.setEditable(false);
+        taBedrag2.setEditable(false);
+        taBedrag3.setEditable(false);
+        taBedrag4.setEditable(false);
+        taNaarHoofdmenu.setEditable(false);
+        taOtherAmount.setEditable(false);
+        taBedrag1.setFont(font);
+        taBedrag2.setFont(font);
+        taBedrag3.setFont(font);
+        taBedrag4.setFont(font);
+        taNaarHoofdmenu.setFont(font);
+        taOtherAmount.setFont(font);
+        taBedrag1.setBackground(Color.CYAN);
+        taBedrag2.setBackground(Color.CYAN);
+        taBedrag3.setBackground(Color.CYAN);
+        taBedrag4.setBackground(Color.CYAN);
+        taNaarHoofdmenu.setBackground(Color.CYAN);
+        taOtherAmount.setBackground(Color.CYAN);
+        taBedrag1.setBounds(50,300, 620,70);
+        taBedrag2.setBounds(1400, 300, 200, 70);
+        taBedrag3.setBounds(50, 500, 200, 70);
+        taBedrag4.setBounds(1400, 500, 200, 70);
+        taOtherAmount.setBounds(50, 700, 600, 70);
+        taNaarHoofdmenu.setBounds(50,900,600,70);
+        afbreken[3].setBounds(1400, 700, 500, 70);
+        abort[5].setBounds(1100, 600, 200, 200); //temp
+        bedrag1.setBounds(700, 200, 200, 200); //temp
+        bedrag2.setBounds(1100, 200, 200, 200); //temp
+        bedrag3.setBounds(700,400, 200, 200); //temp
+        bedrag4.setBounds(1100,400, 200, 200); //temp
+        anderBedrag.setBounds(700, 600, 200,200); //temp
+        naarHoofdMenu[1].setBounds(700,800,200,200); //temp
+
+
         //panelOptions
         panelOptions.setBackground(Color.CYAN);
+        panelOptions.setLayout(null);
+        panelOptions.add(title[6]);
+        panelOptions.add(abort[6]);
+        panelOptions.add(afbreken[4]);
+        panelOptions.add(optie1);
+        panelOptions.add(optie2);
+        panelOptions.add(optie3);
+        panelOptions.add(optie4);
+        panelOptions.add(naarHoofdMenu[2]);
+        panelOptions.add(taNaarHoofdmenu);
+        optie1.setEditable(false);
+        optie2.setEditable(false);
+        optie3.setEditable(false);
+        optie4.setEditable(false);
+        taNaarHoofdmenu.setEditable(false);
+        optie1.setBackground(Color.CYAN);
+        optie2.setBackground(Color.CYAN);
+        optie3.setBackground(Color.CYAN);
+        optie4.setBackground(Color.CYAN);
+        taNaarHoofdmenu.setBackground(Color.CYAN);
+        optie1.setFont(font);
+        optie2.setFont(font);
+        optie3.setFont(font);
+        optie4.setFont(font);
+        taNaarHoofdmenu.setFont(font);
+        optie1.setBounds(50,300, 210,70);
+        optie2.setBounds(1400, 300, 210, 70);
+        optie3.setBounds(50, 500, 210, 70);
+        optie4.setBounds(1400, 500, 210, 70);
+        afbreken[4].setBounds(1400, 700, 500, 70);
+        abort[6].setBounds(1100, 700, 200, 200); //temp
+        taNaarHoofdmenu.setBounds(50, 700, 600, 70);
+        naarHoofdMenu[2].setBounds(700,700,200,200); //temp
         //panelBon
         panelBon.setLayout(null);
         panelBon.setBackground(Color.CYAN);
@@ -287,18 +380,19 @@ public class Gui extends JFrame implements ActionListener {
 
 
 
+
         panelChooseAmount.add(bedrag1);
         panelChooseAmount.add(bedrag2);
         panelChooseAmount.add(bedrag3);
         panelChooseAmount.add(bedrag4);
         panelChooseAmount.add(anderBedrag);
 //        panelChooseAmount.add(abort[1]);
-        panelChooseAmount.add(naarHoofdMenu[1]);
+//        panelChooseAmount.add(naarHoofdMenu[1]);
 
         panelBon.add(noBon);
         panelBon.add(yesBon);
 //        panelBon.add(abort[2]);
-        panelBon.add(naarHoofdMenu[2]);
+//        panelBon.add(naarHoofdMenu[2]);
 
         panelPassword.add(new JLabel("Enter PIN:"));
         panelPassword.add(passwordTextField);
@@ -322,7 +416,7 @@ public class Gui extends JFrame implements ActionListener {
         panelShowBal.add(naarHoofdMenu[4]);
 
         panelFinalizeTransaction.add(tempTa);
-        panelFinalizeTransaction.add(abort[6]);
+//        panelFinalizeTransaction.add(abort[6]);
 
         panelOptions.add(optie1);
         panelOptions.add(optie2);
