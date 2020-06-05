@@ -56,7 +56,7 @@ public class LogIn {
     }
 
     public String getPogingenfromDB() throws SQLException {
-        String checkMistakeQuery = "SELECT mistakes, number FROM account INNER JOIN login ON account.number = login.account_number WHERE login.pass_number = '" + this.passnumber + "';";
+        String checkMistakeQuery = "SELECT mistakes, number FROM account INNER JOIN login ON number = account_number WHERE login.pass_number = '" + this.passnumber + "';";
 
         Statement st = conn.createStatement();
         ResultSet rs = st.executeQuery(checkMistakeQuery);
@@ -69,7 +69,7 @@ public class LogIn {
     //TODO String passNumber hoeft niet meer meegegeven te worden in het eindproduct, dit is nu alleen voor het testen nog zo
     public boolean checkLogin() throws SQLException { //todo password check toevoegen
 
-        int accountNumber = -1;
+        String accountNumber = "";
         //als login correct is ga dan door naar het volgende scherm
 
         String checkMistakeQuery = "SELECT mistakes, number FROM account INNER JOIN login ON account.number = login.account_number WHERE login.pass_number = '" + this.passnumber + "';";
@@ -78,7 +78,7 @@ public class LogIn {
         ResultSet rs = st.executeQuery(checkMistakeQuery);
         while(rs.next()) {
             pogingen = rs.getInt("mistakes");
-            accountNumber = rs.getInt("number");
+            accountNumber = rs.getString("number");
             System.out.println("aantal pogingen: " + pogingen + "\naccountNumber: " + accountNumber);
         }
 
@@ -89,13 +89,13 @@ public class LogIn {
             //reset counter and send to DB
             pogingen = 0;
             //System.out.println(mistakeUpdate);
-            System.out.println("rows affected: " + st.executeUpdate(String.format("UPDATE account SET account.mistakes = %d WHERE number = %d;", pogingen, accountNumber)));
+            System.out.println("rows affected: " + st.executeUpdate(String.format("UPDATE account SET account.mistakes = %d WHERE number = '%s';", pogingen, accountNumber)));
             return true;
         }
 
         else if(pogingen <= 2){
             pogingen++;
-            System.out.println(st.executeUpdate(String.format("UPDATE account SET account.mistakes = %d WHERE number = %d;", pogingen, accountNumber)));
+            System.out.println(st.executeUpdate(String.format("UPDATE account SET account.mistakes = %d WHERE number = '%s';", pogingen, accountNumber)));
             System.out.println("Error: " + (3-pogingen) + " poging(en) over");
         }
 

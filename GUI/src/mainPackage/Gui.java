@@ -484,6 +484,7 @@ public class Gui extends JFrame implements ActionListener {
                 } catch (SQLException e){
                     e.printStackTrace();
                 }
+
                 menuLogin = true;
                 menuStart = false;
                 passwordTextField.setText("");

@@ -13,11 +13,11 @@ public class User {
     public Gui gui;
     public Connection conn;
     public Withdrawal withdrawal;
-    public int accountNumber;
+    public String accountNumber;
 
     private char[] passwordCheck = new char[4];
 
-    User(Gui gui, Connection conn, int accountNumber){
+    User(Gui gui, Connection conn, String accountNumber){
         this.gui = gui;
         this.conn = conn;
         this.accountNumber = accountNumber;
@@ -64,7 +64,7 @@ public class User {
 
 
         Statement st = conn.createStatement();
-        ResultSet rs = st.executeQuery(String.format("SELECT balance FROM account WHERE number = %d", this.accountNumber));
+        ResultSet rs = st.executeQuery(String.format("SELECT balance FROM account WHERE number = '%s'", this.accountNumber));
         if(rs.next())
         {
 
