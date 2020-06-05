@@ -241,13 +241,11 @@ public class Gui extends JFrame implements ActionListener {
         dispensing.setBackground(Color.CYAN);
         //panelChooseAmount
         panelChooseAmount.setBackground(Color.CYAN);
-
         //panelOptions
         panelOptions.setBackground(Color.CYAN);
         //panelBon
         panelBon.setLayout(null);
         panelBon.setBackground(Color.CYAN);
-//        panelBon.add(abort[3]);
         panelBon.add(afbreken[1]);
         panelBon.add(taYesBon);
         panelBon.add(taNoBon);
@@ -265,16 +263,28 @@ public class Gui extends JFrame implements ActionListener {
         receipt.setEditable(false);
         taYesBon.setBackground(Color.CYAN);
         taNoBon.setBackground(Color.CYAN);
-        yesBon.setBounds(350,180, 200, 200);
-        noBon.setBounds(1300, 180, 200, 200);
+        yesBon.setBounds(350,380, 200, 200);
+        noBon.setBounds(1300, 380, 200, 200);
         receipt.setBounds(710,100,800,70);
-        taYesBon.setBounds(50,180,200,200); //temp
-        taNoBon.setBounds(1650, 180, 200,200); //temp
+        taYesBon.setBounds(50,380,200,200); //temp
+        taNoBon.setBounds(1650, 380, 200,200); //temp
         abort[1].setBounds(1300, 700, 200, 200); //temp
         //panelShowBal
+        panelShowBal.setLayout(null);
         panelShowBal.add(abort[2]);
         panelShowBal.add(naarHoofdMenu[0]);
         panelShowBal.add(taShowBal);
+        panelShowBal.add(afbreken[2]);
+        panelShowBal.add(title[4]);
+        taShowBal.setFont(font);
+        panelShowBal.setBackground(Color.CYAN);
+        taShowBal.setEditable(false);
+        taShowBal.setBackground(Color.CYAN);
+        taShowBal.setBounds(700, 300, 900, 200);
+        abort[2].setBounds(1300, 700, 200, 200); //temp
+        naarHoofdMenu[0].setBounds(700, 700, 200, 200); //temp
+
+
 
 
         panelChooseAmount.add(bedrag1);
@@ -507,7 +517,7 @@ public class Gui extends JFrame implements ActionListener {
                 try{
                     if(login.checkLogin()) {//todo  //test string: "2A 9F 0D 0B" //juiste code is: login.getPassnumber()
                         user.requestUserVariables();
-                        taShowBal.setText(Double.toString(user.getBalance()));
+                        taShowBal.setText("Your balance is: " + (Double.toString(user.getBalance())));
                         wrongPassword.setVisible(false);
                         changePanel(panelMain);
                     } else {

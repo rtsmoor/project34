@@ -104,7 +104,7 @@ void simulateLogin(){
   Serial.println("ArdSend_*");
   delay(1000);
   //als de gebruiker op # drukt, verstuur dan eerst het gehaste wachtwoord, en daarna het # (of alleen het wachtwoord, nog even kijken wat handig is)
-  Serial.println("ArdPinHashed_c7a8ac60f7a34ea1b7e04011d32436392f44a3df42b93e4e57f064f27f9f93f91c2e266cf29e46c612dff645c1968b6b42059ca19ba1d8d2dc6c5a5293dca7");
+  Serial.println("ArdPinHashed_c7a8ac60f7a34ea1b7e04011d3243639");
   delay(1000);
   Serial.println("ArdSend_#");
   delay(1000);
