@@ -17,6 +17,7 @@ import java.util.Arrays;
 import static java.lang.Thread.sleep;
 
 
+import static javax.swing.JOptionPane.getDesktopPaneForComponent;
 import static javax.swing.JOptionPane.showMessageDialog;
 
 public class Gui extends JFrame implements ActionListener {
@@ -90,7 +91,7 @@ public class Gui extends JFrame implements ActionListener {
     public JTextField passwordTextField = new JTextField(4);
     public JFormattedTextField customBedragField = new JFormattedTextField();
     private JTextArea taShowBal = new JTextArea();
-    private JTextArea taPanelStart = new JTextArea("Scan uw pas om verder te gaan");
+    private JTextArea taPanelStart = new JTextArea("Scan your pass to continue");
     private JTextArea taInvalidInput = new JTextArea("Voer getallen in tussen 0-9,\nen waar het laatste getal 0 of 5 is. \nAndere karakters zijn niet toegestaan!");
     private JTextArea taInsufficientBills = new JTextArea("Er zijn niet genoeg biljetten om deze actie uit te voeren");
     private JTextArea taInsufficientMoney = new JTextArea("Er is niet genoeg saldo om deze actie uit te voeren");
@@ -102,12 +103,14 @@ public class Gui extends JFrame implements ActionListener {
     private JTextArea taNoBon = new JTextArea("No []");
     private JTextArea taYesBon = new JTextArea("Yes []");
     private JTextArea receipt = new JTextArea("Do you want a receipt?");
-    private JTextArea errorPassNotFound = new JTextArea("Kan pas niet lezen: houd je pas goed voor de scanner\n " +
-            "Als dit probleem zich blijft voordoen, neem dan contact op met uw bank");
+    private JTextArea wrongPassword = new JTextArea("The pin that you entered is incorrect, please try again");
+    private JTextArea numberAttempts = new JTextArea("Attempts left:");
+    private JTextArea errorPassNotFound = new JTextArea("Can't read the pass: put the pass close to the scanner \n " +
+            "If this problem persists, please contact your bank");
     private Font font = new Font("Comic Sans MS", Font.BOLD, 50);
     private Font fontTitle = new Font("Segoe Script", Font.BOLD, 70);
-    private ImageIcon img = new ImageIcon("/resources/background1.jpg");
-    private JLabel background1 = new JLabel("", img, JLabel.CENTER);
+//    private ImageIcon img = new ImageIcon("/resources/background1.jpg");
+//    private JLabel background1 = new JLabel("", img, JLabel.CENTER);
 //    public void setSerialConnection(SerialConnection serialConnection){
 //        this.serialConnection = serialConnection;
 //    }
@@ -154,12 +157,6 @@ public class Gui extends JFrame implements ActionListener {
         panelMain.add(quickPin);
         panelMain.add(showBal);
         panelMain.add(customPin);
-
-
-        //achtergrond
-        background1.setBounds(0,0,1600,900);
-        frame.add(background1);
-        background1.setVisible(true);
         //PanelStart
         panelStart.setLayout(null);
         panelStart.add(nextPage[0]);
@@ -170,10 +167,13 @@ public class Gui extends JFrame implements ActionListener {
         errorPassNotFound.setVisible(false);
         errorPassNotFound.setForeground(Color.red);
         errorPassNotFound.setFont(font);
+        errorPassNotFound.setBackground(Color.CYAN);
+        errorPassNotFound.setEditable(false);
         taPanelStart.setFont(font);
         taPanelStart.setEditable(false);
         taPanelStart.setBackground(Color.CYAN);
-        taPanelStart.setBounds(580,250,800,70);
+        errorPassNotFound.setBounds(360,600,1400,140);
+        taPanelStart.setBounds(620,250,800,70);
         nextPage[0].setBounds(860,340,200,200);
         title[0].setBounds(610,10,800,100);
         //PanelPassword
@@ -182,15 +182,28 @@ public class Gui extends JFrame implements ActionListener {
         panelPassword.add(nextPage[1]);
         panelPassword.add(passwordTextField);
         panelPassword.add(title[1]);
+        panelPassword.add(wrongPassword);
+        panelPassword.add(numberAttempts);
+        wrongPassword.setBackground(Color.CYAN);
+        wrongPassword.setFont(font);
+        wrongPassword.setEditable(false);
+        wrongPassword.setForeground(Color.RED);
+        wrongPassword.setVisible(false);
+        numberAttempts.setBackground(Color.CYAN);
+        numberAttempts.setFont(font);
+        numberAttempts.setEditable(false);
+        numberAttempts.setForeground(Color.orange);
         panelPassword.setBackground(Color.CYAN);
         enterPin.setFont(font);
         enterPin.setEditable(false);
         enterPin.setBackground(Color.CYAN);
         passwordTextField.setFont(font);
         passwordTextField.setBackground(Color.CYAN);
+        numberAttempts.setBounds(750, 400,400,70);
+        wrongPassword.setBounds(300, 500, 1400,70);
         enterPin.setBounds(820,270,400,70);
         passwordTextField.setBounds(860,340,200,40);
-        nextPage[1].setBounds(860,540,200,200);
+        nextPage[1].setBounds(860,740,200,200);
         //PanelMain
         panelMain.setLayout(null);
         panelMain.setBackground(Color.CYAN);
@@ -213,10 +226,10 @@ public class Gui extends JFrame implements ActionListener {
         kiesBedrag.setEditable(false);
         saldo.setEditable(false);
         abort[0].setBounds(1100, 700, 200, 200); //temp
-        quickPin.setBounds(650, 180, 200, 200); //temp
-        showBal.setBounds(650, 700, 200, 200); //temp
+        quickPin.setBounds(700, 180, 200, 200); //temp
+        showBal.setBounds(700, 700, 200, 200); //temp
         customPin.setBounds(1100,180, 200, 200); //temp
-        snelPinnen.setBounds(50,180, 550,70);
+        snelPinnen.setBounds(50,180, 620,70);
         kiesBedrag.setBounds(1400,180, 500,70);
         saldo.setBounds(50,700, 300,70);
         //panel dispensing
@@ -258,6 +271,10 @@ public class Gui extends JFrame implements ActionListener {
         taYesBon.setBounds(50,180,200,200); //temp
         taNoBon.setBounds(1650, 180, 200,200); //temp
         abort[1].setBounds(1300, 700, 200, 200); //temp
+        //panelShowBal
+        panelShowBal.add(abort[2]);
+        panelShowBal.add(naarHoofdMenu[0]);
+        panelShowBal.add(taShowBal);
 
 
         panelChooseAmount.add(bedrag1);
@@ -270,7 +287,7 @@ public class Gui extends JFrame implements ActionListener {
 
         panelBon.add(noBon);
         panelBon.add(yesBon);
-        panelBon.add(abort[2]);
+//        panelBon.add(abort[2]);
         panelBon.add(naarHoofdMenu[2]);
 
         panelPassword.add(new JLabel("Enter PIN:"));
