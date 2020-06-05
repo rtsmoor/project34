@@ -116,7 +116,6 @@ void loop(){
    if(received){
     inputHandler();
    }
-   
     // Look for new cards
    if(cardPresented == false){
     if ( ! mfrc522.PICC_IsNewCardPresent()) 
@@ -141,7 +140,8 @@ void loop(){
   
     content.toUpperCase();
     passUID = content.substring(1);
-    Serial.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+    Serial.print("ArdPassNr_");
+    Serial.println(passUID);
     cardPresented = true;
 
     if(cardBlocked){
@@ -166,9 +166,16 @@ void loop(){
         int currentNumber = enteredCodeArray[(keyCounter-x)-1] - '0';
         enteredCode += currentNumber * round(pow(10, x));
       }
-
-
+      
       hashMaker(&sha512, &pinHash, 4);
+
+      String checkCode;
+      for(int i = 0; i < 32; i++){
+      checkCode += (char)hashedCode.charAt(i);
+      }
+        Serial.print("ArdPinHashed_");
+        Serial.println(checkCode);
+
 
       //Start check
       Serial.println("authorizing");
@@ -177,16 +184,17 @@ void loop(){
     }
 
     
-    if(customKey != '*' || customKey != 'D'){
+    if(customKey != '*' && customKey != 'D'){
     enteredCodeArray[keyCounter] = customKey;
     if(keyCounter >= 0){
-      Serial.println('*');
+      Serial.println("ArdSend_*");
       }
     }
     
     if(customKey == 'D'){   //char D is deleting the whole line
       if(keyCounter > 0){
         keyCounter = -1;
+        Serial.println("ArdSend_D");
       }
       pinCount = 0;
       for(int x = 0; x < keyCounter; x++){
@@ -210,7 +218,6 @@ void resetting(){
     passUID = "00000000000";
     cardBlocked = false;
     hashedCode = "";
-    setup();
 }
 
 //serial communication code
