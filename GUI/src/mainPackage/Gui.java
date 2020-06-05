@@ -21,10 +21,10 @@ import static javax.swing.JOptionPane.showMessageDialog;
 
 public class Gui extends JFrame implements ActionListener {
     public int array_length = 10;
-    private int amount4 = 100;
-    private int amount3 = 100;
-    private int amount2 = 100;
-    private int amount1 = 100;
+    private int amount4 = 10;
+    private int amount3 = 10;
+    private int amount2 = 10;
+    private int amount1 = 10;
     public int[] amounts = {amount1, amount2, amount3, amount4}; // volgorde biljetten: 5, 10, 20, 50
 
     private boolean menuStart = true; //startscherm, is true aan het begin en nadat de gebruiker is uitgelogt
@@ -102,6 +102,8 @@ public class Gui extends JFrame implements ActionListener {
     private JTextArea taNoBon = new JTextArea("No []");
     private JTextArea taYesBon = new JTextArea("Yes []");
     private JTextArea receipt = new JTextArea("Do you want a receipt?");
+    private JTextArea errorPassNotFound = new JTextArea("Kan pas niet lezen: houd je pas goed voor de scanner\n " +
+            "Als dit probleem zich blijft voordoen, neem dan contact op met uw bank");
     private Font font = new Font("Comic Sans MS", Font.BOLD, 50);
     private Font fontTitle = new Font("Segoe Script", Font.BOLD, 70);
     private ImageIcon img = new ImageIcon("/resources/background1.jpg");
@@ -164,6 +166,10 @@ public class Gui extends JFrame implements ActionListener {
         panelStart.setBackground(Color.CYAN);
         panelStart.add(taPanelStart);
         panelStart.add(title[0]);
+        panelStart.add(errorPassNotFound);
+        errorPassNotFound.setVisible(false);
+        errorPassNotFound.setForeground(Color.red);
+        errorPassNotFound.setFont(font);
         taPanelStart.setFont(font);
         taPanelStart.setEditable(false);
         taPanelStart.setBackground(Color.CYAN);
@@ -455,12 +461,17 @@ public class Gui extends JFrame implements ActionListener {
         if(menuStart && input.contains("ArdPassNr_")){
             String temp = input.replace("ArdPassNr_", "");
             login.setRfidDetected(true);
-            login.setPassnumber(temp);
-            System.out.println("Naar inlogscherm");
-            menuLogin = true;
-            menuStart = false;
-            passwordTextField.setText("");
-            changePanel(panelPassword);
+            login.checkPassnumber(temp);
+            if(!("".equals(login.getPassnumber()))) {
+                System.out.println("Naar inlogscherm");
+                menuLogin = true;
+                menuStart = false;
+                passwordTextField.setText("");
+                errorPassNotFound.setVisible(false);
+                changePanel(panelPassword);
+            } else {
+                errorPassNotFound.setVisible(true);
+            }
         }
 
         //dit is voor de pincode invoeren
@@ -471,7 +482,7 @@ public class Gui extends JFrame implements ActionListener {
 
             if("ArdSend_#".equals(input)){
                 System.out.println("attempt login");
-                if(login.requestLogin(login.getPassnumber())) {//todo  //test string: "2A 9F 0D 0B" //juiste code is: login.getPassnumber()
+                if(login.requestLogin()) {//todo  //test string: "2A 9F 0D 0B" //juiste code is: login.getPassnumber()
                     // user.setPasswordCheck(passwordField.getPassword()); //oude code
                     //System.out.println("passwd: " + Arrays.toString(user.getPasswordCheck()));
                     passwordTextField.setText("");
@@ -483,6 +494,7 @@ public class Gui extends JFrame implements ActionListener {
                     changePanel(panelMain); //?moet nog veranderd worden naar inlogscherm?
                 }
             }
+
             if("ArdSend_D".equals(input)){
                 passwordTextField.setText("");
             }
@@ -732,7 +744,7 @@ public class Gui extends JFrame implements ActionListener {
         //if statement met string van arduino
         if("wachtwoord".equalsIgnoreCase((e.getActionCommand()))){
             System.out.println("login");
-            if(login.requestLogin("2A 9F 0D 0B")) {//todo  //test string: "2A 9F 0D 0B" //juiste code is: login.getPassnumber()
+            if(login.requestLogin()) {//todo  //test string: "2A 9F 0D 0B" //juiste code is: login.getPassnumber()
                // user.setPasswordCheck(passwordField.getPassword()); //oude code
                 //System.out.println("passwd: " + Arrays.toString(user.getPasswordCheck()));
                 passwordTextField.setText("");

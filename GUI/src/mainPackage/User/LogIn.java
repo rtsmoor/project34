@@ -40,19 +40,34 @@ public class LogIn {
         this.passnumber = passnumber;
     }
 
-    public boolean requestLogin(String passnumber){
+    public void checkPassnumber(String passnumber){
+        String temp = "";
+        String query = String.format("SELECT pass_number FROM login WHERE pass_number = '%s'", passnumber);
+        try {
+            Statement st = conn.createStatement();
+            ResultSet rs = st.executeQuery(query);
+
+            if(rs.next()) temp = rs.getString("pass_number");
+        } catch (SQLException ex){
+            System.out.println("kan pass niet lezen/pas staat niet in de DB");
+        } finally {
+            this.passnumber = temp;
+        }
+    }
+
+    public boolean requestLogin(){
         //GUI vraagt om pas
         //wanneer pas is ingevoerd ga dan verder
         try {
-            return checkLogin(passnumber);
+            return checkLogin();
         } catch (SQLException e){
             e.printStackTrace();
         }
         return false;
     }
     //TODO String passNumber hoeft niet meer meegegeven te worden in het eindproduct, dit is nu alleen voor het testen nog zo
-    public boolean checkLogin(String passNumber) throws SQLException { //todo password check toevoegen
-        this.passnumber = passNumber;
+    public boolean checkLogin() throws SQLException { //todo password check toevoegen
+
         int accountNumber = -1;
         //als login correct is ga dan door naar het volgende scherm
 
