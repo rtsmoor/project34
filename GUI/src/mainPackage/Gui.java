@@ -39,7 +39,7 @@ public class Gui extends JFrame implements ActionListener {
     private boolean menuBon = false; //menu waar je kan kiezen voor een bon
 
     private User user;
-    private String version = "1.2.5";
+    private String version = "1.2.6";
     private LogIn login;
     public SerialConnection serialConnection;
     public Connection conn;
@@ -81,10 +81,10 @@ public class Gui extends JFrame implements ActionListener {
     private JButton bedrag4 = new JButton("150");
     private JButton anderBedrag = new JButton("Ander bedrag");
 
-    public JButton optie1 = new JButton("ERROR");
-    public JButton optie2 = new JButton("ERROR");
-    public JButton optie3 = new JButton("ERROR");
-    public JButton optie4 = new JButton("ERROR");
+    public JTextArea optie1 = new JTextArea("ERROR");
+    public JTextArea optie2 = new JTextArea("ERROR");
+    public JTextArea optie3 = new JTextArea("ERROR");
+    public JTextArea optie4 = new JTextArea("ERROR");
 
     public Timer logoutTimer = new Timer(300000, this); //todo !!!naar 30000 zetten na het testen!!!
 
@@ -407,15 +407,6 @@ public class Gui extends JFrame implements ActionListener {
         nextPage[2].addActionListener(this);
         nextPage[2].setActionCommand("custAmountToNext");
 
-        optie1.addActionListener(this);
-        optie1.setActionCommand("optie1");
-        optie2.addActionListener(this);
-        optie2.setActionCommand("optie2");
-        optie3.addActionListener(this);
-        optie3.setActionCommand("optie3");
-        optie4.addActionListener(this);
-        optie4.setActionCommand("optie4");
-
         logoutTimer.setActionCommand("abort");
         logoutTimer.start();
 
@@ -451,12 +442,12 @@ public class Gui extends JFrame implements ActionListener {
             resetFlags();
             menuStart = true;
             changePanel(panelStart);
-//            serialConnection.stringOut("abort"); // todo arduino code voor abort
-//            try {
-//                sleep(100);
-//            } catch (InterruptedException ex) {
-//                ex.printStackTrace();
-//            }
+            serialConnection.stringOut("abort"); // todo arduino code voor abort
+            try {
+                sleep(100);
+            } catch (InterruptedException ex) {
+                ex.printStackTrace();
+            }
 
 
 
@@ -517,11 +508,12 @@ public class Gui extends JFrame implements ActionListener {
                 try{
                     if(login.checkLogin()) {//todo  //test string: "2A 9F 0D 0B" //juiste code is: login.getPassnumber()
                         user.requestUserVariables();
-                        taShowBal.setText("Your balance is: " + (Double.toString(user.getBalance())));
+                        taShowBal.setText("Your balance is: " + (user.getBalance()));
                         wrongPassword.setVisible(false);
                         changePanel(panelMain);
                     } else {
                         wrongPassword.setVisible(true);
+                        numberAttempts.setText("Attempts left: " + login.getPogingenfromDB());
                     }
                 } catch (SQLException ex) {
                     ex.printStackTrace();
@@ -536,7 +528,7 @@ public class Gui extends JFrame implements ActionListener {
 
             if(input.contains("ArdPinHashed_")){
                 String temp = input.replace("ArdPinHashed_", "");
-                login.setHashedPIN(temp); //hier een sout om te testen of het werkt
+                login.setHashedPIN(temp);
                 System.out.println("hashed pin: " + temp);
             }
         }
@@ -544,6 +536,20 @@ public class Gui extends JFrame implements ActionListener {
         if(menuMain){
             if("ArdSend_1".equals(input)){
                 //70 euro pinnen
+                if (user.getBalance() - 20 < 0) { //kijken of saldo lager is dan bedrag dat gepind wordt
+                    panelMain.add(taInsufficientMoney);
+                    taInsufficientMoney.setVisible(true);
+                } else {
+                    System.out.println("70 euro");
+                    user.makeWithdrawal();
+                    user.withdrawal.customWithdrawal(70);
+                    try{
+                        user.withdrawal.displayOptions();
+                    }catch (Exception ex){
+                        ex.printStackTrace();
+                    }
+                    changePanel(panelBon);
+                }
             }
 
             if("ArdSend_2".equals(input)){
@@ -554,8 +560,93 @@ public class Gui extends JFrame implements ActionListener {
 
             if("ArdSend_3".equals(input)){
                 //pin menu
+                System.out.println("custom bedrag pinnen");
+                taInsufficientMoney.setVisible(false);
+                panelChooseAmount.add(taInsufficientMoney);
+                changePanel(panelChooseAmount);
             }
          }
+
+        if(menuChooseAmounts){
+            if("ArdSend_1".equals(input)){
+                //pin 20
+                if(amount1 > 0) {
+                    if (user.getBalance() - 20 < 0) { //kijken of saldo lager is dan bedrag dat gepind wordt
+                        taInsufficientMoney.setVisible(true);
+                    } else {
+                        System.out.println("20 euro");
+                        user.makeWithdrawal();
+                        user.withdrawal.customWithdrawal(20);
+                        try{
+                            user.withdrawal.displayOptions();
+                        }catch (Exception ex){
+                            ex.printStackTrace();
+                        }
+
+                        changePanel(panelOptions);
+                        amount1 = amount1 - 1;
+                        System.out.println("Amount1:" + amount1);
+                    }
+                }
+                else{
+                    taInsufficientBills.setVisible(true);
+                }
+            }
+
+            if("ArdSend_2".equals(input)){
+                //pin 50
+            }
+
+            if("ArdSend_3".equals(input)){
+                //pin 100
+            }
+
+            if("ArdSend_4".equals(input)){
+                //pin 150
+            }
+
+            if("ArdSend_5".equals(input)){
+                // pin ander bedrag
+            }
+        }
+
+        if(menuMoneyOptions){
+            if("ArdSend_1".equals(input)) {
+                changePanel(dispensing);
+                try {
+                    user.withdrawal.sendArray(1);
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }
+            }
+
+            if("ArdSend_2".equals(input)) {
+                changePanel(dispensing);
+                try {
+                    user.withdrawal.sendArray(2);
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }
+            }
+
+            if("ArdSend_3".equals(input)) {
+                changePanel(dispensing);
+                try {
+                    user.withdrawal.sendArray(3);
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }
+            }
+
+            if("ArdSend_4".equals(input)) {
+                changePanel(dispensing);
+                try {
+                    user.withdrawal.sendArray(4);
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
     }
 
     //TODO DEZE HELE METHODE VERVANGEN MET IETS ANDERS DAT DE ARDUINO KEYPAD INPUT GEBRUIKT (MISSCHIEN SWITCH CASE OF IF STATEMENTS)

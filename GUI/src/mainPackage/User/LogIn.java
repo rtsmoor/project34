@@ -63,6 +63,7 @@ public class LogIn {
         if(rs.next()) pogingen = rs.getInt("mistakes");
         String temp = "";
         if(pogingen != -1) temp = Integer.toString((3 - pogingen));
+        st.close();
         return temp;
     }
 

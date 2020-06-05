@@ -83,6 +83,7 @@ void simulateLogin(){
   avoidLoop = true;
   cardPresented = true;
   String passNumber = "2A 9F 0D 0B";
+  delay(50);
   Serial.print("ArdPassNr_");
   Serial.println(passNumber);
   delay(1000); //assume the user will wait a little bit before the next input
