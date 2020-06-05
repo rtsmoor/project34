@@ -82,7 +82,7 @@ void inputHandler() {
 void simulateLogin(){
   avoidLoop = true;
   cardPresented = true;
-  String passNumber = "2A 9F 0E 0B";
+  String passNumber = "2A 9F 0D 0B";
   delay(50);
   Serial.print("ArdPassNr_");
   Serial.println(passNumber);

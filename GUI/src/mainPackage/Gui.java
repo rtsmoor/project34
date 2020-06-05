@@ -39,7 +39,7 @@ public class Gui extends JFrame implements ActionListener {
     private boolean menuBon = false; //menu waar je kan kiezen voor een bon
 
     private User user;
-    private String version = "1.2.4";
+    private String version = "1.2.5";
     private LogIn login;
     public SerialConnection serialConnection;
     public Connection conn;
@@ -104,7 +104,7 @@ public class Gui extends JFrame implements ActionListener {
     private JTextArea taYesBon = new JTextArea("Yes []");
     private JTextArea receipt = new JTextArea("Do you want a receipt?");
     private JTextArea wrongPassword = new JTextArea("The pin that you entered is incorrect, please try again");
-    private JTextArea numberAttempts = new JTextArea("Attempts left:");
+    public JTextArea numberAttempts = new JTextArea("Attempts left:");
     private JTextArea errorPassNotFound = new JTextArea("Can't read the pass: put the pass close to the scanner \n " +
             "If this problem persists, please contact your bank");
     private Font font = new Font("Comic Sans MS", Font.BOLD, 50);
@@ -199,7 +199,7 @@ public class Gui extends JFrame implements ActionListener {
         enterPin.setBackground(Color.CYAN);
         passwordTextField.setFont(font);
         passwordTextField.setBackground(Color.CYAN);
-        numberAttempts.setBounds(750, 400,400,70);
+        numberAttempts.setBounds(750, 400,450,70);
         wrongPassword.setBounds(300, 500, 1400,70);
         enterPin.setBounds(820,270,400,70);
         passwordTextField.setBounds(860,340,200,40);
@@ -345,8 +345,6 @@ public class Gui extends JFrame implements ActionListener {
 
         eventHandler();
 
-// todo maak GridBagLayout waar de knoppen in worden toegevoegd.
-//  remove panels van het JFrame als je een nieuwe erop wilt zetten
       /*  mainFrame.getContentPane().add(BorderLayout.SOUTH, );*/
 //        frame.getContentPane().add(BorderLayout.NORTH, taPanelMain);
         frame.getContentPane().add(BorderLayout.CENTER, panelStart);
@@ -481,10 +479,16 @@ public class Gui extends JFrame implements ActionListener {
             login.checkPassnumber(temp);
             if(!("".equals(login.getPassnumber()))) {
                 System.out.println("Naar inlogscherm");
+                try{
+                    numberAttempts.setText("Attempts left: " + login.getPogingenfromDB());
+                } catch (SQLException e){
+                    e.printStackTrace();
+                }
                 menuLogin = true;
                 menuStart = false;
                 passwordTextField.setText("");
                 errorPassNotFound.setVisible(false);
+                wrongPassword.setVisible(false);
                 changePanel(panelPassword);
             } else {
                 errorPassNotFound.setVisible(true);
@@ -499,16 +503,19 @@ public class Gui extends JFrame implements ActionListener {
 
             if("ArdSend_#".equals(input)){
                 System.out.println("attempt login");
-                if(login.requestLogin()) {//todo  //test string: "2A 9F 0D 0B" //juiste code is: login.getPassnumber()
-                    // user.setPasswordCheck(passwordField.getPassword()); //oude code
-                    //System.out.println("passwd: " + Arrays.toString(user.getPasswordCheck()));
-                    passwordTextField.setText("");
-                    try {
+                try{
+                    if(login.checkLogin()) {//todo  //test string: "2A 9F 0D 0B" //juiste code is: login.getPassnumber()
                         user.requestUserVariables();
-                    } catch (SQLException ex) {
-                        ex.printStackTrace();
+                        taShowBal.setText(Double.toString(user.getBalance()));
+                        wrongPassword.setVisible(false);
+                        changePanel(panelMain);
+                    } else {
+                        wrongPassword.setVisible(true);
                     }
-                    changePanel(panelMain); //?moet nog veranderd worden naar inlogscherm?
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                } finally {
+                    passwordTextField.setText("");
                 }
             }
 
@@ -530,8 +537,7 @@ public class Gui extends JFrame implements ActionListener {
 
             if("ArdSend_2".equals(input)){
                 System.out.println("showing balance");
-
-                taShowBal.setText(Double.toString(user.getBalance()));
+                //balance menu
                 changePanel(panelShowBal);
             }
 
@@ -586,7 +592,6 @@ public class Gui extends JFrame implements ActionListener {
             //code om het saldo te laten zien
             System.out.println("showing balance");
 
-            taShowBal.setText(Double.toString(user.getBalance()));
             changePanel(panelShowBal);
         }
 
@@ -761,16 +766,20 @@ public class Gui extends JFrame implements ActionListener {
         //if statement met string van arduino
         if("wachtwoord".equalsIgnoreCase((e.getActionCommand()))){
             System.out.println("login");
-            if(login.requestLogin()) {//todo  //test string: "2A 9F 0D 0B" //juiste code is: login.getPassnumber()
-               // user.setPasswordCheck(passwordField.getPassword()); //oude code
-                //System.out.println("passwd: " + Arrays.toString(user.getPasswordCheck()));
-                passwordTextField.setText("");
-                try {
-                    user.requestUserVariables();
-                } catch (SQLException ex) {
-                    ex.printStackTrace();
+            try {
+                if (login.checkLogin()) {//todo  //test string: "2A 9F 0D 0B" //juiste code is: login.getPassnumber()
+                    // user.setPasswordCheck(passwordField.getPassword()); //oude code
+                    //System.out.println("passwd: " + Arrays.toString(user.getPasswordCheck()));
+                    passwordTextField.setText("");
+                    try {
+                        user.requestUserVariables();
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
+                    }
+                    changePanel(panelMain); //?moet nog veranderd worden naar inlogscherm?
                 }
-                changePanel(panelMain); //?moet nog veranderd worden naar inlogscherm?
+            } catch(SQLException ex){
+                ex.printStackTrace();
             }
         }
 

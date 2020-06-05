@@ -13,7 +13,7 @@ public class LogIn {
     private Connection conn;
     private String passnumber = "";
     private String hashedPIN = "";
-    private int pogingen = 0;
+    private int pogingen = -1;
 
     public LogIn(Gui gui, Connection conn){
         this.gui = gui;
@@ -55,16 +55,17 @@ public class LogIn {
         }
     }
 
-    public boolean requestLogin(){
-        //GUI vraagt om pas
-        //wanneer pas is ingevoerd ga dan verder
-        try {
-            return checkLogin();
-        } catch (SQLException e){
-            e.printStackTrace();
-        }
-        return false;
+    public String getPogingenfromDB() throws SQLException {
+        String checkMistakeQuery = "SELECT mistakes, number FROM account INNER JOIN login ON account.number = login.account_number WHERE login.pass_number = '" + this.passnumber + "';";
+
+        Statement st = conn.createStatement();
+        ResultSet rs = st.executeQuery(checkMistakeQuery);
+        if(rs.next()) pogingen = rs.getInt("mistakes");
+        String temp = "";
+        if(pogingen != -1) temp = Integer.toString((3 - pogingen));
+        return temp;
     }
+
     //TODO String passNumber hoeft niet meer meegegeven te worden in het eindproduct, dit is nu alleen voor het testen nog zo
     public boolean checkLogin() throws SQLException { //todo password check toevoegen
 
@@ -81,7 +82,7 @@ public class LogIn {
             System.out.println("aantal pogingen: " + pogingen + "\naccountNumber: " + accountNumber);
         }
 
-        if (true && pogingen < 3) {//todo verander true naar de waarde die de arduino doorstuurt als de login correct is, of zorg ervoor dat het java programma het checkt
+        if (comparePassword() && pogingen < 3) {
             System.out.println("login successful");
             User user = new User(gui, conn, accountNumber); // creates a new user session every time you log in
             gui.setUser(user);
@@ -107,6 +108,18 @@ public class LogIn {
         st.close();
         return false;
         //als login fout is, geef foutmelding weer en aantal pogingen die er nog over zijn
+    }
+
+    private boolean comparePassword() throws SQLException{
+        String query = String.format("SELECT pincode FROM login WHERE pass_number = '%s'", passnumber);
+        Statement st = conn.createStatement();
+        ResultSet rs = st.executeQuery(query);
+
+        if(rs.next()){
+            String temp = rs.getString("pincode");
+            if(temp.equals(this.hashedPIN)) return true;
+        }
+        return false;
     }
 
     public void clearLoginVariables(){
