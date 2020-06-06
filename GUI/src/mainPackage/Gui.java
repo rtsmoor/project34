@@ -65,7 +65,7 @@ public class Gui extends JFrame implements ActionListener {
      public JPanel panelFinalizeTransaction = new JPanel();
      public JPanel panelOptions = new JPanel();
      public JPanel dispensing = new JPanel();
-     private JTextArea tempTa = new JTextArea("hier komt overzichtelijk de transactie informatie \nterwijl het geld uit de dispenser komt");
+     private JTextArea taReceiptPrinted = new JTextArea("Your receipt is being printed");
 
     private JButton yesBon = new JButton("Yes");
     private JButton noBon = new JButton("No");
@@ -79,6 +79,8 @@ public class Gui extends JFrame implements ActionListener {
     JTextArea[] title = new JTextArea[array_length];
     JTextArea[] afbreken = new JTextArea[array_length];
     JTextArea[] taNaarHoofdmenu = new JTextArea[array_length];
+    JTextArea[] taInsufficientBills = new JTextArea[array_length];//panelchooseamount = 2  panelmain = 0  panelcustomamount = 1
+    JTextArea[] taInsufficientMoney = new JTextArea[array_length];
 
     private JButton bedrag1 = new JButton("20");
     private JButton bedrag2 = new JButton("50");
@@ -97,31 +99,31 @@ public class Gui extends JFrame implements ActionListener {
     public JFormattedTextField customBedragField = new JFormattedTextField();
     private JTextArea taShowBal = new JTextArea();
     private JTextArea taPanelStart = new JTextArea("Scan your pass to continue");
-    private JTextArea taInvalidInput = new JTextArea("Voer getallen in tussen 0-9,\nen waar het laatste getal 0 of 5 is. \nAndere karakters zijn niet toegestaan!");
-    private JTextArea taInsufficientBills = new JTextArea("Er zijn niet genoeg biljetten om deze actie uit te voeren");
-    private JTextArea taInsufficientMoney = new JTextArea("Er is niet genoeg saldo om deze actie uit te voeren");
+    private JTextArea taInvalidInput = new JTextArea("Enter numbers between 0-9,\nand where the last number is 0 or 5.\nOther characters are not allowed!");
+//    private JTextArea taInsufficientBills = new JTextArea("Er zijn niet genoeg biljetten om deze actie uit te voeren");
+//    private JTextArea taInsufficientMoney = new JTextArea("Er is niet genoeg saldo om deze actie uit te voeren");
     private JTextArea enterPin = new JTextArea("ENTER PIN");
     private JTextArea taDispensing = new JTextArea("Dispensing...");
     private JTextArea snelPinnen = new JTextArea("Quick €70 Withdrawal [1]");
-    private JTextArea taBalance = new JTextArea("Balance [2]");
-    private JTextArea kiesBedrag = new JTextArea("Choose Amount [3]");
-    private JTextArea taNoBon = new JTextArea("No [1]");
-    private JTextArea taYesBon = new JTextArea("Yes [2]");
+    private JTextArea taBalance = new JTextArea("Balance [3]");
+    private JTextArea kiesBedrag = new JTextArea("Choose Amount [2]");
+    private JTextArea taNoBon = new JTextArea("No [2]");
+    private JTextArea taYesBon = new JTextArea("Yes [1]");
     private JTextArea receipt = new JTextArea("Do you want a receipt?");
-    private JTextArea taBedrag1 = new JTextArea("20 [1]");
-    private JTextArea taBedrag2 = new JTextArea("50 [2]");
-    private JTextArea taBedrag3 = new JTextArea("100 [3]");
-    private JTextArea taBedrag4 = new JTextArea("150 [4]");
-    private JTextArea taOtherAmount = new JTextArea("Other Amount [5]");
+    private JTextArea taBedrag1 = new JTextArea("20 []");
+    private JTextArea taBedrag2 = new JTextArea("50 []");
+    private JTextArea taBedrag3 = new JTextArea("100 []");
+    private JTextArea taBedrag4 = new JTextArea("150 []");
+    private JTextArea taOtherAmount = new JTextArea("Other Amount []");
+    private JTextArea taCustomAmount = new JTextArea("Enter custom amount:");
     private JTextArea passBlocked = new JTextArea("Your pass has been blocked, please contact your bank");
     private JTextArea wrongPassword = new JTextArea("The pin that you entered is incorrect, please try again");
     public JTextArea numberAttempts = new JTextArea("Attempts left:");
     private JTextArea errorPassNotFound = new JTextArea("Can't read the pass: put the pass close to the scanner \n " +
             "If this problem persists, please contact your bank");
-    private Font font = new Font("Comic Sans MS", Font.BOLD, 50);
+    private Font font = new Font("Neo Sans", Font.BOLD, 50);
     private Font fontTitle = new Font("Segoe Script", Font.BOLD, 70);
-    private Image icon = getToolkit().getImage(("GUI/resources/icon.jpg"));
-//    private JLabel background1 = new JLabel("", img, JLabel.CENTER);
+    private Image icon = getToolkit().getImage(("resources/icon.jpg"));
 //    public void setSerialConnection(SerialConnection serialConnection){
 //        this.serialConnection = serialConnection;
 //    }
@@ -158,6 +160,22 @@ public class Gui extends JFrame implements ActionListener {
             taNaarHoofdmenu[i].setBackground(Color.CYAN);
             taNaarHoofdmenu[i].setFont(font);
             taNaarHoofdmenu[i].setBounds(50,900,600,70);
+
+            taInsufficientMoney[i] = new JTextArea("Er is niet genoeg saldo om deze actie uit te voeren");
+            taInsufficientMoney[i].setBackground(Color.CYAN);
+            taInsufficientMoney[i].setEditable(false);
+            taInsufficientMoney[i].setFont(font);
+            taInsufficientMoney[i].setVisible(false);
+            taInsufficientMoney[i].setForeground(Color.RED);
+            taInsufficientMoney[i].setBounds(300,230,1350,70);
+
+            taInsufficientBills[i] = new JTextArea("Er zijn niet genoeg biljetten om deze actie uit te voeren");
+            taInsufficientBills[i].setBackground(Color.CYAN);
+            taInsufficientBills[i].setEditable(false);
+            taInsufficientBills[i].setFont(font);
+            taInsufficientBills[i].setVisible(false);
+            taInsufficientBills[i].setForeground(Color.RED);
+            taInsufficientBills[i].setBounds(300,150,1350,70);
         }
     }
 
@@ -240,6 +258,8 @@ public class Gui extends JFrame implements ActionListener {
         panelMain.add(showBal);
         panelMain.add(customPin);
         panelMain.add(abort[0]);
+        panelMain.add(taInsufficientBills[0]);
+        panelMain.add(taInsufficientMoney[0]);
         snelPinnen.setBackground(Color.CYAN);
         kiesBedrag.setBackground(Color.CYAN);
         taBalance.setBackground(Color.CYAN);
@@ -253,8 +273,8 @@ public class Gui extends JFrame implements ActionListener {
         quickPin.setBounds(700, 180, 200, 200); //temp
         showBal.setBounds(700, 700, 200, 200); //temp
         customPin.setBounds(1100,180, 200, 200); //temp
-        snelPinnen.setBounds(50,180, 620,70);
-        kiesBedrag.setBounds(1400,180, 500,70);
+        snelPinnen.setBounds(50,300, 620,70);
+        kiesBedrag.setBounds(1400,300, 500,70);
         taBalance.setBounds(50,900, 300,70);
         //panel dispensing
         dispensing.setLayout(null);
@@ -283,6 +303,8 @@ public class Gui extends JFrame implements ActionListener {
         panelChooseAmount.add(taBedrag3);
         panelChooseAmount.add(taBedrag4);
         panelChooseAmount.add(taOtherAmount);
+        panelChooseAmount.add(taInsufficientBills[2]);
+        panelChooseAmount.add(taInsufficientMoney[2]);
         taBedrag1.setEditable(false);
         taBedrag2.setEditable(false);
         taBedrag3.setEditable(false);
@@ -334,10 +356,10 @@ public class Gui extends JFrame implements ActionListener {
         optie2.setFont(font);
         optie3.setFont(font);
         optie4.setFont(font);
-        optie1.setBounds(50,300, 310,140);
-        optie2.setBounds(1400, 300, 310, 140);
-        optie3.setBounds(50, 500, 310, 140);
-        optie4.setBounds(1400, 500, 310, 140);
+        optie1.setBounds(50,200, 310,350);
+        optie2.setBounds(1400, 200, 310, 350);
+        optie3.setBounds(50, 550, 310, 350);
+        optie4.setBounds(1400, 550, 310, 350);
         abort[6].setBounds(1100, 700, 200, 200); //temp
         naarHoofdMenu[2].setBounds(700,700,200,200); //temp
         //panelBon
@@ -362,13 +384,13 @@ public class Gui extends JFrame implements ActionListener {
         taNoBon.setBackground(Color.CYAN);
         yesBon.setBounds(350,380, 200, 200);
         noBon.setBounds(1100, 380, 200, 200);
-        receipt.setBounds(710,100,800,70);
+        receipt.setBounds(710,150,800,70);
         taYesBon.setBounds(50,380,200,200); //temp
         taNoBon.setBounds(1400, 380, 200,200); //temp
         abort[1].setBounds(1100, 700, 200, 200); //temp
         //panelShowBal
         panelShowBal.setLayout(null);
-        panelShowBal.add(abort[2]);
+        panelShowBal.add(abort[4]);
         panelShowBal.add(naarHoofdMenu[0]);
         panelShowBal.add(taShowBal);
         panelShowBal.add(afbreken[2]);
@@ -379,64 +401,89 @@ public class Gui extends JFrame implements ActionListener {
         taShowBal.setEditable(false);
         taShowBal.setBackground(Color.CYAN);
         taShowBal.setBounds(700, 300, 900, 200);
-        abort[2].setBounds(1100, 700, 200, 200); //temp
+        abort[4].setBounds(1100, 700, 200, 200); //temp
         naarHoofdMenu[0].setBounds(700, 700, 200, 200); //temp
-
-
-
-
-
-        panelChooseAmount.add(bedrag1);
-        panelChooseAmount.add(bedrag2);
-        panelChooseAmount.add(bedrag3);
-        panelChooseAmount.add(bedrag4);
-        panelChooseAmount.add(anderBedrag);
-//        panelChooseAmount.add(abort[1]);
-//        panelChooseAmount.add(naarHoofdMenu[1]);
-
-        panelBon.add(noBon);
-        panelBon.add(yesBon);
-//        panelBon.add(abort[2]);
-//        panelBon.add(naarHoofdMenu[2]);
-
-        panelPassword.add(new JLabel("Enter PIN:"));
-        panelPassword.add(passwordTextField);
-        panelPassword.add(nextPage[1]);
-
-        panelCustomAmount.add(new JLabel("Voer aangepast bedrag in:"));
-        panelCustomAmount.add(customBedragField);
-        customBedragField.setColumns(10);
+        //panelCustomAmount
+        panelCustomAmount.setLayout(null);
+        panelCustomAmount.setBackground(Color.CYAN);
+        panelCustomAmount.add(title[8]);
         panelCustomAmount.add(taInvalidInput);
-        taInvalidInput.setEditable(false);
-        taInvalidInput.setVisible(false);
-        taInvalidInput.setForeground(Color.RED);
-
+        panelCustomAmount.add(taNaarHoofdmenu[3]);
+        panelCustomAmount.add(afbreken[5]);
         panelCustomAmount.add(nextPage[2]);
         panelCustomAmount.add(abort[3]);
         panelCustomAmount.add(naarHoofdMenu[3]);
+        panelCustomAmount.add(customBedragField);
+        panelCustomAmount.add(taCustomAmount);
+        panelCustomAmount.add(taInsufficientBills[1]);
+        panelCustomAmount.add(taInsufficientMoney[1]);
+        customBedragField.setColumns(5);
+        taInvalidInput.setEditable(false);
+        taInvalidInput.setBackground(Color.CYAN);
+        taInvalidInput.setFont(font);
+        taInvalidInput.setForeground(Color.RED);
+        taInvalidInput.setVisible(false);
+        taCustomAmount.setEditable(false);
+        taCustomAmount.setBackground(Color.CYAN);
+        taCustomAmount.setFont(font);
+        customBedragField.setBackground(Color.CYAN);
+        customBedragField.setFont(font);
+        taCustomAmount.setBounds(400,400,700,70);
+        customBedragField.setBounds(950,400,700,70);
+        abort[3].setBounds(1100, 700, 200, 200); //temp
+        naarHoofdMenu[3].setBounds(700,700,200,200); //temp
+        nextPage[2].setBounds(700,900,200,200);
+        taInvalidInput.setBounds(600,500,910,200);
+        //panelFinalizeTransaction
+        panelFinalizeTransaction.setLayout(null);
+        panelFinalizeTransaction.setBackground(Color.CYAN);
+        panelFinalizeTransaction.add(title[9]);
+        panelFinalizeTransaction.add(taReceiptPrinted);
+        taReceiptPrinted.setEditable(false);
+        taReceiptPrinted.setBackground(Color.CYAN);
+        taReceiptPrinted.setFont(font);
+        taReceiptPrinted.setBounds(650,150,700,70);
 
-        panelShowBal.add(taShowBal);
-        taShowBal.setEditable(false);
-        panelShowBal.add(abort[4]);
-        panelShowBal.add(naarHoofdMenu[4]);
 
-        panelFinalizeTransaction.add(tempTa);
-//        panelFinalizeTransaction.add(abort[6]);
 
-        panelOptions.add(optie1);
-        panelOptions.add(optie2);
-        panelOptions.add(optie3);
-        panelOptions.add(optie4);
 
-        panelChooseAmount.add(taInsufficientBills);
-        taInsufficientBills.setEditable(false);
-        taInsufficientBills.setVisible(false);
-        taInsufficientBills.setForeground(Color.RED);
 
-        panelChooseAmount.add(taInsufficientMoney);
-        taInsufficientMoney.setEditable(false);
-        taInsufficientMoney.setVisible(false);
-        taInsufficientMoney.setForeground(Color.RED);
+
+//        panelCustomAmount.add(new JLabel("Voer aangepast bedrag in:"));
+////        panelCustomAmount.add(customBedragField);
+////        customBedragField.setColumns(10);
+//        panelCustomAmount.add(taInvalidInput);
+//        taInvalidInput.setEditable(false);
+//        taInvalidInput.setVisible(false);
+//        taInvalidInput.setForeground(Color.RED);
+//
+////        panelCustomAmount.add(nextPage[2]);
+////        panelCustomAmount.add(abort[3]);
+////        panelCustomAmount.add(naarHoofdMenu[3]);
+//
+//        panelShowBal.add(taShowBal);
+//        taShowBal.setEditable(false);
+////        panelShowBal.add(abort[4]);
+//        panelShowBal.add(naarHoofdMenu[4]);
+//
+////        panelFinalizeTransaction.add(tempTa);
+////        panelFinalizeTransaction.add(abort[6]);
+//
+//        panelOptions.add(optie1);
+//        panelOptions.add(optie2);
+//        panelOptions.add(optie3);
+//        panelOptions.add(optie4);
+//
+//        panelChooseAmount.add(taInsufficientBills);
+//        taInsufficientBills.setEditable(false);
+//        taInsufficientBills.setVisible(false);
+//        taInsufficientBills.setForeground(Color.RED);
+//
+//        panelChooseAmount.add(taInsufficientMoney);
+//        taInsufficientMoney.setEditable(false);
+//        taInsufficientMoney.setVisible(false);
+//        taInsufficientMoney.setForeground(Color.RED);
+
         // code die ervoor zorgt dat er max 4 tekens ingevuld worden (van stackoverflow gepakt)
 //        PlainDocument documentPF = (PlainDocument) passwordTextField.getDocument();
 //        documentPF.setDocumentFilter(new DocumentFilter() {
@@ -535,9 +582,9 @@ public class Gui extends JFrame implements ActionListener {
             if(user != null) user.userLogout();
             taShowBal.setText("");
             taInvalidInput.setVisible(false);
-            taInsufficientBills.setVisible(false);
-            taInsufficientMoney.setVisible(false);
-            panelChooseAmount.add(taInsufficientMoney);
+            taInsufficientBills[0].setVisible(false);
+            taInsufficientMoney[0].setVisible(false);
+            panelChooseAmount.add(taInsufficientMoney[2]);
             login.clearLoginVariables();
             resetFlags();
             menuStart = true;
@@ -561,9 +608,9 @@ public class Gui extends JFrame implements ActionListener {
                     System.out.println("naar hoofdmenu");
                     user.toMainMenu();
                     taInvalidInput.setVisible(false);
-                    taInsufficientBills.setVisible(false);
-                    taInsufficientMoney.setVisible(false);
-                    panelChooseAmount.add(taInsufficientMoney);
+                    taInsufficientBills[0].setVisible(false);
+                    taInsufficientMoney[0].setVisible(false);
+                    panelChooseAmount.add(taInsufficientMoney[2]);
                     resetFlags();
                     menuMain = true;
                     changePanel(panelMain);
@@ -648,22 +695,22 @@ public class Gui extends JFrame implements ActionListener {
         if(menuMain){
             if("ArdSend_1".equals(input)){
                 //70 euro pinnen
-                if (user.getBalance() - 20 < 0) { //kijken of saldo lager is dan bedrag dat gepind wordt
-                    panelMain.add(taInsufficientMoney);
-                    taInsufficientMoney.setVisible(true);
+                if (user.getBalance() - 70 < 0) { //kijken of saldo lager is dan bedrag dat gepind wordt
+                    panelMain.add(taInsufficientMoney[0]);
+                    taInsufficientMoney[0].setVisible(true);
                 } else {
                     System.out.println("70 euro");
                     user.makeWithdrawal();
                     user.withdrawal.customWithdrawal(70);
-                    try{
+                    try {
                         user.withdrawal.displayOptions();
-                    }catch (Exception ex){
-                        ex.printStackTrace();
+                    } catch (Exception ex) {
+                            ex.printStackTrace();
                     }
                     menuMain = false;
                     menuBon = true;
                     changePanel(panelBon);
-                }
+                    }
             }
 
             if("ArdSend_2".equals(input)){
@@ -677,8 +724,8 @@ public class Gui extends JFrame implements ActionListener {
             if("ArdSend_3".equals(input)){
                 //pin menu
                 System.out.println("custom bedrag pinnen");
-                taInsufficientMoney.setVisible(false);
-                panelChooseAmount.add(taInsufficientMoney);
+                taInsufficientMoney[0].setVisible(false);
+                panelChooseAmount.add(taInsufficientMoney[2]);
                 menuMain = false;
                 menuChooseAmounts = true;
                 changePanel(panelChooseAmount);
@@ -690,88 +737,105 @@ public class Gui extends JFrame implements ActionListener {
         if(menuChooseAmounts){
             if("ArdSend_1".equals(input)) {
                 //pin 20
-                if (user.getBalance() - 20 < 0) { //kijken of saldo lager is dan bedrag dat gepind wordt
-                    taInsufficientMoney.setVisible(true);
-                } else {
-                    System.out.println("20 euro");
-                    user.makeWithdrawal();
-                    user.withdrawal.customWithdrawal(20);
-                    try {
-                        user.withdrawal.displayOptions();
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
+                if (amounts[0] > 4 && amounts[1] > 2 && amounts[2] > 1 && amounts[3] > 0) {
+                    if (user.getBalance() - 20 < 0) { //kijken of saldo lager is dan bedrag dat gepind wordt
+                        taInsufficientMoney[2].setVisible(true);
+                    } else {
+                        System.out.println("20 euro");
+                        user.makeWithdrawal();
+                        user.withdrawal.customWithdrawal(20);
+                        try {
+                            user.withdrawal.displayOptions();
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                        }
+                        menuChooseAmounts = false;
+                        menuMoneyOptions = true;
+                        changePanel(panelOptions);
                     }
-                    menuChooseAmounts = false;
-                    menuMoneyOptions = true;
-                    changePanel(panelOptions);
+                    return;
+                } else {
+                    taInsufficientBills[2].setVisible(true);
                 }
-                return;
             }
 
             if("ArdSend_2".equals(input)) {
                 //pin 50
-                if (user.getBalance() - 50 < 0) { //kijken of saldo lager is dan bedrag dat gepind wordt
-                    taInsufficientMoney.setVisible(true);
-                } else {
-                    System.out.println("50 euro");
-                    user.makeWithdrawal();
-                    user.withdrawal.customWithdrawal(50);
-                    try {
-                        user.withdrawal.displayOptions();
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
+                if (amounts[0] > 10 && amounts[1] > 3 && amounts[2] > 1 && amounts[3] > 1) {
+                    if (user.getBalance() - 50 < 0) { //kijken of saldo lager is dan bedrag dat gepind wordt
+                        taInsufficientMoney[2].setVisible(true);
+                    } else {
+                        System.out.println("50 euro");
+                        user.makeWithdrawal();
+                        user.withdrawal.customWithdrawal(50);
+                        try {
+                            user.withdrawal.displayOptions();
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                        }
+                        menuChooseAmounts = false;
+                        menuMoneyOptions = true;
+                        changePanel(panelOptions);
                     }
-                    menuChooseAmounts = false;
-                    menuMoneyOptions = true;
-                    changePanel(panelOptions);
+                    return;
+                } else {
+                    taInsufficientBills[2].setVisible(true);
                 }
-                return;
             }
 
             if("ArdSend_3".equals(input)){
                 //pin 100
-                if (user.getBalance() - 100 < 0) { //kijken of saldo lager is dan bedrag dat gepind wordt
-                    taInsufficientMoney.setVisible(true);
-                } else {
-                    System.out.println("100 euro");
-                    user.makeWithdrawal();
-                    user.withdrawal.customWithdrawal(100);
-                    try{
-                        user.withdrawal.displayOptions();
-                    }catch (Exception ex){
-                        ex.printStackTrace();
+                if (amounts[0] > 0 && amounts[1] > 7 && amounts[2] > 3 && amounts[3] > 1) {
+                    if (user.getBalance() - 100 < 0) { //kijken of saldo lager is dan bedrag dat gepind wordt
+                        taInsufficientMoney[2].setVisible(true);
+                    } else {
+                        System.out.println("100 euro");
+                        user.makeWithdrawal();
+                        user.withdrawal.customWithdrawal(100);
+                        try {
+                            user.withdrawal.displayOptions();
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                        }
+                        menuChooseAmounts = false;
+                        menuMoneyOptions = true;
+                        changePanel(panelOptions);
                     }
-                    menuChooseAmounts = false;
-                    menuMoneyOptions = true;
-                    changePanel(panelOptions);
+                    return;
+                } else {
+                    taInsufficientBills[2].setVisible(true);
                 }
-                return;
             }
 
             if("ArdSend_4".equals(input)){
                 //pin 150
-                if (user.getBalance() - 150 < 0) { //kijken of saldo lager is dan bedrag dat gepind wordt
-                    taInsufficientMoney.setVisible(true);
-                } else {
-                    System.out.println("150 euro");
-                    user.makeWithdrawal();
-                    user.withdrawal.customWithdrawal(150);
-                    try{
-                        user.withdrawal.displayOptions();
-                    }catch (Exception ex){
-                        ex.printStackTrace();
+                if (amounts[0] > 0 && amounts[1] > 10 && amounts[2] > 4 && amounts[3] > 2) {
+                    if (user.getBalance() - 150 < 0) { //kijken of saldo lager is dan bedrag dat gepind wordt
+                        taInsufficientMoney[2].setVisible(true);
+                    } else {
+                        System.out.println("150 euro");
+                        user.makeWithdrawal();
+                        user.withdrawal.customWithdrawal(150);
+                        try {
+                            user.withdrawal.displayOptions();
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                        }
+                        menuChooseAmounts = false;
+                        menuMoneyOptions = true;
+                        changePanel(panelOptions);
                     }
-                    menuChooseAmounts = false;
-                    menuMoneyOptions = true;
-                    changePanel(panelOptions);
+                    return;
+                } else {
+                    taInsufficientBills[2].setVisible(true);
                 }
             }
 
             if("ArdSend_5".equals(input)){
                 // pin ander bedrag
                 System.out.println("custom bedrag pinnen");
-                taInsufficientMoney.setVisible(false);
-                panelChooseAmount.add(taInsufficientMoney);
+                taInsufficientMoney[2].setVisible(false);
+                panelChooseAmount.add(taInsufficientMoney[2]);
                 menuChooseAmounts = false;
                 menuCustomAmount = true;
                 changePanel(panelChooseAmount);
@@ -876,9 +940,9 @@ public class Gui extends JFrame implements ActionListener {
             if(user != null) user.userLogout();
             taShowBal.setText("");
             taInvalidInput.setVisible(false);
-            taInsufficientBills.setVisible(false);
-            taInsufficientMoney.setVisible(false);
-            panelChooseAmount.add(taInsufficientMoney);
+            taInsufficientBills[1].setVisible(false);
+            taInsufficientMoney[1].setVisible(false);
+            panelChooseAmount.add(taInsufficientMoney[2]);
             login.clearLoginVariables();
             changePanel(panelStart);
 //            serialConnection.stringOut("abort"); // todo arduino code voor abort
@@ -894,9 +958,11 @@ public class Gui extends JFrame implements ActionListener {
             System.out.println("naar hoofdmenu");
             user.toMainMenu();
             taInvalidInput.setVisible(false);
-            taInsufficientBills.setVisible(false);
-            taInsufficientMoney.setVisible(false);
-            panelChooseAmount.add(taInsufficientMoney);
+            taInsufficientBills[2].setVisible(false);
+            taInsufficientMoney[2].setVisible(false);
+            taInsufficientBills[1].setVisible(false);
+            taInsufficientMoney[1].setVisible(false);
+            panelChooseAmount.add(taInsufficientMoney[2]);
             changePanel(panelMain);
 //            serialConnection.stringOut("mainMenu"); //todo arduino code voor hoofdmenu
 //            try {
@@ -915,34 +981,39 @@ public class Gui extends JFrame implements ActionListener {
 
         if("pin70".equalsIgnoreCase(e.getActionCommand())){
             //code om 70 euro te pinnen (kan via dezelfde methode als die voor hetzelfde bedrag)
-            if (user.getBalance() - 20 < 0) { //kijken of saldo lager is dan bedrag dat gepind wordt
-                panelMain.add(taInsufficientMoney);
-                taInsufficientMoney.setVisible(true);
-            } else {
-                System.out.println("70 euro");
-                user.makeWithdrawal();
-                user.withdrawal.customWithdrawal(70);
-                try{
-                    user.withdrawal.displayOptions();
-                }catch (Exception ex){
-                    ex.printStackTrace();
+            if (amounts[2] > 0 && amounts[3] > 0) {
+                if (user.getBalance() - 70 < 0) { //kijken of saldo lager is dan bedrag dat gepind wordt
+                    panelMain.add(taInsufficientMoney[0]);
+                    taInsufficientMoney[0].setVisible(true);
+                } else {
+                    System.out.println("70 euro");
+                    user.makeWithdrawal();
+                    user.withdrawal.customWithdrawal(70);
+                    try {
+                        user.withdrawal.displayOptions();
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                    changePanel(panelBon);
                 }
-                changePanel(panelBon);
+            }
+            else {
+                taInsufficientBills[0].setVisible(true);
             }
         }
 
         if("customPin".equalsIgnoreCase(e.getActionCommand())) {
 
             System.out.println("custom bedrag pinnen");
-            taInsufficientMoney.setVisible(false);
-            panelChooseAmount.add(taInsufficientMoney);
+            taInsufficientMoney[1].setVisible(false);
+            panelChooseAmount.add(taInsufficientMoney[1]);
             changePanel(panelChooseAmount);
         }
 
         if("yesBon".equalsIgnoreCase(e.getActionCommand()))   {
             System.out.println("Bon printen");
-            serialConnection.stringOut("printBon");
-            changePanel(dispensing);
+            serialConnection.stringOut("printBon"); //todo uncomment (was even voor de demo gecommented)
+            changePanel(panelFinalizeTransaction);
 
         }
 
@@ -953,7 +1024,7 @@ public class Gui extends JFrame implements ActionListener {
         if("customBedrag1".equalsIgnoreCase(e.getActionCommand())){
             if(amount1 > 0) {
                 if (user.getBalance() - 20 < 0) { //kijken of saldo lager is dan bedrag dat gepind wordt
-                    taInsufficientMoney.setVisible(true);
+                    taInsufficientMoney[1].setVisible(true);
                 } else {
                     System.out.println("20 euro");
                     user.makeWithdrawal();
@@ -970,13 +1041,13 @@ public class Gui extends JFrame implements ActionListener {
                 }
             }
             else{
-                taInsufficientBills.setVisible(true);
+                taInsufficientBills[1].setVisible(true);
             }
         }
         if("customBedrag2".equalsIgnoreCase(e.getActionCommand())){
             if(amount2 > 0) {
                 if (user.getBalance() - 50 < 0) { //kijken of saldo lager is dan bedrag dat gepind wordt
-                    taInsufficientMoney.setVisible(true);
+                    taInsufficientMoney[1].setVisible(true);
                 } else {
                     System.out.println("50 euro");
                     user.makeWithdrawal();
@@ -993,13 +1064,13 @@ public class Gui extends JFrame implements ActionListener {
                 }
             }
             else{
-                taInsufficientBills.setVisible(true);
+                taInsufficientBills[1].setVisible(true);
             }
         }
         if("customBedrag3".equalsIgnoreCase(e.getActionCommand())){
             if(amount3 > 0) {
                 if (user.getBalance() - 100 < 0) { //kijken of saldo lager is dan bedrag dat gepind wordt
-                    taInsufficientMoney.setVisible(true);
+                    taInsufficientMoney[1].setVisible(true);
                 } else {
                     System.out.println("100 euro");
                     user.makeWithdrawal();
@@ -1016,13 +1087,13 @@ public class Gui extends JFrame implements ActionListener {
                 }
             }
             else{
-                taInsufficientBills.setVisible(true);
+                taInsufficientBills[1].setVisible(true);
             }
         }
         if("customBedrag4".equalsIgnoreCase(e.getActionCommand())){
             if(amount4 > 0) {
                 if (user.getBalance() - 150 < 0) { //kijken of saldo lager is dan bedrag dat gepind wordt
-                    taInsufficientMoney.setVisible(true);
+                    taInsufficientMoney[1].setVisible(true);
                 } else {
                     System.out.println("150 euro");
                     user.makeWithdrawal();
@@ -1039,7 +1110,7 @@ public class Gui extends JFrame implements ActionListener {
                 }
             }
             else{
-                taInsufficientBills.setVisible(true);
+                taInsufficientBills[1].setVisible(true);
             }
         }
         if("optie1".equalsIgnoreCase(e.getActionCommand())){
@@ -1104,18 +1175,22 @@ public class Gui extends JFrame implements ActionListener {
         if("anderBedrag".equalsIgnoreCase((e.getActionCommand()))){
             System.out.println("ander bedrag invullen");
             customBedragField.setText("");
-            taInsufficientMoney.setVisible(false);
+            taInsufficientMoney[1].setVisible(false);
             changePanel(panelCustomAmount);
         }
 
         if("custAmountToNext".equalsIgnoreCase((e.getActionCommand()))){
+            taInsufficientMoney[0].setVisible(false);
+            taInsufficientBills[0].setVisible(false);
+            taInsufficientMoney[1].setVisible(false);
+            taInsufficientBills[1].setVisible(false);
             if(!("".equals(customBedragField.getText()))) {
                 try {
                     int tempInt = Integer.parseInt(customBedragField.getText());
                     if(tempInt%5 != 0 || tempInt < 0) throw new NumberFormatException();
                     if (user.getBalance() - tempInt < 0) { //kijken of saldo lager is dan bedrag dat gepind wordt, en of het getal eindigt met 0 of 5
-                        panelCustomAmount.add(taInsufficientMoney);
-                        taInsufficientMoney.setVisible(true);
+                        panelCustomAmount.add(taInsufficientMoney[1]);
+                        taInsufficientMoney[1].setVisible(true);
 
                     }
 

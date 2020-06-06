@@ -19,10 +19,10 @@ public class Withdrawal {
     public int[] withdrawalArray3 = new int[4];
     public int[] withdrawalArray4 = new int[4];
     short option;
-    StringBuilder option1 = new StringBuilder("Optie 1 []\n");
-    StringBuilder option2 = new StringBuilder("Optie 2 []\n");
-    StringBuilder option3 = new StringBuilder("Optie 3 []\n");
-    StringBuilder option4 = new StringBuilder("Optie 4 []\n");
+    StringBuilder option1 = new StringBuilder("Optie 1 [1]\n");
+    StringBuilder option2 = new StringBuilder("Optie 2 [2]\n");
+    StringBuilder option3 = new StringBuilder("Optie 3 [3]\n");
+    StringBuilder option4 = new StringBuilder("Optie 4 [4]\n");
 
     public Withdrawal(Gui gui, User user){
         this.gui = gui;

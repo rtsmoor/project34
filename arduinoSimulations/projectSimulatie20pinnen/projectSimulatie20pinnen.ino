@@ -87,7 +87,7 @@ Serial.println("ready");
 void simulateLogin(){
   avoidLoop = true;
   cardPresented = true;
-  String passNumber = "2A 9F 0D 0B";
+  String passNumber = "50 41 93 1D";
   delay(50);
   Serial.print("ArdPassNr_");
   Serial.println(passNumber);
@@ -103,7 +103,7 @@ void simulateLogin(){
   Serial.println("ArdSend_*");
   delay(1000);
   //als de gebruiker op # drukt, verstuur dan eerst het gehaste wachtwoord, en daarna het # (of alleen het wachtwoord, nog even kijken wat handig is)
-  Serial.println("ArdPinHashed_c7a8ac60f7a34ea1b7e04011d3243639");
+  Serial.println("ArdPinHashed_454fd8661718a7ed022925eec8227f2b");
   delay(1000);
   Serial.println("ArdSend_#");
   delay(3000);
