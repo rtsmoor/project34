@@ -101,17 +101,17 @@ public class Gui extends JFrame implements ActionListener {
     private JTextArea taInsufficientMoney = new JTextArea("Er is niet genoeg saldo om deze actie uit te voeren");
     private JTextArea enterPin = new JTextArea("ENTER PIN");
     private JTextArea taDispensing = new JTextArea("Dispensing...");
-    private JTextArea snelPinnen = new JTextArea("Quick €70 Withdrawal []");
-    private JTextArea taBalance = new JTextArea("Balance []");
-    private JTextArea kiesBedrag = new JTextArea("Choose Amount []");
-    private JTextArea taNoBon = new JTextArea("No []");
-    private JTextArea taYesBon = new JTextArea("Yes []");
+    private JTextArea snelPinnen = new JTextArea("Quick €70 Withdrawal [1]");
+    private JTextArea taBalance = new JTextArea("Balance [2]");
+    private JTextArea kiesBedrag = new JTextArea("Choose Amount [3]");
+    private JTextArea taNoBon = new JTextArea("No [1]");
+    private JTextArea taYesBon = new JTextArea("Yes [2]");
     private JTextArea receipt = new JTextArea("Do you want a receipt?");
-    private JTextArea taBedrag1 = new JTextArea("20 []");
-    private JTextArea taBedrag2 = new JTextArea("50 []");
-    private JTextArea taBedrag3 = new JTextArea("100 []");
-    private JTextArea taBedrag4 = new JTextArea("150 []");
-    private JTextArea taOtherAmount = new JTextArea("Other Amount []");
+    private JTextArea taBedrag1 = new JTextArea("20 [1]");
+    private JTextArea taBedrag2 = new JTextArea("50 [2]");
+    private JTextArea taBedrag3 = new JTextArea("100 [3]");
+    private JTextArea taBedrag4 = new JTextArea("150 [4]");
+    private JTextArea taOtherAmount = new JTextArea("Other Amount [5]");
     private JTextArea passBlocked = new JTextArea("Your pass has been blocked, please contact your bank");
     private JTextArea wrongPassword = new JTextArea("The pin that you entered is incorrect, please try again");
     public JTextArea numberAttempts = new JTextArea("Attempts left:");
@@ -540,12 +540,15 @@ public class Gui extends JFrame implements ActionListener {
             resetFlags();
             menuStart = true;
             changePanel(panelStart);
+
             serialConnection.stringOut("abort"); // todo arduino code voor abort
-            try {
-                sleep(100);
-            } catch (InterruptedException ex) {
-                ex.printStackTrace();
-            }
+            System.out.println(serialConnection.in.nextLine());
+//            try {
+//                sleep(5000);
+//            } catch (InterruptedException ex) {
+//                ex.printStackTrace();
+//            }
+
 
 
 
@@ -611,7 +614,11 @@ public class Gui extends JFrame implements ActionListener {
                         wrongPassword.setVisible(false);
                         menuMain = true;
                         menuLogin = false;
+                        serialConnection.javaBusy = true;
                         serialConnection.stringOut("success");
+
+                        System.out.println(serialConnection.in.nextLine());
+                        serialConnection.javaBusy = false;
                         changePanel(panelMain);
                     } else {
                         wrongPassword.setVisible(true);
@@ -677,6 +684,7 @@ public class Gui extends JFrame implements ActionListener {
             }
             return;
          }
+
         //todo display message if the bills are gone
         if(menuChooseAmounts){
             if("ArdSend_1".equals(input)) {
@@ -698,7 +706,6 @@ public class Gui extends JFrame implements ActionListener {
                 }
                 return;
             }
-
 
             if("ArdSend_2".equals(input)) {
                 //pin 50
@@ -827,10 +834,16 @@ public class Gui extends JFrame implements ActionListener {
                     serialConnection.javaBusy = false;
                 }
             }
+            return;
+        }
+
+        if(menuCustomAmount){
+            if("ArdSend_1".equals(input)) {
+
+            }
         }
     }
 
-    //TODO DEZE HELE METHODE VERVANGEN MET IETS ANDERS DAT DE ARDUINO KEYPAD INPUT GEBRUIKT (MISSCHIEN SWITCH CASE OF IF STATEMENTS)
     @Override
     public void actionPerformed(ActionEvent e) {
         logoutTimer.restart();

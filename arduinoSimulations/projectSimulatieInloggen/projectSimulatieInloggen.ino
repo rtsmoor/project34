@@ -10,6 +10,8 @@ bool cardPresented = false;
 void setup() {
    Serial.begin(115200);
    Serial.println("ready");
+   pinMode(13, OUTPUT);
+   
 }
 
 void loop() {
@@ -40,8 +42,13 @@ void inputHandler() {
   if(stringIn == "abort"){
     for(int i = 0; i < 4; i++) moneyArray[i] = 0;
         //code voor het 'resetten' van ale gegevens
+       Serial.println("resetting");
+       digitalWrite(13, HIGH);
         
   } 
+   if(stringIn == "success"){
+    Serial.println("hij doet t");
+   }
 
   if(withdraw){
     //wait until more input comes
@@ -98,6 +105,7 @@ void simulateLogin(){
   Serial.println("ArdPinHashed_c7a8ac60f7a34ea1b7e04011d3243639");
   delay(1000);
   Serial.println("ArdSend_#");
-  delay(1000);
+  delay(10000);
+  Serial.println("ArdSend_B");
   
 }

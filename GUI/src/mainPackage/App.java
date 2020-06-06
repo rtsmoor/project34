@@ -105,9 +105,9 @@ public class App {
 
             @Override
             public void serialEvent(SerialPortEvent serialPortEvent) { //ik denk dat deze methode activeert iedere keer dat er iets nieuws binnenkomt op de serial port
-                String input = "";
+
                 if (in.hasNextLine()) {
-                    input = in.nextLine();
+                    String input = in.nextLine();
                     // ArdSend word gebruikt als java niet eerder om input heeft gevraagd.
                     // Omdat veel methodes gebruik maken van serialConnection.stringIn() doe ik het op deze manier zodat ook zij de juiste input zullen krijgen
                     if (input.contains("Ard") && !gui.serialConnection.javaBusy) { //!!!opletten dat je niet Ard in een andere string verstuurt!!!

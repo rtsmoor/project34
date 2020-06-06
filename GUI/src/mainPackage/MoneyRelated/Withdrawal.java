@@ -37,6 +37,7 @@ public class Withdrawal {
 //TODO !!!kijken of je gewoon de hele array kan doorsturen!!! VEEL SNELLER!!! ALS HET KAN!!!
     public void sendArray(int arrayNumber) throws InterruptedException{
         gui.serialConnection.stringOut("withdraw");
+        System.out.println(gui.serialConnection.in.nextLine());
         sleep(2000);
 //todo in gui hier een laadscherm toevoegen omdat deze code tering lang duurt om te runnen (i.v.m. communicatie java->arduino, niet door de slechte code (waarschijnlijk beide))
         if(arrayNumber == 1){
