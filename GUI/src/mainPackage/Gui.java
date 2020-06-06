@@ -112,7 +112,7 @@ public class Gui extends JFrame implements ActionListener {
     private JTextArea taBedrag2 = new JTextArea("50 [2]");
     private JTextArea taBedrag3 = new JTextArea("100 [3]");
     private JTextArea taBedrag4 = new JTextArea("150 [4]");
-    private JTextArea taOtherAmount = new JTextArea("Other Amount []");
+    private JTextArea taOtherAmount = new JTextArea("Other Amount [5]");
     private JTextArea taCustomAmount = new JTextArea("Enter custom amount:");
     private JTextArea passBlocked = new JTextArea("Your pass has been blocked, please contact your bank");
     private JTextArea wrongPassword = new JTextArea("The pin that you entered is incorrect, please try again");
