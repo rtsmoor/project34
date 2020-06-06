@@ -48,6 +48,8 @@ void inputHandler() {
   } 
    if(stringIn == "success"){
     Serial.println("hij doet t");
+     delay(1000);
+  Serial.println("ArdSend_B");
    }
 
   if(withdraw){
@@ -105,7 +107,6 @@ void simulateLogin(){
   Serial.println("ArdPinHashed_c7a8ac60f7a34ea1b7e04011d3243639");
   delay(1000);
   Serial.println("ArdSend_#");
-  delay(10000);
-  Serial.println("ArdSend_B");
+ 
   
 }

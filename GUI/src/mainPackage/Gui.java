@@ -614,11 +614,11 @@ public class Gui extends JFrame implements ActionListener {
                         wrongPassword.setVisible(false);
                         menuMain = true;
                         menuLogin = false;
-                        serialConnection.javaBusy = true;
+
                         serialConnection.stringOut("success");
 
                         System.out.println(serialConnection.in.nextLine());
-                        serialConnection.javaBusy = false;
+
                         changePanel(panelMain);
                     } else {
                         wrongPassword.setVisible(true);
