@@ -161,9 +161,15 @@ public class Withdrawal {
 
             gui.serialConnection.stringOut("complete");
             sleep(2500);
-        }
+    }
 
          //todo toevoegen dat de dispenser aangeeft wanneer het geld gedispenst is
+            if(gui.menuDispensing){
+                gui.changePanel(gui.panelBon);
+                gui.menuDispensing = false;
+                gui.menuBon = true;
+            }
+
             double balance = user.getBalance();
             balance -= withdrawalAmount;
             user.setBalance(balance);

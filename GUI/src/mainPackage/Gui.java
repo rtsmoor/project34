@@ -38,12 +38,12 @@ public class Gui extends JFrame implements ActionListener {
     private boolean menuChooseAmounts = false; // keuzemenu voor 20,50,100,150 of ander bedrag
     private boolean menuCustomAmount = false; //menu waar je het bedrag invult dat je wilt hebben
     private boolean menuMoneyOptions = false; // menu waar je kiest in welke biljetten je je geld wilt hebben
-    private boolean menuDispensing = false; // scherm die laat zien dat de automaat aan het dispensen is
-    private boolean menuBon = false; //menu waar je kan kiezen voor een bon
-    private boolean menuFinal = false;
+    public boolean menuDispensing = false; // scherm die laat zien dat de automaat aan het dispensen is
+    public boolean menuBon = false; //menu waar je kan kiezen voor een bon
+    public boolean menuFinal = false;
 
     private User user;
-    private String version = "1.2.7";
+    private String version = "1.2.8";
     private LogIn login;
     public SerialConnection serialConnection;
     public Connection conn;
@@ -843,6 +843,8 @@ public class Gui extends JFrame implements ActionListener {
 
             }
         }
+
+        if(menuDispensing)
 
         if(menuBon){
             if("ArdSend_1".equals(input)) {

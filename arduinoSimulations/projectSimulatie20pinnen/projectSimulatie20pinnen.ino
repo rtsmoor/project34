@@ -112,6 +112,6 @@ void simulateLogin(){
   delay(3000);
   Serial.println("ArdSend_2"); //50 pinnen
   delay(3000);
-  Serial.println("ArdSend_1"); // optie 1
+  Serial.println("ArdSend_2"); // optie 1
   
 }
