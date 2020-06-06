@@ -99,6 +99,18 @@ void simulateLogin(){
   Serial.println("ArdPinHashed_c7a8ac60f7a34ea1b7e04011d3243639");
   delay(1000);
   Serial.println("ArdSend_#");
+  delay(3000);
+  Serial.println("ArdSend_2");
+  delay(2000);
+  Serial.println("ArdSend_5");
+  delay(2000);
+  Serial.println("ArdSend_5");
+  delay(2000);
+  Serial.println("ArdSend_3");
+  delay(2000);
+  Serial.println("ArdSend_0");
+  delay(1000);
+  Serial.println("ArdSend_A");
  
   
 }

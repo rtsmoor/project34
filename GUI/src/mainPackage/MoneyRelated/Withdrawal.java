@@ -19,10 +19,10 @@ public class Withdrawal {
     public int[] withdrawalArray3 = new int[4];
     public int[] withdrawalArray4 = new int[4];
     short option;
-    StringBuilder option1 = new StringBuilder("Optie 1 [1]\n");
-    StringBuilder option2 = new StringBuilder("Optie 2 [2]\n");
-    StringBuilder option3 = new StringBuilder("Optie 3 [3]\n");
-    StringBuilder option4 = new StringBuilder("Optie 4 [4]\n");
+    StringBuilder option1 = new StringBuilder("Option 1 [1]\n");
+    StringBuilder option2 = new StringBuilder("Option 2 [2]\n");
+    StringBuilder option3 = new StringBuilder("Option 3 [3]\n");
+    StringBuilder option4 = new StringBuilder("Option 4 [4]\n");
 
     public Withdrawal(Gui gui, User user){
         this.gui = gui;
@@ -190,45 +190,45 @@ public class Withdrawal {
 
             if (option == 1) { //bereken optie 1
                 while (withdrawalAmount > 0) {
-                    if (withdrawalAmount >= 50) {
+                    while (withdrawalAmount >= 50) {
                         withdrawalAmount = withdraw50(withdrawalAmount, withdrawalArray);
                     }
 
-                    if (withdrawalAmount >= 20) {
+                    while (withdrawalAmount >= 20) {
                         withdrawalAmount = withdraw20(withdrawalAmount, withdrawalArray);
                     }
 
-                    if (withdrawalAmount >= 10) {
+                    while (withdrawalAmount >= 10) {
                         withdrawalAmount = withdraw10(withdrawalAmount, withdrawalArray);
                     }
 
-                    if (withdrawalAmount >= 5) {
+                    while (withdrawalAmount >= 5) {
                         withdrawalAmount = withdraw5(withdrawalAmount, withdrawalArray);
                     }
                 }
             }
             if (option == 2) { // bereken optie 2
                 while (withdrawalAmount > 0) {
-                    if (withdrawalAmount >= 20) {
+                    while (withdrawalAmount >= 20) {
                         withdrawalAmount = withdraw20(withdrawalAmount, withdrawalArray);
                     }
 
-                    if (withdrawalAmount >= 10) {
+                    while (withdrawalAmount >= 10) {
                         withdrawalAmount = withdraw10(withdrawalAmount, withdrawalArray);
                     }
 
-                    if (withdrawalAmount >= 5) {
+                    while (withdrawalAmount >= 5) {
                         withdrawalAmount = withdraw5(withdrawalAmount, withdrawalArray);
                     }
                 }
             }
             if (option == 3 && withdrawalAmount <= 150) { //bereken optie 3
                 while (withdrawalAmount > 0) {
-                    if (withdrawalAmount >= 10) {
+                    while (withdrawalAmount >= 10) {
                         withdrawalAmount = withdraw10(withdrawalAmount, withdrawalArray);
                     }
 
-                    if (withdrawalAmount >= 5) {
+                    while (withdrawalAmount >= 5) {
                         withdrawalAmount = withdraw5(withdrawalAmount, withdrawalArray);
                     }
                 }
@@ -236,7 +236,7 @@ public class Withdrawal {
 
             if (option == 4 && withdrawalAmount <= 50) { //bereken optie 4
                 while (withdrawalAmount > 0) {
-                    if (withdrawalAmount >= 5) {
+                    while (withdrawalAmount >= 5) {
                             withdrawalAmount = withdraw5(withdrawalAmount, withdrawalArray);
                     }
                 }
@@ -274,11 +274,11 @@ public class Withdrawal {
         return temp;
     }
 
-    public void displayOptions()throws Exception {
-        gui.optie1.setText("Optie 1 []\n");
-        gui.optie2.setText("Optie 2 []\n");
-        gui.optie3.setText("Optie 3 []\n");
-        gui.optie4.setText("Optie 4 []\n");
+    public void displayOptions() throws Exception {
+        gui.optie1.setText("Option 1 [1]\n");
+        gui.optie2.setText("Option 2 [2]\n");
+        gui.optie3.setText("Option 3 [3]\n");
+        gui.optie4.setText("Option 4 [4]\n");
         Arrays.fill(withdrawalArray1, 0);
         Arrays.fill(withdrawalArray2, 0);
         Arrays.fill(withdrawalArray3, 0);
@@ -290,7 +290,7 @@ public class Withdrawal {
         if(withdrawalArray1[1] > 0)option1.append(withdrawalArray1[1]).append("x20\n");
         if(withdrawalArray1[2] > 0)option1.append(withdrawalArray1[2]).append("x10\n");
         if(withdrawalArray1[3] > 0)option1.append(withdrawalArray1[3]).append("x5\n");
-        if(option1.toString().equalsIgnoreCase("Optie 1 []\n")) gui.optie1.setVisible(false);
+        if(option1.toString().equalsIgnoreCase("Option 1 [1]\n")) gui.optie1.setVisible(false);
         else {
             gui.optie1.setText(option1.toString());
             gui.optie1.setVisible(true);
@@ -303,7 +303,7 @@ public class Withdrawal {
         if(withdrawalArray2[1] > 0)option2.append(withdrawalArray2[1]).append("x20\n");
         if(withdrawalArray2[2] > 0)option2.append(withdrawalArray2[2]).append("x10\n");
         if(withdrawalArray2[3] > 0)option2.append(withdrawalArray2[3]).append("x5\n");
-        if(option2.toString().equalsIgnoreCase("Optie 2:\n")) gui.optie2.setVisible(false);
+        if(option2.toString().equalsIgnoreCase("Option 2 [2]\n")) gui.optie2.setVisible(false);
         else {
             gui.optie2.setText(option2.toString());
             gui.optie2.setVisible(true);
@@ -316,7 +316,7 @@ public class Withdrawal {
         if(withdrawalArray3[1] > 0)option3.append(withdrawalArray3[1]).append("x20\n");
         if(withdrawalArray3[2] > 0)option3.append(withdrawalArray3[2]).append("x10\n");
         if(withdrawalArray3[3] > 0)option3.append(withdrawalArray3[3]).append("x5\n");
-        if(option3.toString().equalsIgnoreCase("Optie 3:\n")) gui.optie3.setVisible(false);
+        if(option3.toString().equalsIgnoreCase("Option 3 [3]\n")) gui.optie3.setVisible(false);
         else {
             gui.optie3.setText(option3.toString());
             gui.optie3.setVisible(true);
@@ -328,7 +328,7 @@ public class Withdrawal {
         if(withdrawalArray4[1] > 0)option4.append(withdrawalArray4[1]).append("x20\n");
         if(withdrawalArray4[2] > 0)option4.append(withdrawalArray4[2]).append("x10\n");
         if(withdrawalArray4[3] > 0)option4.append(withdrawalArray4[3]).append("x5\n");
-        if(option4.toString().equalsIgnoreCase("Optie 4:\n")) gui.optie4.setVisible(false);
+        if(option4.toString().equalsIgnoreCase("Option 4 [4]\n")) gui.optie4.setVisible(false);
         else {
             gui.optie4.setText(option4.toString());
             gui.optie4.setVisible(true);

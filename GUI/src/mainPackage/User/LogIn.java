@@ -8,20 +8,15 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class LogIn {
-    boolean rfidDetected = false;
     private Gui gui;
     private Connection conn;
     private String passnumber = "";
     private String hashedPIN = "";
-    private int pogingen = -1;
+    public int pogingen = -1;
 
     public LogIn(Gui gui, Connection conn){
         this.gui = gui;
         this.conn = conn;
-    }
-
-    public void setRfidDetected(boolean rfidDetected) {
-        this.rfidDetected = rfidDetected;
     }
 
     public String getHashedPIN() {
@@ -67,8 +62,8 @@ public class LogIn {
         return temp;
     }
 
-    //TODO String passNumber hoeft niet meer meegegeven te worden in het eindproduct, dit is nu alleen voor het testen nog zo
-    public boolean checkLogin() throws SQLException { //todo password check toevoegen
+
+    public boolean checkLogin() throws SQLException {
 
         String accountNumber = "";
         //als login correct is ga dan door naar het volgende scherm
@@ -127,6 +122,5 @@ public class LogIn {
         passnumber = "";
         hashedPIN = "";
         pogingen = 0;
-        rfidDetected = false;
     }
 }

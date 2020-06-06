@@ -25,10 +25,10 @@ import static javax.swing.JOptionPane.showMessageDialog;
 
 public class Gui extends JFrame implements ActionListener {
     public int array_length = 10;
-    private int amount4 = 15;
-    private int amount3 = 15;
-    private int amount2 = 15;
-    private int amount1 = 15;
+    private int amount4 = 10;
+    private int amount3 = 10;
+    private int amount2 = 10;
+    private int amount1 = 10;
     public int[] amounts = {amount1, amount2, amount3, amount4}; // volgorde biljetten: 5, 10, 20, 50
 
     private boolean menuStart = true; //startscherm, is true aan het begin en nadat de gebruiker is uitgelogt
@@ -43,7 +43,7 @@ public class Gui extends JFrame implements ActionListener {
     public boolean menuFinal = false;
 
     private User user;
-    private String version = "1.2.8";
+    private String version = "1.2.9";
     private LogIn login;
     public SerialConnection serialConnection;
     public Connection conn;
@@ -93,13 +93,13 @@ public class Gui extends JFrame implements ActionListener {
     public JTextArea optie3 = new JTextArea("ERROR");
     public JTextArea optie4 = new JTextArea("ERROR");
 
-    public Timer logoutTimer = new Timer(3000000, this); //todo !!!naar 30000 zetten na het testen!!!
+    public Timer logoutTimer = new Timer(30000, this); //todo !!!naar 30000 zetten na het testen!!!
 
     public JTextField passwordTextField = new JTextField(4);
     public JFormattedTextField customBedragField = new JFormattedTextField();
     private JTextArea taShowBal = new JTextArea();
     private JTextArea taPanelStart = new JTextArea("Scan your pass to continue");
-    private JTextArea taInvalidInput = new JTextArea("Enter numbers between 0-9,\nand where the last number is 0 or 5.\nOther characters are not allowed!");
+    private JTextArea taInvalidInput = new JTextArea("Enter numbers between 0-9,\nand where the last number is 0 or 5.\nMaximum allowed amount: 250");
     private JTextArea enterPin = new JTextArea("ENTER PIN");
     private JTextArea taDispensing = new JTextArea("Dispensing...");
     private JTextArea snelPinnen = new JTextArea("Quick €70 Withdrawal [1]");
@@ -122,10 +122,8 @@ public class Gui extends JFrame implements ActionListener {
             "If this problem persists, please contact your bank");
     private Font font = new Font("Neo Sans", Font.BOLD, 50);
     private Font fontTitle = new Font("Segoe Script", Font.BOLD, 70);
-    private Image icon = getToolkit().getImage(("resources/icon.jpg"));
-//    public void setSerialConnection(SerialConnection serialConnection){
-//        this.serialConnection = serialConnection;
-//    }
+    private Image icon = getToolkit().getImage(("GUI/resources/icon.jpg"));
+
 
     private void createButonArrays(){
         for(int i = 0; i < array_length; i++){
@@ -594,7 +592,7 @@ public class Gui extends JFrame implements ActionListener {
             menuStart = true;
             changePanel(panelStart);
 
-            serialConnection.stringOut("abort"); // todo arduino code voor abort
+            serialConnection.stringOut("abort");
             System.out.println(serialConnection.in.hasNextLine());
 //            try {
 //                sleep(5000);
@@ -630,7 +628,6 @@ public class Gui extends JFrame implements ActionListener {
 
         if(menuStart && input.contains("ArdPassNr_")){
             String temp = input.replace("ArdPassNr_", "");
-            login.setRfidDetected(true);
             login.checkPassnumber(temp);
             if(!("".equals(login.getPassnumber()))) {
                 System.out.println("Naar inlogscherm");
@@ -661,7 +658,7 @@ public class Gui extends JFrame implements ActionListener {
             if("ArdSend_#".equals(input)){
                 System.out.println("attempt login");
                 try{
-                    if(login.checkLogin()) {//todo  //test string: "2A 9F 0D 0B" //juiste code is: login.getPassnumber()
+                    if(login.checkLogin()) {  //test string: "2A 9F 0D 0B" //juiste code is: login.getPassnumber()
                         user.requestUserVariables();
                         taShowBal.setText("Your balance is: " + (user.getBalance()));
                         wrongPassword.setVisible(false);
@@ -672,6 +669,8 @@ public class Gui extends JFrame implements ActionListener {
 
 
                         changePanel(panelMain);
+                    } else if (login.pogingen >= 3) {
+                        passBlocked.setVisible(true);
                     } else {
                         wrongPassword.setVisible(true);
                         //serialConnection.stringOut("");
@@ -714,18 +713,10 @@ public class Gui extends JFrame implements ActionListener {
                     menuMain = false;
                     menuBon = true;
                     changePanel(panelBon);
-                    }
+                }
             }
 
             if("ArdSend_2".equals(input)){
-                System.out.println("showing balance");
-                //balance menu
-                menuMain = false;
-                menuBalance = true;
-                changePanel(panelShowBal);
-            }
-
-            if("ArdSend_3".equals(input)){
                 //pin menu
                 System.out.println("custom bedrag pinnen");
                 taInsufficientMoney[0].setVisible(false);
@@ -733,6 +724,14 @@ public class Gui extends JFrame implements ActionListener {
                 menuMain = false;
                 menuChooseAmounts = true;
                 changePanel(panelChooseAmount);
+            }
+
+            if("ArdSend_3".equals(input)){
+                System.out.println("showing balance");
+                //balance menu
+                menuMain = false;
+                menuBalance = true;
+                changePanel(panelShowBal);
             }
             return;
          }
@@ -836,13 +835,13 @@ public class Gui extends JFrame implements ActionListener {
             }
 
             if("ArdSend_5".equals(input)){
-                // pin ander bedrag
+                // pin custom amount
                 System.out.println("custom bedrag pinnen");
                 taInsufficientMoney[2].setVisible(false);
                 panelChooseAmount.add(taInsufficientMoney[2]);
                 menuChooseAmounts = false;
                 menuCustomAmount = true;
-                changePanel(panelChooseAmount);
+                changePanel(panelCustomAmount);
             }
             return;
         }
@@ -850,11 +849,13 @@ public class Gui extends JFrame implements ActionListener {
         if(menuMoneyOptions){
             if("ArdSend_1".equals(input)) {
                 serialConnection.javaBusy = true;
-                menuMoneyOptions = false;
-                menuDispensing = true;
-                changePanel(dispensing);
                 try {
-                    user.withdrawal.sendArray(1);
+                    if(optie1.isVisible()){
+                        menuMoneyOptions = false;
+                        menuDispensing = true;
+                        changePanel(dispensing);
+                        user.withdrawal.sendArray(1);
+                    }
                 } catch (InterruptedException ex) {
                     ex.printStackTrace();
                 } finally {
@@ -864,11 +865,13 @@ public class Gui extends JFrame implements ActionListener {
 
             if("ArdSend_2".equals(input)) {
                 serialConnection.javaBusy = true;
-                menuMoneyOptions = false;
-                menuDispensing = true;
-                changePanel(dispensing);
                 try {
-                    user.withdrawal.sendArray(2);
+                    if(optie2.isVisible()){
+                        menuMoneyOptions = false;
+                        menuDispensing = true;
+                        changePanel(dispensing);
+                        user.withdrawal.sendArray(2);
+                    }
                 } catch (InterruptedException ex) {
                     ex.printStackTrace();
                 } finally {
@@ -878,11 +881,13 @@ public class Gui extends JFrame implements ActionListener {
 
             if("ArdSend_3".equals(input)) {
                 serialConnection.javaBusy = true;
-                menuMoneyOptions = false;
-                menuDispensing = true;
-                changePanel(dispensing);
                 try {
-                    user.withdrawal.sendArray(3);
+                    if(optie3.isVisible()) {
+                        menuMoneyOptions = false;
+                        menuDispensing = true;
+                        changePanel(dispensing);
+                        user.withdrawal.sendArray(3);
+                    }
                 } catch (InterruptedException ex) {
                     ex.printStackTrace();
                 } finally {
@@ -892,11 +897,13 @@ public class Gui extends JFrame implements ActionListener {
 
             if("ArdSend_4".equals(input)) {
                 serialConnection.javaBusy = true;
-                menuMoneyOptions = false;
-                menuDispensing = true;
-                changePanel(dispensing);
                 try {
-                    user.withdrawal.sendArray(4);
+                    if(optie4.isVisible()){
+                        menuMoneyOptions = false;
+                        menuDispensing = true;
+                        changePanel(dispensing);
+                        user.withdrawal.sendArray(4);
+                    }
                 } catch (InterruptedException ex) {
                     ex.printStackTrace();
                 } finally {
@@ -908,11 +915,89 @@ public class Gui extends JFrame implements ActionListener {
 
         if(menuCustomAmount){
             if("ArdSend_1".equals(input)) {
-
+                customBedragField.setText(customBedragField.getText() + "1");
             }
+
+            if("ArdSend_2".equals(input)) {
+                customBedragField.setText(customBedragField.getText() + "2");
+            }
+
+            if("ArdSend_3".equals(input)) {
+                customBedragField.setText(customBedragField.getText() + "3");
+            }
+
+            if("ArdSend_4".equals(input)) {
+                customBedragField.setText(customBedragField.getText() + "4");
+            }
+
+            if("ArdSend_5".equals(input)) {
+                customBedragField.setText(customBedragField.getText() + "5");
+            }
+
+            if("ArdSend_6".equals(input)) {
+                customBedragField.setText(customBedragField.getText() + "6");
+            }
+
+            if("ArdSend_7".equals(input)) {
+                customBedragField.setText(customBedragField.getText() + "7");
+            }
+
+            if("ArdSend_8".equals(input)) {
+                customBedragField.setText(customBedragField.getText() + "8");
+            }
+
+            if("ArdSend_9".equals(input)) {
+                customBedragField.setText(customBedragField.getText() + "9");
+            }
+
+            if("ArdSend_0".equals(input)) {
+                customBedragField.setText(customBedragField.getText() + "0");
+            }
+
+            if("ArdSend_A".equals(input)) {
+                //next page
+                taInsufficientMoney[0].setVisible(false);
+                taInsufficientBills[0].setVisible(false);
+                taInsufficientMoney[1].setVisible(false);
+                taInsufficientBills[1].setVisible(false);
+                if(!("".equals(customBedragField.getText()))) {
+                    try {
+                        int tempInt = Integer.parseInt(customBedragField.getText());
+                        if(tempInt%5 != 0 || tempInt < 0 || tempInt > 250) throw new NumberFormatException();
+                        if (user.getBalance() - tempInt < 0) { //kijken of saldo lager is dan bedrag dat gepind wordt, en of het getal eindigt met 0 of 5
+                            panelCustomAmount.add(taInsufficientMoney[1]);
+                            taInsufficientMoney[1].setVisible(true);
+                        }
+
+                        else {
+                            System.out.println("custom bedrag: " + tempInt);
+                            user.makeWithdrawal();
+                            user.withdrawal.customWithdrawal(tempInt);
+                            try{
+                                user.withdrawal.displayOptions();
+                                changePanel(panelOptions);
+                            }catch (Exception ex){
+                                taInsufficientBills[1].setVisible(true);
+                            }
+                        }
+                    } catch (NumberFormatException nfe) {
+                        System.out.println("ERROR: invalid input");
+                        customBedragField.setText("");
+                        taInvalidInput.setVisible(true);
+                    }
+                }
+            }
+
+            if("ArdSend_D".equals(input)) {
+                //remove line
+                customBedragField.setText("");
+            }
+            return;
         }
 
-        if(menuDispensing){}
+        if(menuDispensing){
+            return;
+        }
 
         if(menuBon){
             if("ArdSend_1".equals(input)) {
@@ -931,6 +1016,7 @@ public class Gui extends JFrame implements ActionListener {
                 menuFinal = true;
                 changePanel(panelFinalizeTransaction);
             }
+            return;
         }
     }
 
@@ -949,12 +1035,12 @@ public class Gui extends JFrame implements ActionListener {
             panelChooseAmount.add(taInsufficientMoney[2]);
             login.clearLoginVariables();
             changePanel(panelStart);
-//            serialConnection.stringOut("abort"); // todo arduino code voor abort
-//            try {
-//                sleep(100);
-//            } catch (InterruptedException ex) {
-//                ex.printStackTrace();
-//            }
+            serialConnection.stringOut("abort");
+            try {
+                sleep(100);
+            } catch (InterruptedException ex) {
+                ex.printStackTrace();
+            }
         }
 
         if("hoofdmenu".equalsIgnoreCase(e.getActionCommand())){
@@ -1000,7 +1086,7 @@ public class Gui extends JFrame implements ActionListener {
                     } catch (Exception ex) {
                         ex.printStackTrace();
                     }
-                    changePanel(panelBon);
+                    changePanel(panelOptions);
                 }
             }
             else {
@@ -1018,7 +1104,7 @@ public class Gui extends JFrame implements ActionListener {
 
         if("yesBon".equalsIgnoreCase(e.getActionCommand()))   {
             System.out.println("Bon printen");
-            serialConnection.stringOut("printBon"); //todo uncomment (was even voor de demo gecommented)
+            serialConnection.stringOut("printBon");
             changePanel(panelFinalizeTransaction);
 
         }
@@ -1153,7 +1239,6 @@ public class Gui extends JFrame implements ActionListener {
         }
 
         if("inlogScherm".equalsIgnoreCase((e.getActionCommand()))){
-            login.setRfidDetected(true);
             System.out.println("Naar inlogscherm");
             changePanel(panelPassword);
             //moet nog veranderd worden naar inlogscherm
@@ -1210,11 +1295,10 @@ public class Gui extends JFrame implements ActionListener {
                         user.withdrawal.customWithdrawal(tempInt);
                         try{
                             user.withdrawal.displayOptions();
+                            changePanel(panelOptions);
                         }catch (Exception ex){
-                            ex.printStackTrace();
+                            taInsufficientBills[1].setVisible(true);
                         }
-
-                        changePanel(panelOptions);
                     }
                 } catch (NumberFormatException nfe) {
                     System.out.println("ERROR: invalid input");
