@@ -175,6 +175,7 @@ void loop(){
       }
         Serial.print("ArdPinHashed_");
         Serial.println(checkCode);
+        Serial.println("ArdSend_#");
 
 
       //Start check
@@ -184,7 +185,7 @@ void loop(){
     }
 
     
-    if(customKey != '*' && customKey != 'D'){
+    if(customKey != '*' && customKey != 'D' && customKey != '#'){
     enteredCodeArray[keyCounter] = customKey;
     if(keyCounter >= 0){
       Serial.println("ArdSend_*");
