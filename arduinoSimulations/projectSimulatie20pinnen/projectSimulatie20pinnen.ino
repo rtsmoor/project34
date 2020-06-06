@@ -40,36 +40,41 @@ void inputHandler() {
   if(stringIn == "abort"){
     for(int i = 0; i < 4; i++) moneyArray[i] = 0;
         //code voor het 'resetten' van ale gegevens
-        
+   
   } 
+   if(stringIn == "success"){
+
+     
+ 
+   }
 
   if(withdraw){
     //wait until more input comes
       if(stringIn == "fifty"){
         moneyArray[0]++;
-        Serial.println("received_fifty");
+
       }
       if(stringIn == "twenty"){
         moneyArray[1]++;
-        Serial.println("received_twenty");
+  
       }
       if(stringIn == "ten"){
         moneyArray[2]++;
-        Serial.println("received_ten");
+       
       }
       if(stringIn == "five"){
         moneyArray[3]++;
-        Serial.println("received_five");
+       
       }
     
   if(stringIn == "complete"){
     withdraw = false;
-    Serial.println("received");
+    
   }
   }
   
   if(stringIn == "withdraw"){
-    Serial.println("sendTransaction");
+    
     withdraw = true;     
   }
 
@@ -102,8 +107,10 @@ void simulateLogin(){
   delay(3000);
   Serial.println("ArdSend_3"); //geld pin menu
   delay(3000);
-  Serial.println("ArdSend_3"); //100 pinnen
-  delay(15000);
+  Serial.println("ArdSend_3"); //geld pin menu
+  delay(3000);
+  Serial.println("ArdSend_2"); //50 pinnen
+  delay(3000);
   Serial.println("ArdSend_1"); // optie 1
   
 }

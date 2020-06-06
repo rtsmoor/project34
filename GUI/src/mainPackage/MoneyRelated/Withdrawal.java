@@ -37,7 +37,6 @@ public class Withdrawal {
 //TODO !!!kijken of je gewoon de hele array kan doorsturen!!! VEEL SNELLER!!! ALS HET KAN!!!
     public void sendArray(int arrayNumber) throws InterruptedException{
         gui.serialConnection.stringOut("withdraw");
-        System.out.println(gui.serialConnection.in.nextLine());
         sleep(2000);
 //todo in gui hier een laadscherm toevoegen omdat deze code tering lang duurt om te runnen (i.v.m. communicatie java->arduino, niet door de slechte code (waarschijnlijk beide))
         if(arrayNumber == 1){
@@ -64,13 +63,11 @@ public class Withdrawal {
                         withdrawalArray1[i]--;
                     }
                     sleep(2500);
-                    System.out.println(gui.serialConnection.in.nextLine());
                 }
             }
 
             gui.serialConnection.stringOut("complete");
             sleep(2500);
-            System.out.println(gui.serialConnection.in.nextLine());
         }
 
         if(arrayNumber == 2){
@@ -97,13 +94,11 @@ public class Withdrawal {
                         withdrawalArray2[i]--;
                     }
                     sleep(2500);
-                    System.out.println(gui.serialConnection.in.nextLine());
                 }
             }
 
             gui.serialConnection.stringOut("complete");
             sleep(2500);
-            System.out.println(gui.serialConnection.in.nextLine());
         }
 
         if(arrayNumber == 3){
@@ -130,13 +125,11 @@ public class Withdrawal {
                         withdrawalArray3[i]--;
                     }
                     sleep(2500);
-                    System.out.println(gui.serialConnection.in.nextLine());
                 }
             }
 
             gui.serialConnection.stringOut("complete");
             sleep(2500);
-            System.out.println(gui.serialConnection.in.nextLine());
         }
 
         if(arrayNumber == 4){
@@ -163,13 +156,11 @@ public class Withdrawal {
                         withdrawalArray4[i]--;
                     }
                     sleep(2500);
-                    System.out.println(gui.serialConnection.in.nextLine());
                 }
             }
 
             gui.serialConnection.stringOut("complete");
             sleep(2500);
-            System.out.println(gui.serialConnection.in.nextLine());
         }
 
         if(gui.serialConnection.input.equals("received")) {//todo toevoegen dat de dispenser aangeeft wanneer het geld gedispenst is

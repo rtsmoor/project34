@@ -90,7 +90,7 @@ public class Gui extends JFrame implements ActionListener {
     public JTextArea optie3 = new JTextArea("ERROR");
     public JTextArea optie4 = new JTextArea("ERROR");
 
-    public Timer logoutTimer = new Timer(300000, this); //todo !!!naar 30000 zetten na het testen!!!
+    public Timer logoutTimer = new Timer(3000000, this); //todo !!!naar 30000 zetten na het testen!!!
 
     public JTextField passwordTextField = new JTextField(4);
     public JFormattedTextField customBedragField = new JFormattedTextField();
@@ -542,7 +542,7 @@ public class Gui extends JFrame implements ActionListener {
             changePanel(panelStart);
 
             serialConnection.stringOut("abort"); // todo arduino code voor abort
-            System.out.println(serialConnection.in.nextLine());
+            System.out.println(serialConnection.in.hasNextLine());
 //            try {
 //                sleep(5000);
 //            } catch (InterruptedException ex) {
@@ -617,7 +617,6 @@ public class Gui extends JFrame implements ActionListener {
 
                         serialConnection.stringOut("success");
 
-                        System.out.println(serialConnection.in.nextLine());
 
                         changePanel(panelMain);
                     } else {

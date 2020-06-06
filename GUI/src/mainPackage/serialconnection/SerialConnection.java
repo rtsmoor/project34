@@ -28,7 +28,7 @@ public class SerialConnection {
         System.out.println("command sent: " + stringOut);
         out.flush();
 
-        if (in.hasNextLine()) ; // arduino moet altijd iets terugsturen, en dat moet ook worden opgevangen in de GUI //redundant na v1.2.2
+        //if (in.hasNextLine()) ; // arduino moet altijd iets terugsturen, en dat moet ook worden opgevangen in de GUI //redundant na v1.2.2
     }
 
     public boolean hasString() {

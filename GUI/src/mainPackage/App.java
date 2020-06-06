@@ -110,11 +110,9 @@ public class App {
                     String input = in.nextLine();
                     // ArdSend word gebruikt als java niet eerder om input heeft gevraagd.
                     // Omdat veel methodes gebruik maken van serialConnection.stringIn() doe ik het op deze manier zodat ook zij de juiste input zullen krijgen
-                    if (input.contains("Ard") && !gui.serialConnection.javaBusy) { //!!!opletten dat je niet Ard in een andere string verstuurt!!!
+                    //if (input.contains("Ard")) { //!!!opletten dat je niet Ard in een andere string verstuurt!!!
                         gui.arduinoInputHandler(input);
-                    } else {
-                        gui.serialConnection.stringIn(input);
-                    }
+
 //
 //                System.out.println("received: " + input);
 ////                received = true;
