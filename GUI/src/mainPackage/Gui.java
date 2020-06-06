@@ -108,10 +108,10 @@ public class Gui extends JFrame implements ActionListener {
     private JTextArea taNoBon = new JTextArea("No [2]");
     private JTextArea taYesBon = new JTextArea("Yes [1]");
     private JTextArea receipt = new JTextArea("Do you want a receipt?");
-    private JTextArea taBedrag1 = new JTextArea("20 []");
-    private JTextArea taBedrag2 = new JTextArea("50 []");
-    private JTextArea taBedrag3 = new JTextArea("100 []");
-    private JTextArea taBedrag4 = new JTextArea("150 []");
+    private JTextArea taBedrag1 = new JTextArea("20 [1]");
+    private JTextArea taBedrag2 = new JTextArea("50 [2]");
+    private JTextArea taBedrag3 = new JTextArea("100 [3]");
+    private JTextArea taBedrag4 = new JTextArea("150 [4]");
     private JTextArea taOtherAmount = new JTextArea("Other Amount []");
     private JTextArea taCustomAmount = new JTextArea("Enter custom amount:");
     private JTextArea passBlocked = new JTextArea("Your pass has been blocked, please contact your bank");
