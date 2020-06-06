@@ -169,16 +169,31 @@ void loop(){
       
       hashMaker(&sha512, &pinHash, 4);
 
+      
+      for(int i = 0; i < 4; i++){
+              Serial.println(enteredCodeArray[i]);
+              enteredCodeArray[i] = '0';
+      }
+
       String checkCode;
       for(int i = 0; i < 32; i++){
       checkCode += (char)hashedCode.charAt(i);
       }
+        Serial.println(enteredCode);
+        Serial.println(hashedCode);
         Serial.print("ArdPinHashed_");
         Serial.println(checkCode);
         Serial.println("ArdSend_#");
 
 
       //Start check
+      hashedCode = "";
+      int delaying = 0;
+      if(keyCounter != 0){
+        keyCounter = -1;
+      }
+      checkDatabase = 0;
+      enteredCode = 0;
       Serial.println("authorizing");
       finished = true;
       delay(3000);
@@ -206,6 +221,13 @@ void loop(){
     keyCounter++;
     enteredCode = 0;
   }
+}
+
+void menuInput(){
+  char customKey = customKeypad.getKey();
+  if (customKey){
+    Serial.print(customKey);
+    }
 }
 
 void resetting(){
@@ -240,9 +262,9 @@ void inputHandler() {
 //  stringOut = "ERROR: No (correct) input";
   if(stringIn == "abort"){
     for(int i = 0; i < 4; i++) moneyArray[i] = 0;
-        //code voor het 'resetten' van ale gegevens
-        
-  } 
+        resetting();
+  }
+   
 
   if(withdraw){
     //wait until more input comes
@@ -274,6 +296,10 @@ void inputHandler() {
   if(stringIn == "withdraw"){
     Serial.println("sendTransaction");
     withdraw = true;     
+  }
+
+  if(stringIn == "success"){
+    menuInput();
   }
 
 //outputString(stringIn);
