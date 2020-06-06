@@ -19,10 +19,10 @@ public class Withdrawal {
     public int[] withdrawalArray3 = new int[4];
     public int[] withdrawalArray4 = new int[4];
     short option;
-    StringBuilder option1 = new StringBuilder("Optie 1:\n");
-    StringBuilder option2 = new StringBuilder("Optie 2:\n");
-    StringBuilder option3 = new StringBuilder("Optie 3:\n");
-    StringBuilder option4 = new StringBuilder("Optie 4:\n");
+    StringBuilder option1 = new StringBuilder("Optie 1 []\n");
+    StringBuilder option2 = new StringBuilder("Optie 2 []\n");
+    StringBuilder option3 = new StringBuilder("Optie 3 []\n");
+    StringBuilder option4 = new StringBuilder("Optie 4 []\n");
 
     public Withdrawal(Gui gui, User user){
         this.gui = gui;
@@ -269,10 +269,10 @@ public class Withdrawal {
     }
 
     public void displayOptions()throws Exception {
-        gui.optie1.setText("Optie 1:\n");
-        gui.optie2.setText("Optie 2:\n");
-        gui.optie3.setText("Optie 3:\n");
-        gui.optie4.setText("Optie 4:\n");
+        gui.optie1.setText("Optie 1 []\n");
+        gui.optie2.setText("Optie 2 []\n");
+        gui.optie3.setText("Optie 3 []\n");
+        gui.optie4.setText("Optie 4 []\n");
         Arrays.fill(withdrawalArray1, 0);
         Arrays.fill(withdrawalArray2, 0);
         Arrays.fill(withdrawalArray3, 0);
@@ -284,7 +284,7 @@ public class Withdrawal {
         if(withdrawalArray1[1] > 0)option1.append(withdrawalArray1[1]).append("x20\n");
         if(withdrawalArray1[2] > 0)option1.append(withdrawalArray1[2]).append("x10\n");
         if(withdrawalArray1[3] > 0)option1.append(withdrawalArray1[3]).append("x5\n");
-        if(option1.toString().equalsIgnoreCase("Optie 1:\n")) gui.optie1.setVisible(false);
+        if(option1.toString().equalsIgnoreCase("Optie 1 []\n")) gui.optie1.setVisible(false);
         else {
             gui.optie1.setText(option1.toString());
             gui.optie1.setVisible(true);
