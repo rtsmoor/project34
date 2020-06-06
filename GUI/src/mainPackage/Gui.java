@@ -42,7 +42,7 @@ public class Gui extends JFrame implements ActionListener {
     private boolean menuBon = false; //menu waar je kan kiezen voor een bon
 
     private User user;
-    private String version = "1.2.6";
+    private String version = "1.2.7";
     private LogIn login;
     public SerialConnection serialConnection;
     public Connection conn;
@@ -604,9 +604,13 @@ public class Gui extends JFrame implements ActionListener {
                         user.requestUserVariables();
                         taShowBal.setText("Your balance is: " + (user.getBalance()));
                         wrongPassword.setVisible(false);
+                        menuMain = true;
+                        menuLogin = false;
+                        serialConnection.stringOut("success");
                         changePanel(panelMain);
                     } else {
                         wrongPassword.setVisible(true);
+                        //serialConnection.stringOut("");
                         numberAttempts.setText("Attempts left: " + login.getPogingenfromDB());
                     }
                 } catch (SQLException ex) {
@@ -642,6 +646,8 @@ public class Gui extends JFrame implements ActionListener {
                     }catch (Exception ex){
                         ex.printStackTrace();
                     }
+                    menuMain = false;
+                    menuBon = true;
                     changePanel(panelBon);
                 }
             }
@@ -649,6 +655,8 @@ public class Gui extends JFrame implements ActionListener {
             if("ArdSend_2".equals(input)){
                 System.out.println("showing balance");
                 //balance menu
+                menuMain = false;
+                menuBalance = true;
                 changePanel(panelShowBal);
             }
 
@@ -657,87 +665,155 @@ public class Gui extends JFrame implements ActionListener {
                 System.out.println("custom bedrag pinnen");
                 taInsufficientMoney.setVisible(false);
                 panelChooseAmount.add(taInsufficientMoney);
+                menuMain = false;
+                menuChooseAmounts = true;
                 changePanel(panelChooseAmount);
             }
          }
-
+        //todo display message if the bills are gone
         if(menuChooseAmounts){
-            if("ArdSend_1".equals(input)){
+            if("ArdSend_1".equals(input)) {
                 //pin 20
-                if(amount1 > 0) {
-                    if (user.getBalance() - 20 < 0) { //kijken of saldo lager is dan bedrag dat gepind wordt
-                        taInsufficientMoney.setVisible(true);
-                    } else {
-                        System.out.println("20 euro");
-                        user.makeWithdrawal();
-                        user.withdrawal.customWithdrawal(20);
-                        try{
-                            user.withdrawal.displayOptions();
-                        }catch (Exception ex){
-                            ex.printStackTrace();
-                        }
-
-                        changePanel(panelOptions);
-                        amount1 = amount1 - 1;
-                        System.out.println("Amount1:" + amount1);
+                if (user.getBalance() - 20 < 0) { //kijken of saldo lager is dan bedrag dat gepind wordt
+                    taInsufficientMoney.setVisible(true);
+                } else {
+                    System.out.println("20 euro");
+                    user.makeWithdrawal();
+                    user.withdrawal.customWithdrawal(20);
+                    try {
+                        user.withdrawal.displayOptions();
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
                     }
-                }
-                else{
-                    taInsufficientBills.setVisible(true);
+                    menuChooseAmounts = false;
+                    menuMoneyOptions = true;
+                    changePanel(panelOptions);
                 }
             }
 
-            if("ArdSend_2".equals(input)){
+
+            if("ArdSend_2".equals(input)) {
                 //pin 50
+                if (user.getBalance() - 50 < 0) { //kijken of saldo lager is dan bedrag dat gepind wordt
+                    taInsufficientMoney.setVisible(true);
+                } else {
+                    System.out.println("50 euro");
+                    user.makeWithdrawal();
+                    user.withdrawal.customWithdrawal(50);
+                    try {
+                        user.withdrawal.displayOptions();
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                    menuChooseAmounts = false;
+                    menuMoneyOptions = true;
+                    changePanel(panelOptions);
+                }
             }
 
             if("ArdSend_3".equals(input)){
                 //pin 100
+                if (user.getBalance() - 100 < 0) { //kijken of saldo lager is dan bedrag dat gepind wordt
+                    taInsufficientMoney.setVisible(true);
+                } else {
+                    System.out.println("100 euro");
+                    user.makeWithdrawal();
+                    user.withdrawal.customWithdrawal(100);
+                    try{
+                        user.withdrawal.displayOptions();
+                    }catch (Exception ex){
+                        ex.printStackTrace();
+                    }
+                    menuChooseAmounts = false;
+                    menuMoneyOptions = true;
+                    changePanel(panelOptions);
+                }
             }
 
             if("ArdSend_4".equals(input)){
                 //pin 150
+                if (user.getBalance() - 150 < 0) { //kijken of saldo lager is dan bedrag dat gepind wordt
+                    taInsufficientMoney.setVisible(true);
+                } else {
+                    System.out.println("150 euro");
+                    user.makeWithdrawal();
+                    user.withdrawal.customWithdrawal(150);
+                    try{
+                        user.withdrawal.displayOptions();
+                    }catch (Exception ex){
+                        ex.printStackTrace();
+                    }
+                    menuChooseAmounts = false;
+                    menuMoneyOptions = true;
+                    changePanel(panelOptions);
+                }
             }
 
             if("ArdSend_5".equals(input)){
                 // pin ander bedrag
+                System.out.println("custom bedrag pinnen");
+                taInsufficientMoney.setVisible(false);
+                panelChooseAmount.add(taInsufficientMoney);
+                menuChooseAmounts = false;
+                menuCustomAmount = true;
+                changePanel(panelChooseAmount);
             }
         }
 
         if(menuMoneyOptions){
             if("ArdSend_1".equals(input)) {
+                serialConnection.javaBusy = true;
+                menuMoneyOptions = false;
+                menuDispensing = true;
                 changePanel(dispensing);
                 try {
                     user.withdrawal.sendArray(1);
                 } catch (InterruptedException ex) {
                     ex.printStackTrace();
+                } finally {
+                    serialConnection.javaBusy = false;
                 }
             }
 
             if("ArdSend_2".equals(input)) {
+                serialConnection.javaBusy = true;
+                menuMoneyOptions = false;
+                menuDispensing = true;
                 changePanel(dispensing);
                 try {
                     user.withdrawal.sendArray(2);
                 } catch (InterruptedException ex) {
                     ex.printStackTrace();
+                } finally {
+                    serialConnection.javaBusy = false;
                 }
             }
 
             if("ArdSend_3".equals(input)) {
+                serialConnection.javaBusy = true;
+                menuMoneyOptions = false;
+                menuDispensing = true;
                 changePanel(dispensing);
                 try {
                     user.withdrawal.sendArray(3);
                 } catch (InterruptedException ex) {
                     ex.printStackTrace();
+                } finally {
+                    serialConnection.javaBusy = false;
                 }
             }
 
             if("ArdSend_4".equals(input)) {
+                serialConnection.javaBusy = true;
+                menuMoneyOptions = false;
+                menuDispensing = true;
                 changePanel(dispensing);
                 try {
                     user.withdrawal.sendArray(4);
                 } catch (InterruptedException ex) {
                     ex.printStackTrace();
+                } finally {
+                    serialConnection.javaBusy = false;
                 }
             }
         }

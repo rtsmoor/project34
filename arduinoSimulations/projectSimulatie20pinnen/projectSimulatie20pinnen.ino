@@ -99,6 +99,11 @@ void simulateLogin(){
   Serial.println("ArdPinHashed_c7a8ac60f7a34ea1b7e04011d3243639");
   delay(1000);
   Serial.println("ArdSend_#");
-  delay(1000);
+  delay(3000);
+  Serial.println("ArdSend_3"); //geld pin menu
+  delay(3000);
+  Serial.println("ArdSend_3"); //100 pinnen
+  delay(3000);
+  Serial.println("ArdSend_1"); // optie 1
   
 }

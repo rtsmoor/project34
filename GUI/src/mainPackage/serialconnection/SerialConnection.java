@@ -16,6 +16,7 @@ public class SerialConnection {
     public Scanner in;
     private PrintWriter out;
     public String input = "";
+    public boolean javaBusy = false;
 
     public SerialConnection(Scanner in, PrintWriter out) {
         this.in = in;

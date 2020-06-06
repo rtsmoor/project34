@@ -18,9 +18,10 @@ public class App {
     static boolean received;
     static boolean arduinoReady = false;
 
+
     public static void main(String[] args) {
 
-        SerialPort port = SerialPort.getCommPort("COM4"); // edit dit als je een andere com port gebruikt //todo maak een for loop om te checken op de juiste com port
+        SerialPort port = SerialPort.getCommPort("COM5"); // edit dit als je een andere com port gebruikt //todo maak een for loop om te checken op de juiste com port
         port.setComPortParameters(115200, 8, 1, 0);
         port.setComPortTimeouts(SerialPort.TIMEOUT_SCANNER, 0, 0);
         System.out.println("Open port: " + port.openPort());
@@ -109,7 +110,7 @@ public class App {
                     input = in.nextLine();
                     // ArdSend word gebruikt als java niet eerder om input heeft gevraagd.
                     // Omdat veel methodes gebruik maken van serialConnection.stringIn() doe ik het op deze manier zodat ook zij de juiste input zullen krijgen
-                    if (input.contains("Ard")) { //!!!opletten dat je niet Ard in een andere string verstuurt!!!
+                    if (input.contains("Ard") && !gui.serialConnection.javaBusy) { //!!!opletten dat je niet Ard in een andere string verstuurt!!!
                         gui.arduinoInputHandler(input);
                     } else {
                         gui.serialConnection.stringIn(input);
