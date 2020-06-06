@@ -118,7 +118,7 @@ public class Gui extends JFrame implements ActionListener {
             "If this problem persists, please contact your bank");
     private Font font = new Font("Comic Sans MS", Font.BOLD, 50);
     private Font fontTitle = new Font("Segoe Script", Font.BOLD, 70);
-    private Image icon = getToolkit().getImage(("resources/icon.jpg"));
+    private Image icon = getToolkit().getImage(("GUI/resources/icon.jpg"));
 //    private JLabel background1 = new JLabel("", img, JLabel.CENTER);
 //    public void setSerialConnection(SerialConnection serialConnection){
 //        this.serialConnection = serialConnection;
@@ -629,6 +629,7 @@ public class Gui extends JFrame implements ActionListener {
                 login.setHashedPIN(temp);
                 System.out.println("hashed pin: " + temp);
             }
+            return;
         }
 
         if(menuMain){
@@ -669,6 +670,7 @@ public class Gui extends JFrame implements ActionListener {
                 menuChooseAmounts = true;
                 changePanel(panelChooseAmount);
             }
+            return;
          }
         //todo display message if the bills are gone
         if(menuChooseAmounts){
@@ -689,6 +691,7 @@ public class Gui extends JFrame implements ActionListener {
                     menuMoneyOptions = true;
                     changePanel(panelOptions);
                 }
+                return;
             }
 
 
@@ -709,6 +712,7 @@ public class Gui extends JFrame implements ActionListener {
                     menuMoneyOptions = true;
                     changePanel(panelOptions);
                 }
+                return;
             }
 
             if("ArdSend_3".equals(input)){
@@ -728,6 +732,7 @@ public class Gui extends JFrame implements ActionListener {
                     menuMoneyOptions = true;
                     changePanel(panelOptions);
                 }
+                return;
             }
 
             if("ArdSend_4".equals(input)){
@@ -758,6 +763,7 @@ public class Gui extends JFrame implements ActionListener {
                 menuCustomAmount = true;
                 changePanel(panelChooseAmount);
             }
+            return;
         }
 
         if(menuMoneyOptions){
