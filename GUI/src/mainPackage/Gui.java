@@ -22,7 +22,7 @@ import static java.lang.Thread.sleep;
 
 import static javax.swing.JOptionPane.getDesktopPaneForComponent;
 import static javax.swing.JOptionPane.showMessageDialog;
-
+//TODO arduino moet iets sturen als hij klaar is met dispensen
 public class Gui extends JFrame implements ActionListener {
     public int array_length = 10;
     private int amount4 = 10;
@@ -43,7 +43,7 @@ public class Gui extends JFrame implements ActionListener {
     public boolean menuFinal = false;
 
     private User user;
-    private String version = "1.2.9";
+    private String version = "1.3.0";
     private LogIn login;
     public SerialConnection serialConnection;
     public Connection conn;
@@ -183,7 +183,7 @@ public class Gui extends JFrame implements ActionListener {
         frame.setSize(new Dimension(1920,1080));
         frame.setIconImage(Toolkit.getDefaultToolkit().getImage("icon.jpg"));
 //        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-//        mainFrame.setUndecorated(true); // zorgt ervoor dat je niet zomaar uit het programma kan klikken
+        frame.setUndecorated(true); // zorgt ervoor dat je niet zomaar uit het programma kan klikken
         frame.add(panelMain);
         frame.setIconImage(icon);
         panelMain.add(quickPin);
@@ -578,6 +578,7 @@ public class Gui extends JFrame implements ActionListener {
         logoutTimer.restart(); //resets the 30 second logout timer
 
         if(!menuStart) {
+
         if("ArdSend_B".equals(input)){
             //code om uit te loggen en naar het startscherm te gaan
             System.out.println("aborting...");
@@ -593,17 +594,9 @@ public class Gui extends JFrame implements ActionListener {
             changePanel(panelStart);
 
             serialConnection.stringOut("abort");
-            System.out.println(serialConnection.in.hasNextLine());
-//            try {
-//                sleep(5000);
-//            } catch (InterruptedException ex) {
-//                ex.printStackTrace();
-//            }
-
-
-
-
+            return;
         }
+
             if(!menuLogin) {
                 if ("ArdSend_C".equals(input)) {
                     //code om naar het hoofdmenu te gaan
@@ -617,11 +610,7 @@ public class Gui extends JFrame implements ActionListener {
                     menuMain = true;
                     changePanel(panelMain);
 //            serialConnection.stringOut("mainMenu"); //todo arduino code voor hoofdmenu
-//            try {
-//                sleep(100);
-//            } catch (InterruptedException ex) {
-//                ex.printStackTrace();
-//            }
+                    return;
                 }
             }
         }
@@ -736,7 +725,6 @@ public class Gui extends JFrame implements ActionListener {
             return;
          }
 
-        //todo display message if the bills are gone
         if(menuChooseAmounts){
             if("ArdSend_1".equals(input)) {
                 //pin 20
@@ -975,6 +963,8 @@ public class Gui extends JFrame implements ActionListener {
                             user.withdrawal.customWithdrawal(tempInt);
                             try{
                                 user.withdrawal.displayOptions();
+                                menuCustomAmount = false;
+                                menuMoneyOptions = true;
                                 changePanel(panelOptions);
                             }catch (Exception ex){
                                 taInsufficientBills[1].setVisible(true);
@@ -1014,9 +1004,12 @@ public class Gui extends JFrame implements ActionListener {
                 System.out.println("Bon niet printen");
                 menuBon = false;
                 menuFinal = true;
-                changePanel(panelFinalizeTransaction);
+                arduinoInputHandler("ArdSend_B");
             }
             return;
+        }
+        if(menuFinal){
+            if(input.contains("ArdSend_")) arduinoInputHandler("ArdSend_B");
         }
     }
 
