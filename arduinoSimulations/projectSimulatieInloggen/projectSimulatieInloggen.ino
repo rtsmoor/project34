@@ -48,8 +48,7 @@ void inputHandler() {
   } 
    if(stringIn == "success"){
     Serial.println("hij doet t");
-     delay(1000);
-  Serial.println("ArdSend_B");
+     delay(1000);  
    }
 
   if(withdraw){
@@ -94,14 +93,7 @@ void simulateLogin(){
   String passNumber = "2A 9F 0D 0B";
   Serial.print("ArdPassNr_");
   Serial.println(passNumber);
-  delay(1000); //assume the user will wait a little bit before the next input
-  Serial.println("ArdSend_*");
-  delay(1000);
-  Serial.println("ArdSend_*");
-  delay(1000);
-  Serial.println("ArdSend_*");
-  delay(1000);
-  Serial.println("ArdSend_*");
+  delay(2000); //assume the user will wait a little bit before the next input
   delay(1000);
   //als de gebruiker op # drukt, verstuur dan eerst het gehaste wachtwoord, en daarna het # (of alleen het wachtwoord, nog even kijken wat handig is)
   Serial.println("ArdPinHashed_c7a8ac60f7a34ea1b7e04011d3243639");
