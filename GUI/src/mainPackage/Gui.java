@@ -80,7 +80,7 @@ public class Gui extends JFrame implements ActionListener {
     JTextArea[] afbreken = new JTextArea[array_length];
     JTextArea[] taNaarHoofdmenu = new JTextArea[array_length];
     JTextArea[] taInsufficientBills = new JTextArea[array_length];//panelchooseamount = 2  panelmain = 0  panelcustomamount = 1
-    JTextArea[] taInsufficientMoney = new JTextArea[array_length];
+    JTextArea[] taInsufficientMoney = new JTextArea[array_length];//panelchooseamount = 2  panelmain = 0  panelcustomamount = 1
 
     private JButton bedrag1 = new JButton("20");
     private JButton bedrag2 = new JButton("50");
@@ -100,8 +100,6 @@ public class Gui extends JFrame implements ActionListener {
     private JTextArea taShowBal = new JTextArea();
     private JTextArea taPanelStart = new JTextArea("Scan your pass to continue");
     private JTextArea taInvalidInput = new JTextArea("Enter numbers between 0-9,\nand where the last number is 0 or 5.\nOther characters are not allowed!");
-//    private JTextArea taInsufficientBills = new JTextArea("Er zijn niet genoeg biljetten om deze actie uit te voeren");
-//    private JTextArea taInsufficientMoney = new JTextArea("Er is niet genoeg saldo om deze actie uit te voeren");
     private JTextArea enterPin = new JTextArea("ENTER PIN");
     private JTextArea taDispensing = new JTextArea("Dispensing...");
     private JTextArea snelPinnen = new JTextArea("Quick €70 Withdrawal [1]");
@@ -962,6 +960,8 @@ public class Gui extends JFrame implements ActionListener {
             taInsufficientMoney[2].setVisible(false);
             taInsufficientBills[1].setVisible(false);
             taInsufficientMoney[1].setVisible(false);
+            taInsufficientBills[0].setVisible(false);
+            taInsufficientMoney[0].setVisible(false);
             panelChooseAmount.add(taInsufficientMoney[2]);
             changePanel(panelMain);
 //            serialConnection.stringOut("mainMenu"); //todo arduino code voor hoofdmenu
@@ -1176,6 +1176,10 @@ public class Gui extends JFrame implements ActionListener {
             System.out.println("ander bedrag invullen");
             customBedragField.setText("");
             taInsufficientMoney[1].setVisible(false);
+            taInsufficientMoney[0].setVisible(false);
+            taInsufficientBills[0].setVisible(false);
+            taInsufficientMoney[2].setVisible(false);
+            taInsufficientBills[2].setVisible(false);
             changePanel(panelCustomAmount);
         }
 
