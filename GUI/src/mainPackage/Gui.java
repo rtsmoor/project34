@@ -25,10 +25,10 @@ import static javax.swing.JOptionPane.showMessageDialog;
 
 public class Gui extends JFrame implements ActionListener {
     public int array_length = 10;
-    private int amount4 = 10;
-    private int amount3 = 10;
-    private int amount2 = 10;
-    private int amount1 = 10;
+    private int amount4 = 15;
+    private int amount3 = 15;
+    private int amount2 = 15;
+    private int amount1 = 15;
     public int[] amounts = {amount1, amount2, amount3, amount4}; // volgorde biljetten: 5, 10, 20, 50
 
     private boolean menuStart = true; //startscherm, is true aan het begin en nadat de gebruiker is uitgelogt
@@ -440,7 +440,7 @@ public class Gui extends JFrame implements ActionListener {
         taReceiptPrinted.setEditable(false);
         taReceiptPrinted.setBackground(Color.CYAN);
         taReceiptPrinted.setFont(font);
-        taReceiptPrinted.setBounds(650,150,720,70);
+        taReceiptPrinted.setBounds(650,150,750,70);
 
 
 
@@ -906,7 +906,7 @@ public class Gui extends JFrame implements ActionListener {
             }
         }
 
-        if(menuDispensing)
+        if(menuDispensing){}
 
         if(menuBon){
             if("ArdSend_1".equals(input)) {

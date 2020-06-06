@@ -3,16 +3,24 @@
 #include <MFRC522.h>
 #include <SHA512.h>
 #include <Stepper.h>
+#include "Adafruit_Thermal.h"
+#include "SoftwareSerial.h"
 
 #define HASH_SIZE 32
 #define BLOCK_SIZE 128
 
 #define SS_PIN 9
 #define RST_PIN 8
+#define TX_PIN 6
+#define RX_PIN 5
+
+SoftwareSerial mySerial(RX_PIN, TX_PIN); 
+Adafruit_Thermal printer(&mySerial);
 
 long enteredCode = 0;
 char enteredCodeArray[4] = {'0', '0', '0', '0'};
-
+int amount;
+int cashCounter[4];
 const int stepsPerRevolution = 200;
 
 Stepper myStepper1(stepsPerRevolution, 49, 47, 48, 46);
@@ -24,8 +32,6 @@ Stepper myStepper4(stepsPerRevolution, 34, 36, 35, 37);
 String stringIn;
 bool received = false;
 bool withdraw = false;
-int moneyArray[4];
-
 
 //Hashing
 
@@ -101,12 +107,14 @@ byte rowPins[ROWS] = {33, 31, 32, 30}; //connect to the column pinouts of the ke
 Keypad customKeypad = Keypad( makeKeymap(hexaKeys), rowPins, colPins, ROWS, COLS); 
 
 void setup(){ 
+  mySerial.begin(9600);
   Serial.begin(115200);
   pinMode(10, OUTPUT);
   pinMode(11, OUTPUT);
   SPI.begin();
   mfrc522.PCD_Init();
   Serial.println("ready");
+  pinMode(2, OUTPUT);
 
   
  // Serial.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nPlease present your card: ");
@@ -224,10 +232,49 @@ void loop(){
 }
 
 void menuInput(){
+  bool exitProgram = true;
+  while(exitProgram){
+  if(Serial.available()) {
+    Serial.println("serial event");
+  if (Serial.available()) {
+    Serial.println("serial event 2");
+//    while (true) {
+      stringIn = Serial.readString();
+//      stringIn += inChar;
+
+//      if (inChar == '\n') break;
+//    }
+   if(stringIn != NULL) received = true;
+  }
+  }
   char customKey = customKeypad.getKey();
   if (customKey){
-    Serial.print(customKey);
+    if(customKey == 'B'){
+      exitProgram = false;
+      Serial.println("ArdSend_B");
     }
+    else if(customKey == 'C'){
+      Serial.println("ArdSend_C");
+    }
+      else if(customKey == '1'){
+      Serial.println("ArdSend_1");
+    }
+      else if(customKey == '2'){
+      Serial.println("ArdSend_2");
+    }
+      else if(customKey == '3'){
+      Serial.println("ArdSend_3");
+    }
+      else if(customKey == '4'){
+      Serial.println("ArdSend_4");
+    }
+      else if(customKey == '5'){
+      Serial.println("ArdSend_5");
+    }
+    Serial.println(customKey);
+    }
+    if(received) {Serial.println("receiving");inputHandler();}
+  }
 }
 
 void resetting(){
@@ -245,7 +292,9 @@ void resetting(){
 
 //serial communication code
 void serialEvent() { // To check if there is any data on the serial line
+  Serial.println("serial event");
   if (Serial.available()) {
+    Serial.println("serial event 2");
 //    while (true) {
       stringIn = Serial.readString();
 //      stringIn += inChar;
@@ -258,32 +307,37 @@ void serialEvent() { // To check if there is any data on the serial line
 
 //handles serial input
 void inputHandler() {
- 
 //  stringOut = "ERROR: No (correct) input";
   if(stringIn == "abort"){
-    for(int i = 0; i < 4; i++) moneyArray[i] = 0;
-        resetting();
+    Serial.println("reset complete");
+    resetting();
+    for(int i = 0; i < 4; i++) cashCounter[i] = 0;
   }
-   
+
+  if(stringIn == "printBon"){
+    printReceipt();
+    Serial.println("Print bon");
+  }
+
 
   if(withdraw){
     //wait until more input comes
       if(stringIn == "fifty"){
-        moneyArray[0]++;
+        cashCounter[0]++;
         Serial.println("received_fifty");
       }
       if(stringIn == "twenty"){
-        moneyArray[1]++;
+        cashCounter[1]++;
         //myStepper3.setSpeed(60);
         //myStepper3.step(1000); //deze code van de steppermotor in een aparte functie die word aangeroepen als hij alles heeft ontvangen, anders loopt het hele javaprogramma ook vast
         Serial.println("received_twenty");
       }
       if(stringIn == "ten"){
-        moneyArray[2]++;
+        cashCounter[2]++;
         Serial.println("received_ten");
       }
       if(stringIn == "five"){
-        moneyArray[3]++;
+        cashCounter[3]++;
         Serial.println("received_five");
       }
     
@@ -299,11 +353,60 @@ void inputHandler() {
   }
 
   if(stringIn == "success"){
+    Serial.println("keypad input");
+    stringIn = "";
+    received = false;
     menuInput();
   }
+
+  
 
 //outputString(stringIn);
   
   received = false;
   stringIn = "";
+}
+
+
+void printReceipt() {
+  printer.begin();
+  printer.justify('C');
+  printer.setSize('M');
+  printer.feed(2);
+  printer.println(F("---------------------------- \n"));
+  printer.println(F("Welcome to ItsFreeStonksEstate\n"));
+  printCashCounter();
+  printer.justify('C');
+  printer.println(F("Thank you for your withdrawal"));
+  printer.println(F("---------------------------- \n"));
+  printer.feed(6);
+  printer.setDefault(); // Restore printer to defaults
+}
+
+void resetCashCounter(){
+  for(int i = 0;i<4;i++){
+    cashCounter[i] = 0;
+  }
+}
+void amountCounter(){
+  amount = ((cashCounter[0]*50) + (cashCounter[1]*20) + (cashCounter[2]*10) + (cashCounter[3]*5));
+}
+
+void printCashCounter(){
+    amountCounter();
+    printer.setSize('S');
+    printer.justify('L');
+    printer.print(cashCounter[0]);
+    printer.println(F(" x 50Stanks\n"));
+    printer.print(cashCounter[1]);
+    printer.println(F(" x 20Stanks\n"));
+    printer.print(cashCounter[2]);
+    printer.println(F(" x 10Stanks\n"));
+    printer.print(cashCounter[3]);
+    printer.println(F(" x 5Stanks\n"));
+    printer.print(F("Total :"));
+    printer.println(amount);
+    printer.setSize('M');
+    amount = 0;
+    resetCashCounter();
 }
