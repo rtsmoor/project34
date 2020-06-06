@@ -34,11 +34,11 @@ public class Withdrawal {
 
 
     }
-//TODO !!!kijken of je gewoon de hele array kan doorsturen!!! VEEL SNELLER!!! ALS HET KAN!!!
+
     public void sendArray(int arrayNumber) throws InterruptedException{
         gui.serialConnection.stringOut("withdraw");
         sleep(2000);
-//todo in gui hier een laadscherm toevoegen omdat deze code tering lang duurt om te runnen (i.v.m. communicatie java->arduino, niet door de slechte code (waarschijnlijk beide))
+
         if(arrayNumber == 1){
             for(int i = 0; i < withdrawalArray1.length; i++) {
                 while (withdrawalArray1[i] > 0){
@@ -163,7 +163,7 @@ public class Withdrawal {
             sleep(2500);
         }
 
-        if(gui.serialConnection.input.equals("received")) {//todo toevoegen dat de dispenser aangeeft wanneer het geld gedispenst is
+         //todo toevoegen dat de dispenser aangeeft wanneer het geld gedispenst is
             double balance = user.getBalance();
             balance -= withdrawalAmount;
             user.setBalance(balance);
@@ -177,7 +177,7 @@ public class Withdrawal {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-        }
+
     }
 
     public void algorithm(int withdrawalAmount, int[] withdrawalArray) throws Exception { //algoritme voor keuze van biljetten

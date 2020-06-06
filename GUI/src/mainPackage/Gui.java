@@ -841,6 +841,21 @@ public class Gui extends JFrame implements ActionListener {
 
             }
         }
+
+        if(menuBon){
+            if("ArdSend_1".equals(input)) {
+                //bon printen
+                System.out.println("Bon printen");
+                serialConnection.stringOut("printBon");
+                changePanel(dispensing);
+            }
+
+            if("ArdSend_2".equals(input)) {
+                //geen bon
+                System.out.println("Bon niet printen");
+                changePanel(panelFinalizeTransaction);
+            }
+        }
     }
 
     @Override
@@ -918,7 +933,7 @@ public class Gui extends JFrame implements ActionListener {
 
         if("yesBon".equalsIgnoreCase(e.getActionCommand()))   {
             System.out.println("Bon printen");
-            //serialConnection.stringOut("printBon"); //todo uncomment (was even voor de demo gecommented)
+            serialConnection.stringOut("printBon");
             changePanel(dispensing);
 
         }

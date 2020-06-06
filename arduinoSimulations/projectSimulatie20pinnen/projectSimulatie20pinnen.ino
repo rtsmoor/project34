@@ -52,7 +52,7 @@ void inputHandler() {
     //wait until more input comes
       if(stringIn == "fifty"){
         moneyArray[0]++;
-
+Serial.println("ready");
       }
       if(stringIn == "twenty"){
         moneyArray[1]++;
@@ -94,6 +94,8 @@ void simulateLogin(){
   delay(1000); //assume the user will wait a little bit before the next input
   Serial.println("ArdSend_*");
   delay(1000);
+  Serial.println("ready");
+  delay(1000);
   Serial.println("ArdSend_*");
   delay(1000);
   Serial.println("ArdSend_*");
@@ -105,8 +107,7 @@ void simulateLogin(){
   delay(1000);
   Serial.println("ArdSend_#");
   delay(3000);
-  Serial.println("ArdSend_3"); //geld pin menu
-  delay(3000);
+
   Serial.println("ArdSend_3"); //geld pin menu
   delay(3000);
   Serial.println("ArdSend_2"); //50 pinnen
