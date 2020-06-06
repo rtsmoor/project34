@@ -114,6 +114,7 @@ public class Gui extends JFrame implements ActionListener {
     private JTextArea taBedrag4 = new JTextArea("150 [4]");
     private JTextArea taOtherAmount = new JTextArea("Other Amount [5]");
     private JTextArea taCustomAmount = new JTextArea("Enter custom amount:");
+    private JTextArea continueCustomAmount = new JTextArea("Continue [A]");
     private JTextArea passBlocked = new JTextArea("Your pass has been blocked, please contact your bank");
     private JTextArea wrongPassword = new JTextArea("The pin that you entered is incorrect, please try again");
     public JTextArea numberAttempts = new JTextArea("Attempts left:");
@@ -415,7 +416,11 @@ public class Gui extends JFrame implements ActionListener {
         panelCustomAmount.add(taCustomAmount);
         panelCustomAmount.add(taInsufficientBills[1]);
         panelCustomAmount.add(taInsufficientMoney[1]);
-        customBedragField.setColumns(5);
+        panelCustomAmount.add(continueCustomAmount);
+        continueCustomAmount.setEditable(false);
+        continueCustomAmount.setFont(font);
+        continueCustomAmount.setBackground(Color.CYAN);
+        customBedragField.setColumns(2);
         taInvalidInput.setEditable(false);
         taInvalidInput.setBackground(Color.CYAN);
         taInvalidInput.setFont(font);
@@ -427,11 +432,12 @@ public class Gui extends JFrame implements ActionListener {
         customBedragField.setBackground(Color.CYAN);
         customBedragField.setFont(font);
         taCustomAmount.setBounds(400,400,700,70);
-        customBedragField.setBounds(950,400,700,70);
+        customBedragField.setBounds(950,400,300,70);
         abort[3].setBounds(1100, 700, 200, 200); //temp
         naarHoofdMenu[3].setBounds(700,700,200,200); //temp
         nextPage[2].setBounds(700,900,200,200);
         taInvalidInput.setBounds(600,500,910,200);
+        continueCustomAmount.setBounds(1400,400,700,70);
         //panelFinalizeTransaction
         panelFinalizeTransaction.setLayout(null);
         panelFinalizeTransaction.setBackground(Color.CYAN);
