@@ -159,7 +159,7 @@ public class Gui extends JFrame implements ActionListener {
             taNaarHoofdmenu[i].setFont(font);
             taNaarHoofdmenu[i].setBounds(50,900,600,70);
 
-            taInsufficientMoney[i] = new JTextArea("Er is niet genoeg saldo om deze actie uit te voeren");
+            taInsufficientMoney[i] = new JTextArea("There is not enough balance to perform this action");
             taInsufficientMoney[i].setBackground(Color.CYAN);
             taInsufficientMoney[i].setEditable(false);
             taInsufficientMoney[i].setFont(font);
@@ -167,7 +167,7 @@ public class Gui extends JFrame implements ActionListener {
             taInsufficientMoney[i].setForeground(Color.RED);
             taInsufficientMoney[i].setBounds(300,230,1350,70);
 
-            taInsufficientBills[i] = new JTextArea("Er zijn niet genoeg biljetten om deze actie uit te voeren");
+            taInsufficientBills[i] = new JTextArea("There are not enough bills to perform this action");
             taInsufficientBills[i].setBackground(Color.CYAN);
             taInsufficientBills[i].setEditable(false);
             taInsufficientBills[i].setFont(font);
