@@ -271,7 +271,7 @@ public class Gui extends JFrame implements ActionListener {
         quickPin.setBounds(700, 180, 200, 200); //temp
         showBal.setBounds(700, 700, 200, 200); //temp
         customPin.setBounds(1100,180, 200, 200); //temp
-        snelPinnen.setBounds(50,300, 620,70);
+        snelPinnen.setBounds(50,300, 640,70);
         kiesBedrag.setBounds(1400,300, 500,70);
         taBalance.setBounds(50,900, 300,70);
         //panel dispensing
@@ -440,7 +440,7 @@ public class Gui extends JFrame implements ActionListener {
         taReceiptPrinted.setEditable(false);
         taReceiptPrinted.setBackground(Color.CYAN);
         taReceiptPrinted.setFont(font);
-        taReceiptPrinted.setBounds(650,150,700,70);
+        taReceiptPrinted.setBounds(650,150,720,70);
 
 
 
