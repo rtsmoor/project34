@@ -40,6 +40,7 @@ public class Gui extends JFrame implements ActionListener {
     private boolean menuMoneyOptions = false; // menu waar je kiest in welke biljetten je je geld wilt hebben
     private boolean menuDispensing = false; // scherm die laat zien dat de automaat aan het dispensen is
     private boolean menuBon = false; //menu waar je kan kiezen voor een bon
+    private boolean menuFinal = false;
 
     private User user;
     private String version = "1.2.7";
@@ -521,6 +522,7 @@ public class Gui extends JFrame implements ActionListener {
         menuCustomAmount = false;
         menuDispensing = false;
         menuMoneyOptions = false;
+        menuFinal = false;
     }
 
     public void arduinoInputHandler(String input){
@@ -847,12 +849,16 @@ public class Gui extends JFrame implements ActionListener {
                 //bon printen
                 System.out.println("Bon printen");
                 serialConnection.stringOut("printBon");
-                changePanel(dispensing);
+                menuBon = false;
+                menuFinal = true;
+                changePanel(panelFinalizeTransaction);
             }
 
             if("ArdSend_2".equals(input)) {
                 //geen bon
                 System.out.println("Bon niet printen");
+                menuBon = false;
+                menuFinal = true;
                 changePanel(panelFinalizeTransaction);
             }
         }
