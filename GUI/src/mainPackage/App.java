@@ -21,7 +21,7 @@ public class App {
 
     public static void main(String[] args) {
 
-        SerialPort port = SerialPort.getCommPort("COM5"); // edit dit als je een andere com port gebruikt
+        SerialPort port = SerialPort.getCommPort("/dev/tty.wchusbserialfa130"); // edit dit als je een andere com port gebruikt
         port.setComPortParameters(115200, 8, 1, 0);
         port.setComPortTimeouts(SerialPort.TIMEOUT_SCANNER, 0, 0);
         System.out.println("Open port: " + port.openPort());

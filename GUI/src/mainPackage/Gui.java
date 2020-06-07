@@ -13,10 +13,10 @@ import static java.lang.Thread.sleep;
 
 public class Gui extends JFrame implements ActionListener {
     public int array_length = 10;
-    private int amount4 = 15;
-    private int amount3 = 15;
-    private int amount2 = 15;
-    private int amount1 = 15;
+    private int amount4 = 4;
+    private int amount3 = 4;
+    private int amount2 = 4;
+    private int amount1 = 4;
     public int[] amounts = {amount1, amount2, amount3, amount4}; // volgorde biljetten: 5, 10, 20, 50
 
     private boolean menuStart = true; //startscherm, is true aan het begin en nadat de gebruiker is uitgelogt
@@ -220,7 +220,7 @@ public class Gui extends JFrame implements ActionListener {
         taFastPin.setEditable(false);
         taChooseAmount.setEditable(false);
         taBalance.setEditable(false);
-        taFastPin.setBounds(50,300, 640,70);
+        taFastPin.setBounds(50,300, 670,70);
         taChooseAmount.setBounds(1400,300, 500,70);
         taBalance.setBounds(50,900, 300,70);
         //panel dispensing
@@ -553,7 +553,7 @@ public class Gui extends JFrame implements ActionListener {
         if(menuChooseAmounts){
             if("ArdSend_1".equals(input)) {
                 //pin 20
-                if (amounts[0] > 4 && amounts[1] > 2 && amounts[2] > 1 && amounts[3] > 0) {
+                if (amounts[0] > 3 && amounts[1] > 2 && amounts[2] > 1 && amounts[3] > 0) {
                     if (user.getBalance() - 20 < 0) { //kijken of saldo lager is dan bedrag dat gepind wordt
                         taInsufficientMoney[2].setVisible(true);
                     } else {

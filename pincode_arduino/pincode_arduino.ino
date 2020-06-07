@@ -248,30 +248,32 @@ void menuInput(){
   }
   }
   char customKey = customKeypad.getKey();
-  if (customKey){
-    if(customKey == 'B'){
+  switch(customKey){
+    case 'B':
       exitProgram = false;
       Serial.println("ArdSend_B");
-    }
-    else if(customKey == 'C'){
+    break;
+    case 'A':
+      Serial.println("ArdSend_A");
+    break;
+    case 'C':
       Serial.println("ArdSend_C");
-    }
-      else if(customKey == '1'){
+    break;
+      case '1':
       Serial.println("ArdSend_1");
-    }
-      else if(customKey == '2'){
+    break;
+      case '2':
       Serial.println("ArdSend_2");
-    }
-      else if(customKey == '3'){
+    break;
+      case '3':
       Serial.println("ArdSend_3");
-    }
-      else if(customKey == '4'){
+    break;
+      case '4':
       Serial.println("ArdSend_4");
-    }
-      else if(customKey == '5'){
+    break;
+      case '5':
       Serial.println("ArdSend_5");
-    }
-    Serial.println(customKey);
+    break;
     }
     if(received) {Serial.println("receiving");inputHandler();}
   }
@@ -324,24 +326,22 @@ void inputHandler() {
     //wait until more input comes
       if(stringIn == "fifty"){
         cashCounter[0]++;
-        Serial.println("received_fifty");
+        
       }
       if(stringIn == "twenty"){
         cashCounter[1]++;
-        //myStepper3.setSpeed(60);
-        //myStepper3.step(1000); //deze code van de steppermotor in een aparte functie die word aangeroepen als hij alles heeft ontvangen, anders loopt het hele javaprogramma ook vast
-        Serial.println("received_twenty");
       }
       if(stringIn == "ten"){
         cashCounter[2]++;
-        Serial.println("received_ten");
+         
       }
       if(stringIn == "five"){
         cashCounter[3]++;
-        Serial.println("received_five");
+        
       }
     
   if(stringIn == "complete"){
+    dispense();
     withdraw = false;
     Serial.println("received");
   }
@@ -365,6 +365,26 @@ void inputHandler() {
   
   received = false;
   stringIn = "";
+}
+
+void dispense(){
+  Stepper steppers[4] = {myStepper4, myStepper3, myStepper2, myStepper1};
+  for(int i = 0; i < 4; i++){
+    steppers[i].setSpeed(60);
+    for(int x = 0; x < cashCounter[i]; x++){
+      int stepperSpeed;
+      if(i == 2){
+        stepperSpeed = -1750;
+      }
+      else{
+        stepperSpeed = 1750;
+      }
+      steppers[i].step(stepperSpeed);
+    }
+  }
+  Serial.println("ArdSend_finish");
+  delay(100);
+  Serial.println("ArdSend_finish");
 }
 
 
