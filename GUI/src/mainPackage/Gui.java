@@ -115,6 +115,7 @@ public class Gui extends JFrame implements ActionListener {
     private JTextArea taOtherAmount = new JTextArea("Other Amount [5]");
     private JTextArea taCustomAmount = new JTextArea("Enter custom amount:");
     private JTextArea continueCustomAmount = new JTextArea("Continue [A]");
+    private JTextArea taThanksMessage = new JTextArea("Have a nice day!");
     private JTextArea passBlocked = new JTextArea("Your pass has been blocked, please contact your bank");
     private JTextArea wrongPassword = new JTextArea("The pin that you entered is incorrect, please try again");
     public JTextArea numberAttempts = new JTextArea("Attempts left:");
@@ -441,10 +442,15 @@ public class Gui extends JFrame implements ActionListener {
         panelFinalizeTransaction.setBackground(Color.CYAN);
         panelFinalizeTransaction.add(title[9]);
         panelFinalizeTransaction.add(taReceiptPrinted);
+        panelFinalizeTransaction.add(taThanksMessage);
+        taThanksMessage.setEditable(false);
+        taThanksMessage.setBackground(Color.CYAN);
+        taThanksMessage.setFont(font);
         taReceiptPrinted.setEditable(false);
         taReceiptPrinted.setBackground(Color.CYAN);
         taReceiptPrinted.setFont(font);
         taReceiptPrinted.setBounds(650,150,750,70);
+        taThanksMessage.setBounds(750,550,750,70);
 
 
 
@@ -996,6 +1002,8 @@ public class Gui extends JFrame implements ActionListener {
                 serialConnection.stringOut("printBon");
                 menuBon = false;
                 menuFinal = true;
+                taReceiptPrinted.setVisible(true);
+                taThanksMessage.setVisible(true);
                 changePanel(panelFinalizeTransaction);
             }
 
@@ -1004,6 +1012,9 @@ public class Gui extends JFrame implements ActionListener {
                 System.out.println("Bon niet printen");
                 menuBon = false;
                 menuFinal = true;
+                taReceiptPrinted.setVisible(false);
+                taThanksMessage.setVisible(true);
+                changePanel(panelFinalizeTransaction);
                 arduinoInputHandler("ArdSend_B");
             }
             return;

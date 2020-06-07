@@ -95,15 +95,16 @@ void simulateLogin(){
   Serial.println("ArdSend_*");
 
   //als de gebruiker op # drukt, verstuur dan eerst het gehaste wachtwoord, en daarna het # (of alleen het wachtwoord, nog even kijken wat handig is)
-  Serial.println("ArdPinHashed_c7a8ac60f7a34ea1b7e04011d3243639");
+  Serial.println("ArdPinHashed_454fd8661718a7ed022925eec8227f2b");
   delay(1000);
   Serial.println("ArdSend_#");
   delay(3000);
 
   Serial.println("ArdSend_1"); //geld pin menu
   delay(3000);
-  Serial.println("ArdSend_1"); //50 pinnen
-  delay(3000);
-  //Serial.println("ArdSend_2"); // optie 1
+//  Serial.println("ArdSend_2"); //50 pinnen
+//  delay(3000);
+//  Serial.println("ArdSend_2"); // optie 2
   
+  Serial.println("ArdSend_2"); // niet bon printen
 }
