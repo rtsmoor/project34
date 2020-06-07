@@ -3,7 +3,6 @@ package mainPackage.MoneyRelated;
 import mainPackage.Gui;
 import mainPackage.User.User;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Arrays;
@@ -42,6 +41,7 @@ public class Withdrawal {
         if(arrayNumber == 1){
             for(int i = 0; i < withdrawalArray1.length; i++) {
                 while (withdrawalArray1[i] > 0){
+                    gui.logoutTimer.restart();
                     if(i == 0) {
                         gui.serialConnection.stringOut("fifty");
                         gui.amounts[3]--;
@@ -73,6 +73,7 @@ public class Withdrawal {
         if(arrayNumber == 2){
             for(int i = 0; i < withdrawalArray2.length; i++) {
                 while (withdrawalArray2[i] > 0){
+                    gui.logoutTimer.restart();
                     if(i == 0) {
                         gui.serialConnection.stringOut("fifty");
                         gui.amounts[3]--;
@@ -104,6 +105,7 @@ public class Withdrawal {
         if(arrayNumber == 3){
             for(int i = 0; i < withdrawalArray3.length; i++) {
                 while (withdrawalArray3[i] > 0){
+                    gui.logoutTimer.restart();
                     if(i == 0) {
                         gui.serialConnection.stringOut("fifty");
                         gui.amounts[3]--;
@@ -135,6 +137,7 @@ public class Withdrawal {
         if(arrayNumber == 4){
             for(int i = 0; i < withdrawalArray4.length; i++) {
                 while (withdrawalArray4[i] > 0){
+                    gui.logoutTimer.restart();
                     if(i == 0) {
                         gui.serialConnection.stringOut("fifty");
                         gui.amounts[3]--;
@@ -163,18 +166,10 @@ public class Withdrawal {
             sleep(2500);
     }
 
-         //todo toevoegen dat de dispenser aangeeft wanneer het geld gedispenst is
-            if(gui.menuDispensing){
-                gui.changePanel(gui.panelBon);
-                gui.menuDispensing = false;
-                gui.menuBon = true;
-            }
-
             double balance = user.getBalance();
             balance -= withdrawalAmount;
             user.setBalance(balance);
             System.out.println("Transaction Complete");
-            gui.changePanel(gui.panelBon);//na het dispensen
 
             try {
                 Statement st = user.conn.createStatement();
@@ -188,7 +183,7 @@ public class Withdrawal {
 
     public void algorithm(int withdrawalAmount, int[] withdrawalArray) throws Exception { //algoritme voor keuze van biljetten
 
-            if (option == 1) { //bereken optie 1
+            if (option == 1) { //calculate option 1
                 while (withdrawalAmount > 0) {
                     while (withdrawalAmount >= 50) {
                         withdrawalAmount = withdraw50(withdrawalAmount, withdrawalArray);
@@ -207,7 +202,7 @@ public class Withdrawal {
                     }
                 }
             }
-            if (option == 2) { // bereken optie 2
+            if (option == 2) { // calculate option 2
                 while (withdrawalAmount > 0) {
                     while (withdrawalAmount >= 20) {
                         withdrawalAmount = withdraw20(withdrawalAmount, withdrawalArray);
@@ -222,7 +217,7 @@ public class Withdrawal {
                     }
                 }
             }
-            if (option == 3 && withdrawalAmount <= 150) { //bereken optie 3
+            if (option == 3 && withdrawalAmount <= 150) { //calculate option 3
                 while (withdrawalAmount > 0) {
                     while (withdrawalAmount >= 10) {
                         withdrawalAmount = withdraw10(withdrawalAmount, withdrawalArray);
@@ -234,7 +229,7 @@ public class Withdrawal {
                 }
             }
 
-            if (option == 4 && withdrawalAmount <= 50) { //bereken optie 4
+            if (option == 4 && withdrawalAmount <= 50) { //calculate option 4
                 while (withdrawalAmount > 0) {
                     while (withdrawalAmount >= 5) {
                             withdrawalAmount = withdraw5(withdrawalAmount, withdrawalArray);
@@ -242,11 +237,11 @@ public class Withdrawal {
                 }
             }
     }
-//todo ervoor zorgen dat hij niet gelijk gui.amounts dingen veranderd hier, misschien opschuiven naar de sendArrays methode?
+
     private int withdraw50(int temp, int[] withdrawalArray)throws Exception{
         if (gui.amounts[3] > 0) {
             temp = temp - 50;
-            withdrawalArray[0]++; // houd bij hoeveel biljetten hij straks moet gaan printen
+            withdrawalArray[0]++; // keeps track of how many bills are going to be printed
         } else throw new Exception();
         return temp;
     }
@@ -275,10 +270,10 @@ public class Withdrawal {
     }
 
     public void displayOptions() throws Exception {
-        gui.optie1.setText("Option 1 [1]\n");
-        gui.optie2.setText("Option 2 [2]\n");
-        gui.optie3.setText("Option 3 [3]\n");
-        gui.optie4.setText("Option 4 [4]\n");
+        gui.option1.setText("Option 1 [1]\n");
+        gui.option2.setText("Option 2 [2]\n");
+        gui.option3.setText("Option 3 [3]\n");
+        gui.option4.setText("Option 4 [4]\n");
         Arrays.fill(withdrawalArray1, 0);
         Arrays.fill(withdrawalArray2, 0);
         Arrays.fill(withdrawalArray3, 0);
@@ -290,10 +285,10 @@ public class Withdrawal {
         if(withdrawalArray1[1] > 0)option1.append(withdrawalArray1[1]).append("x20\n");
         if(withdrawalArray1[2] > 0)option1.append(withdrawalArray1[2]).append("x10\n");
         if(withdrawalArray1[3] > 0)option1.append(withdrawalArray1[3]).append("x5\n");
-        if(option1.toString().equalsIgnoreCase("Option 1 [1]\n")) gui.optie1.setVisible(false);
+        if(option1.toString().equalsIgnoreCase("Option 1 [1]\n")) gui.option1.setVisible(false);
         else {
-            gui.optie1.setText(option1.toString());
-            gui.optie1.setVisible(true);
+            gui.option1.setText(option1.toString());
+            gui.option1.setVisible(true);
         }
 
 
@@ -303,10 +298,10 @@ public class Withdrawal {
         if(withdrawalArray2[1] > 0)option2.append(withdrawalArray2[1]).append("x20\n");
         if(withdrawalArray2[2] > 0)option2.append(withdrawalArray2[2]).append("x10\n");
         if(withdrawalArray2[3] > 0)option2.append(withdrawalArray2[3]).append("x5\n");
-        if(option2.toString().equalsIgnoreCase("Option 2 [2]\n")) gui.optie2.setVisible(false);
+        if(option2.toString().equalsIgnoreCase("Option 2 [2]\n")) gui.option2.setVisible(false);
         else {
-            gui.optie2.setText(option2.toString());
-            gui.optie2.setVisible(true);
+            gui.option2.setText(option2.toString());
+            gui.option2.setVisible(true);
         }
 
 
@@ -316,10 +311,10 @@ public class Withdrawal {
         if(withdrawalArray3[1] > 0)option3.append(withdrawalArray3[1]).append("x20\n");
         if(withdrawalArray3[2] > 0)option3.append(withdrawalArray3[2]).append("x10\n");
         if(withdrawalArray3[3] > 0)option3.append(withdrawalArray3[3]).append("x5\n");
-        if(option3.toString().equalsIgnoreCase("Option 3 [3]\n")) gui.optie3.setVisible(false);
+        if(option3.toString().equalsIgnoreCase("Option 3 [3]\n")) gui.option3.setVisible(false);
         else {
-            gui.optie3.setText(option3.toString());
-            gui.optie3.setVisible(true);
+            gui.option3.setText(option3.toString());
+            gui.option3.setVisible(true);
         }
 
         option = 4;
@@ -328,10 +323,10 @@ public class Withdrawal {
         if(withdrawalArray4[1] > 0)option4.append(withdrawalArray4[1]).append("x20\n");
         if(withdrawalArray4[2] > 0)option4.append(withdrawalArray4[2]).append("x10\n");
         if(withdrawalArray4[3] > 0)option4.append(withdrawalArray4[3]).append("x5\n");
-        if(option4.toString().equalsIgnoreCase("Option 4 [4]\n")) gui.optie4.setVisible(false);
+        if(option4.toString().equalsIgnoreCase("Option 4 [4]\n")) gui.option4.setVisible(false);
         else {
-            gui.optie4.setText(option4.toString());
-            gui.optie4.setVisible(true);
+            gui.option4.setText(option4.toString());
+            gui.option4.setVisible(true);
         }
     }
 }

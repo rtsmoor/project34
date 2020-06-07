@@ -3,32 +3,24 @@ package mainPackage;
 import mainPackage.User.*;
 import mainPackage.serialconnection.SerialConnection;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.text.AttributeSet;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.DocumentFilter;
-import javax.swing.text.PlainDocument;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Arrays;
+
 import static java.lang.Thread.sleep;
 
 
-import static javax.swing.JOptionPane.getDesktopPaneForComponent;
 import static javax.swing.JOptionPane.showMessageDialog;
 //TODO arduino moet iets sturen als hij klaar is met dispensen
 public class Gui extends JFrame implements ActionListener {
     public int array_length = 10;
-    private int amount4 = 10;
-    private int amount3 = 10;
-    private int amount2 = 10;
-    private int amount1 = 10;
+    private int amount4 = 15;
+    private int amount3 = 15;
+    private int amount2 = 15;
+    private int amount1 = 15;
     public int[] amounts = {amount1, amount2, amount3, amount4}; // volgorde biljetten: 5, 10, 20, 50
 
     private boolean menuStart = true; //startscherm, is true aan het begin en nadat de gebruiker is uitgelogt
@@ -41,9 +33,10 @@ public class Gui extends JFrame implements ActionListener {
     public boolean menuDispensing = false; // scherm die laat zien dat de automaat aan het dispensen is
     public boolean menuBon = false; //menu waar je kan kiezen voor een bon
     public boolean menuFinal = false;
+    public boolean pointOfNoReturn = false;
 
     private User user;
-    private String version = "1.3.0";
+    private String version = "1.3.1";
     private LogIn login;
     public SerialConnection serialConnection;
     public Connection conn;
@@ -64,7 +57,7 @@ public class Gui extends JFrame implements ActionListener {
      public JPanel panelShowBal = new JPanel();
      public JPanel panelFinalizeTransaction = new JPanel();
      public JPanel panelOptions = new JPanel();
-     public JPanel dispensing = new JPanel();
+     public JPanel panelDispensing = new JPanel();
      private JTextArea taReceiptPrinted = new JTextArea("Your receipt is being printed");
 
     private JButton yesBon = new JButton("Yes");
@@ -88,10 +81,10 @@ public class Gui extends JFrame implements ActionListener {
     private JButton bedrag4 = new JButton("150");
     private JButton anderBedrag = new JButton("Ander bedrag");
 
-    public JTextArea optie1 = new JTextArea("ERROR");
-    public JTextArea optie2 = new JTextArea("ERROR");
-    public JTextArea optie3 = new JTextArea("ERROR");
-    public JTextArea optie4 = new JTextArea("ERROR");
+    public JTextArea option1 = new JTextArea("ERROR");
+    public JTextArea option2 = new JTextArea("ERROR");
+    public JTextArea option3 = new JTextArea("ERROR");
+    public JTextArea option4 = new JTextArea("ERROR");
 
     public Timer logoutTimer = new Timer(30000, this); //todo !!!naar 30000 zetten na het testen!!!
 
@@ -100,14 +93,14 @@ public class Gui extends JFrame implements ActionListener {
     private JTextArea taShowBal = new JTextArea();
     private JTextArea taPanelStart = new JTextArea("Scan your pass to continue");
     private JTextArea taInvalidInput = new JTextArea("Enter numbers between 0-9,\nand where the last number is 0 or 5.\nMaximum allowed amount: 250");
-    private JTextArea enterPin = new JTextArea("ENTER PIN");
+    private JTextArea taEnterPin = new JTextArea("ENTER PIN");
     private JTextArea taDispensing = new JTextArea("Dispensing...");
-    private JTextArea snelPinnen = new JTextArea("Quick €70 Withdrawal [1]");
+    private JTextArea taFastPin = new JTextArea("Quick €70 Withdrawal [1]");
     private JTextArea taBalance = new JTextArea("Balance [3]");
-    private JTextArea kiesBedrag = new JTextArea("Choose Amount [2]");
+    private JTextArea taChooseAmount = new JTextArea("Choose Amount [2]");
     private JTextArea taNoBon = new JTextArea("No [2]");
     private JTextArea taYesBon = new JTextArea("Yes [1]");
-    private JTextArea receipt = new JTextArea("Do you want a receipt?");
+    private JTextArea taAskReceipt = new JTextArea("Do you want a receipt?");
     private JTextArea taBedrag1 = new JTextArea("20 [1]");
     private JTextArea taBedrag2 = new JTextArea("50 [2]");
     private JTextArea taBedrag3 = new JTextArea("100 [3]");
@@ -211,7 +204,7 @@ public class Gui extends JFrame implements ActionListener {
         title[0].setBounds(610,10,800,100);
         //PanelPassword
         panelPassword.setLayout(null);
-        panelPassword.add(enterPin);
+        panelPassword.add(taEnterPin);
         panelPassword.add(nextPage[1]);
         panelPassword.add(passwordTextField);
         panelPassword.add(title[1]);
@@ -233,14 +226,14 @@ public class Gui extends JFrame implements ActionListener {
         numberAttempts.setEditable(false);
         numberAttempts.setForeground(Color.orange);
         panelPassword.setBackground(Color.CYAN);
-        enterPin.setFont(font);
-        enterPin.setEditable(false);
-        enterPin.setBackground(Color.CYAN);
+        taEnterPin.setFont(font);
+        taEnterPin.setEditable(false);
+        taEnterPin.setBackground(Color.CYAN);
         passwordTextField.setFont(font);
         passwordTextField.setBackground(Color.CYAN);
         numberAttempts.setBounds(750, 400,450,70);
         wrongPassword.setBounds(300, 500, 1400,70);
-        enterPin.setBounds(820,270,400,70);
+        taEnterPin.setBounds(820,270,400,70);
         passwordTextField.setBounds(860,340,200,40);
         passBlocked.setBounds(350, 600, 1400, 70);
         nextPage[1].setBounds(860,900,200,200); //temp
@@ -248,8 +241,8 @@ public class Gui extends JFrame implements ActionListener {
         panelMain.setLayout(null);
         panelMain.setBackground(Color.CYAN);
         panelMain.add(title[2]);
-        panelMain.add(snelPinnen);
-        panelMain.add(kiesBedrag);
+        panelMain.add(taFastPin);
+        panelMain.add(taChooseAmount);
         panelMain.add(taBalance);
         panelMain.add(afbreken[0]);
         panelMain.add(quickPin);
@@ -258,30 +251,30 @@ public class Gui extends JFrame implements ActionListener {
         panelMain.add(abort[0]);
         panelMain.add(taInsufficientBills[0]);
         panelMain.add(taInsufficientMoney[0]);
-        snelPinnen.setBackground(Color.CYAN);
-        kiesBedrag.setBackground(Color.CYAN);
+        taFastPin.setBackground(Color.CYAN);
+        taChooseAmount.setBackground(Color.CYAN);
         taBalance.setBackground(Color.CYAN);
-        snelPinnen.setFont(font);
-        kiesBedrag.setFont(font);
+        taFastPin.setFont(font);
+        taChooseAmount.setFont(font);
         taBalance.setFont(font);
-        snelPinnen.setEditable(false);
-        kiesBedrag.setEditable(false);
+        taFastPin.setEditable(false);
+        taChooseAmount.setEditable(false);
         taBalance.setEditable(false);
         abort[0].setBounds(1100, 700, 200, 200); //temp
         quickPin.setBounds(700, 180, 200, 200); //temp
         showBal.setBounds(700, 700, 200, 200); //temp
         customPin.setBounds(1100,180, 200, 200); //temp
-        snelPinnen.setBounds(50,300, 640,70);
-        kiesBedrag.setBounds(1400,300, 500,70);
+        taFastPin.setBounds(50,300, 640,70);
+        taChooseAmount.setBounds(1400,300, 500,70);
         taBalance.setBounds(50,900, 300,70);
         //panel dispensing
-        dispensing.setLayout(null);
-        dispensing.add(title[7]);
-        dispensing.add(taDispensing);
+        panelDispensing.setLayout(null);
+        panelDispensing.add(title[7]);
+        panelDispensing.add(taDispensing);
         taDispensing.setFont(font);
         taDispensing.setEditable(false);
         taDispensing.setBackground(Color.CYAN);
-        dispensing.setBackground(Color.CYAN);
+        panelDispensing.setBackground(Color.CYAN);
         taDispensing.setBounds(800,400,310,70);
         //panelChooseAmount
         panelChooseAmount.setBackground(Color.CYAN);
@@ -336,28 +329,28 @@ public class Gui extends JFrame implements ActionListener {
         panelOptions.add(title[6]);
         panelOptions.add(abort[6]);
         panelOptions.add(afbreken[4]);
-        panelOptions.add(optie1);
-        panelOptions.add(optie2);
-        panelOptions.add(optie3);
-        panelOptions.add(optie4);
+        panelOptions.add(option1);
+        panelOptions.add(option2);
+        panelOptions.add(option3);
+        panelOptions.add(option4);
         panelOptions.add(naarHoofdMenu[2]);
         panelOptions.add(taNaarHoofdmenu[1]);
-        optie1.setEditable(false);
-        optie2.setEditable(false);
-        optie3.setEditable(false);
-        optie4.setEditable(false);
-        optie1.setBackground(Color.CYAN);
-        optie2.setBackground(Color.CYAN);
-        optie3.setBackground(Color.CYAN);
-        optie4.setBackground(Color.CYAN);
-        optie1.setFont(font);
-        optie2.setFont(font);
-        optie3.setFont(font);
-        optie4.setFont(font);
-        optie1.setBounds(50,200, 310,350);
-        optie2.setBounds(1400, 200, 310, 350);
-        optie3.setBounds(50, 550, 310, 350);
-        optie4.setBounds(1400, 550, 310, 350);
+        option1.setEditable(false);
+        option2.setEditable(false);
+        option3.setEditable(false);
+        option4.setEditable(false);
+        option1.setBackground(Color.CYAN);
+        option2.setBackground(Color.CYAN);
+        option3.setBackground(Color.CYAN);
+        option4.setBackground(Color.CYAN);
+        option1.setFont(font);
+        option2.setFont(font);
+        option3.setFont(font);
+        option4.setFont(font);
+        option1.setBounds(50,200, 310,350);
+        option2.setBounds(1400, 200, 310, 350);
+        option3.setBounds(50, 550, 310, 350);
+        option4.setBounds(1400, 550, 310, 350);
         abort[6].setBounds(1100, 700, 200, 200); //temp
         naarHoofdMenu[2].setBounds(700,700,200,200); //temp
         //panelBon
@@ -367,22 +360,22 @@ public class Gui extends JFrame implements ActionListener {
         panelBon.add(taYesBon);
         panelBon.add(taNoBon);
         panelBon.add(title[3]);
-        panelBon.add(receipt);
+        panelBon.add(taAskReceipt);
         panelBon.add(yesBon);
         panelBon.add(noBon);
         panelBon.add(abort[1]);
-        receipt.setFont(font);
-        receipt.setBackground(Color.CYAN);
+        taAskReceipt.setFont(font);
+        taAskReceipt.setBackground(Color.CYAN);
         taYesBon.setFont(font);
         taNoBon.setFont(font);
         taYesBon.setEditable(false);
         taNoBon.setEditable(false);
-        receipt.setEditable(false);
+        taAskReceipt.setEditable(false);
         taYesBon.setBackground(Color.CYAN);
         taNoBon.setBackground(Color.CYAN);
         yesBon.setBounds(350,380, 200, 200);
         noBon.setBounds(1100, 380, 200, 200);
-        receipt.setBounds(710,150,800,70);
+        taAskReceipt.setBounds(710,150,800,70);
         taYesBon.setBounds(50,380,200,200); //temp
         taNoBon.setBounds(1400, 380, 200,200); //temp
         abort[1].setBounds(1100, 700, 200, 200); //temp
@@ -583,25 +576,24 @@ public class Gui extends JFrame implements ActionListener {
     public void arduinoInputHandler(String input){
         logoutTimer.restart(); //resets the 30 second logout timer
 
-        if(!menuStart) {
+        if(!menuStart && !pointOfNoReturn) {
+            if("ArdSend_B".equals(input)){
+                //code om uit te loggen en naar het startscherm te gaan
+                System.out.println("aborting...");
+                if(user != null) user.userLogout();
+                taShowBal.setText("");
+                taInvalidInput.setVisible(false);
+                taInsufficientBills[0].setVisible(false);
+                taInsufficientMoney[0].setVisible(false);
+                panelChooseAmount.add(taInsufficientMoney[2]);
+                login.clearLoginVariables();
+                resetFlags();
+                menuStart = true;
+                changePanel(panelStart);
 
-        if("ArdSend_B".equals(input)){
-            //code om uit te loggen en naar het startscherm te gaan
-            System.out.println("aborting...");
-            if(user != null) user.userLogout();
-            taShowBal.setText("");
-            taInvalidInput.setVisible(false);
-            taInsufficientBills[0].setVisible(false);
-            taInsufficientMoney[0].setVisible(false);
-            panelChooseAmount.add(taInsufficientMoney[2]);
-            login.clearLoginVariables();
-            resetFlags();
-            menuStart = true;
-            changePanel(panelStart);
-
-            serialConnection.stringOut("abort");
-            return;
-        }
+                serialConnection.stringOut("abort");
+                return;
+            }
 
             if(!menuLogin) {
                 if ("ArdSend_C".equals(input)) {
@@ -706,8 +698,8 @@ public class Gui extends JFrame implements ActionListener {
                             ex.printStackTrace();
                     }
                     menuMain = false;
-                    menuBon = true;
-                    changePanel(panelBon);
+                    menuMoneyOptions = true;
+                    changePanel(panelOptions);
                 }
             }
 
@@ -758,7 +750,7 @@ public class Gui extends JFrame implements ActionListener {
 
             if("ArdSend_2".equals(input)) {
                 //pin 50
-                if (amounts[0] > 10 && amounts[1] > 3 && amounts[2] > 1 && amounts[3] > 1) {
+                if (amounts[0] > 9 && amounts[1] > 3 && amounts[2] > 1 && amounts[3] > 1) {
                     if (user.getBalance() - 50 < 0) { //kijken of saldo lager is dan bedrag dat gepind wordt
                         taInsufficientMoney[2].setVisible(true);
                     } else {
@@ -842,66 +834,59 @@ public class Gui extends JFrame implements ActionListener {
 
         if(menuMoneyOptions){
             if("ArdSend_1".equals(input)) {
-                serialConnection.javaBusy = true;
+
                 try {
-                    if(optie1.isVisible()){
+                    if(option1.isVisible()){
                         menuMoneyOptions = false;
                         menuDispensing = true;
-                        changePanel(dispensing);
+                        pointOfNoReturn = true;
+                        changePanel(panelDispensing);
                         user.withdrawal.sendArray(1);
                     }
                 } catch (InterruptedException ex) {
                     ex.printStackTrace();
-                } finally {
-                    serialConnection.javaBusy = false;
                 }
             }
 
             if("ArdSend_2".equals(input)) {
-                serialConnection.javaBusy = true;
                 try {
-                    if(optie2.isVisible()){
+                    if(option2.isVisible()){
                         menuMoneyOptions = false;
                         menuDispensing = true;
-                        changePanel(dispensing);
+                        pointOfNoReturn = true;
+                        changePanel(panelDispensing);
                         user.withdrawal.sendArray(2);
                     }
                 } catch (InterruptedException ex) {
                     ex.printStackTrace();
-                } finally {
-                    serialConnection.javaBusy = false;
                 }
             }
 
             if("ArdSend_3".equals(input)) {
-                serialConnection.javaBusy = true;
                 try {
-                    if(optie3.isVisible()) {
+                    if(option3.isVisible()) {
                         menuMoneyOptions = false;
                         menuDispensing = true;
-                        changePanel(dispensing);
+                        pointOfNoReturn = true;
+                        changePanel(panelDispensing);
                         user.withdrawal.sendArray(3);
                     }
                 } catch (InterruptedException ex) {
                     ex.printStackTrace();
-                } finally {
-                    serialConnection.javaBusy = false;
                 }
             }
 
             if("ArdSend_4".equals(input)) {
-                serialConnection.javaBusy = true;
                 try {
-                    if(optie4.isVisible()){
+                    if(option4.isVisible()){
                         menuMoneyOptions = false;
                         menuDispensing = true;
-                        changePanel(dispensing);
+                        pointOfNoReturn = true;
+                        changePanel(panelDispensing);
                         user.withdrawal.sendArray(4);
                     }
                 } catch (InterruptedException ex) {
                     ex.printStackTrace();
-                } finally {
-                    serialConnection.javaBusy = false;
                 }
             }
             return;
@@ -992,6 +977,11 @@ public class Gui extends JFrame implements ActionListener {
         }
 
         if(menuDispensing){
+            if("ArdSend_finish".equals(input)){
+                changePanel(panelBon);
+                menuDispensing = false;
+                menuBon = true;
+            }
             return;
         }
 
@@ -1002,20 +992,21 @@ public class Gui extends JFrame implements ActionListener {
                 serialConnection.stringOut("printBon");
                 menuBon = false;
                 menuFinal = true;
+                pointOfNoReturn = false;
                 taReceiptPrinted.setVisible(true);
                 taThanksMessage.setVisible(true);
                 changePanel(panelFinalizeTransaction);
             }
 
             if("ArdSend_2".equals(input)) {
-                //geen bon
+                //no receipt
                 System.out.println("Bon niet printen");
                 menuBon = false;
                 menuFinal = true;
+                pointOfNoReturn = false;
                 taReceiptPrinted.setVisible(false);
                 taThanksMessage.setVisible(true);
                 changePanel(panelFinalizeTransaction);
-                arduinoInputHandler("ArdSend_B");
             }
             return;
         }
@@ -1210,7 +1201,7 @@ public class Gui extends JFrame implements ActionListener {
             }
         }
         if("optie1".equalsIgnoreCase(e.getActionCommand())){
-            changePanel(dispensing);
+            changePanel(panelDispensing);
             try{
                 user.withdrawal.sendArray(1);
             } catch (InterruptedException ex){
@@ -1218,7 +1209,7 @@ public class Gui extends JFrame implements ActionListener {
             }
         }
         if("optie2".equalsIgnoreCase(e.getActionCommand())){
-            changePanel(dispensing);
+            changePanel(panelDispensing);
             try{
                 user.withdrawal.sendArray(2);
             } catch(InterruptedException ex){
@@ -1226,7 +1217,7 @@ public class Gui extends JFrame implements ActionListener {
             }
         }
         if("optie3".equalsIgnoreCase(e.getActionCommand())){
-            changePanel(dispensing);
+            changePanel(panelDispensing);
             try{
                 user.withdrawal.sendArray(3);
             } catch (InterruptedException ex){
@@ -1234,7 +1225,7 @@ public class Gui extends JFrame implements ActionListener {
             }
         }
         if("optie4".equalsIgnoreCase(e.getActionCommand())){
-            changePanel(dispensing);
+            changePanel(panelDispensing);
             try{
                 user.withdrawal.sendArray(4);
             }catch(InterruptedException ex){

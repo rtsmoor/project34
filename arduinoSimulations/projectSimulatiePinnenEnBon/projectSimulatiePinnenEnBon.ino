@@ -108,13 +108,16 @@ void simulateLogin(){
   Serial.println("ArdSend_#");
   delay(3000);
 
-  Serial.println("ArdSend_3"); //geld pin menu
+  Serial.println("ArdSend_2"); //geld pin menu
   delay(3000);
   Serial.println("ArdSend_2"); //50 pinnen
   delay(3000);
   Serial.println("ArdSend_1"); // optie 1
-  delay(10000);
-  Serial.println("ArdSend_1"); // bon printen
+  delay(100);
+  delay(12000);
+  Serial.println("ArdSend_finish");
+  delay(2000);
+  Serial.println("ArdSend_2"); // bon printen
  
   
 }
