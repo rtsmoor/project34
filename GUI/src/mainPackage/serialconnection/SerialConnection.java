@@ -8,9 +8,7 @@ import java.io.InputStreamReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Scanner;
-import java.util.Vector;
 
-import static java.lang.Thread.sleep;
 
 public class SerialConnection {
     public Scanner in;

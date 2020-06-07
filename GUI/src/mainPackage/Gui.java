@@ -9,12 +9,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.SQLException;
-
 import static java.lang.Thread.sleep;
 
-
-import static javax.swing.JOptionPane.showMessageDialog;
-//TODO arduino moet iets sturen als hij klaar is met dispensen
 public class Gui extends JFrame implements ActionListener {
     public int array_length = 10;
     private int amount4 = 15;
@@ -36,7 +32,7 @@ public class Gui extends JFrame implements ActionListener {
     public boolean pointOfNoReturn = false;
 
     private User user;
-    private String version = "1.3.1";
+    private String version = "1.3.2";
     private LogIn login;
     public SerialConnection serialConnection;
     public Connection conn;
@@ -60,26 +56,11 @@ public class Gui extends JFrame implements ActionListener {
      public JPanel panelDispensing = new JPanel();
      private JTextArea taReceiptPrinted = new JTextArea("Your receipt is being printed");
 
-    private JButton yesBon = new JButton("Yes");
-    private JButton noBon = new JButton("No");
-    private JButton quickPin = new JButton("Snel €70,- pinnen");
-    private JButton showBal = new JButton("Bekijk saldo");
-    private JButton customPin = new JButton("Kies bedrag");
-
-    JButton[] abort = new JButton[array_length];
-    JButton[] naarHoofdMenu = new JButton[array_length];
-    JButton[] nextPage = new JButton[array_length];
     JTextArea[] title = new JTextArea[array_length];
     JTextArea[] afbreken = new JTextArea[array_length];
     JTextArea[] taNaarHoofdmenu = new JTextArea[array_length];
     JTextArea[] taInsufficientBills = new JTextArea[array_length];//panelchooseamount = 2  panelmain = 0  panelcustomamount = 1
     JTextArea[] taInsufficientMoney = new JTextArea[array_length];//panelchooseamount = 2  panelmain = 0  panelcustomamount = 1
-
-    private JButton bedrag1 = new JButton("20");
-    private JButton bedrag2 = new JButton("50");
-    private JButton bedrag3 = new JButton("100");
-    private JButton bedrag4 = new JButton("150");
-    private JButton anderBedrag = new JButton("Ander bedrag");
 
     public JTextArea option1 = new JTextArea("ERROR");
     public JTextArea option2 = new JTextArea("ERROR");
@@ -117,15 +98,6 @@ public class Gui extends JFrame implements ActionListener {
     private Font font = new Font("Neo Sans", Font.BOLD, 50);
     private Font fontTitle = new Font("Segoe Script", Font.BOLD, 70);
     private Image icon = getToolkit().getImage(("GUI/resources/icon.jpg"));
-
-
-    private void createButonArrays(){
-        for(int i = 0; i < array_length; i++){
-            naarHoofdMenu[i] = new JButton("Terug naar het hoofdmenu");
-            abort[i] = new JButton("Afbreken");
-            nextPage[i] = new JButton("Volgende");// temp array, zal wss niet nodig zijn bij het eindproduct
-        }
-    }
 
     public void setUser(User user) {
         this.user = user;
@@ -172,7 +144,6 @@ public class Gui extends JFrame implements ActionListener {
 
     void createApp(){
         createLayout();
-        createButonArrays();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(new Dimension(1920,1080));
         frame.setIconImage(Toolkit.getDefaultToolkit().getImage("icon.jpg"));
@@ -180,12 +151,8 @@ public class Gui extends JFrame implements ActionListener {
         frame.setUndecorated(true); // zorgt ervoor dat je niet zomaar uit het programma kan klikken
         frame.add(panelMain);
         frame.setIconImage(icon);
-        panelMain.add(quickPin);
-        panelMain.add(showBal);
-        panelMain.add(customPin);
         //PanelStart
         panelStart.setLayout(null);
-        panelStart.add(nextPage[0]);
         panelStart.setBackground(Color.CYAN);
         panelStart.add(taPanelStart);
         panelStart.add(title[0]);
@@ -200,12 +167,10 @@ public class Gui extends JFrame implements ActionListener {
         taPanelStart.setBackground(Color.CYAN);
         errorPassNotFound.setBounds(360,600,1400,140);
         taPanelStart.setBounds(620,250,800,70);
-        nextPage[0].setBounds(860,340,200,200); //temp
         title[0].setBounds(610,10,800,100);
         //PanelPassword
         panelPassword.setLayout(null);
         panelPassword.add(taEnterPin);
-        panelPassword.add(nextPage[1]);
         panelPassword.add(passwordTextField);
         panelPassword.add(title[1]);
         panelPassword.add(wrongPassword);
@@ -236,7 +201,6 @@ public class Gui extends JFrame implements ActionListener {
         taEnterPin.setBounds(820,270,400,70);
         passwordTextField.setBounds(860,340,200,40);
         passBlocked.setBounds(350, 600, 1400, 70);
-        nextPage[1].setBounds(860,900,200,200); //temp
         //PanelMain
         panelMain.setLayout(null);
         panelMain.setBackground(Color.CYAN);
@@ -245,10 +209,6 @@ public class Gui extends JFrame implements ActionListener {
         panelMain.add(taChooseAmount);
         panelMain.add(taBalance);
         panelMain.add(afbreken[0]);
-        panelMain.add(quickPin);
-        panelMain.add(showBal);
-        panelMain.add(customPin);
-        panelMain.add(abort[0]);
         panelMain.add(taInsufficientBills[0]);
         panelMain.add(taInsufficientMoney[0]);
         taFastPin.setBackground(Color.CYAN);
@@ -260,10 +220,6 @@ public class Gui extends JFrame implements ActionListener {
         taFastPin.setEditable(false);
         taChooseAmount.setEditable(false);
         taBalance.setEditable(false);
-        abort[0].setBounds(1100, 700, 200, 200); //temp
-        quickPin.setBounds(700, 180, 200, 200); //temp
-        showBal.setBounds(700, 700, 200, 200); //temp
-        customPin.setBounds(1100,180, 200, 200); //temp
         taFastPin.setBounds(50,300, 640,70);
         taChooseAmount.setBounds(1400,300, 500,70);
         taBalance.setBounds(50,900, 300,70);
@@ -279,16 +235,9 @@ public class Gui extends JFrame implements ActionListener {
         //panelChooseAmount
         panelChooseAmount.setBackground(Color.CYAN);
         panelChooseAmount.setLayout(null);
-        panelChooseAmount.add(abort[5]);
         panelChooseAmount.add(afbreken[3]);
         panelChooseAmount.add(taNaarHoofdmenu[0]);
         panelChooseAmount.add(title[5]);
-        panelChooseAmount.add(naarHoofdMenu[1]);//temp
-        panelChooseAmount.add(bedrag1);//temp
-        panelChooseAmount.add(bedrag2);//temp
-        panelChooseAmount.add(bedrag3);//temp
-        panelChooseAmount.add(bedrag4);//temp
-        panelChooseAmount.add(anderBedrag);//temp
         panelChooseAmount.add(taBedrag1);
         panelChooseAmount.add(taBedrag2);
         panelChooseAmount.add(taBedrag3);
@@ -316,24 +265,15 @@ public class Gui extends JFrame implements ActionListener {
         taBedrag3.setBounds(50, 500, 200, 70);
         taBedrag4.setBounds(1400, 500, 200, 70);
         taOtherAmount.setBounds(50, 700, 600, 70);
-        abort[5].setBounds(1100, 600, 200, 200); //temp
-        bedrag1.setBounds(700, 200, 200, 200); //temp
-        bedrag2.setBounds(1100, 200, 200, 200); //temp
-        bedrag3.setBounds(700,400, 200, 200); //temp
-        bedrag4.setBounds(1100,400, 200, 200); //temp
-        anderBedrag.setBounds(700, 600, 200,200); //temp
-        naarHoofdMenu[1].setBounds(700,800,200,200); //temp
         //panelOptions
         panelOptions.setBackground(Color.CYAN);
         panelOptions.setLayout(null);
         panelOptions.add(title[6]);
-        panelOptions.add(abort[6]);
         panelOptions.add(afbreken[4]);
         panelOptions.add(option1);
         panelOptions.add(option2);
         panelOptions.add(option3);
         panelOptions.add(option4);
-        panelOptions.add(naarHoofdMenu[2]);
         panelOptions.add(taNaarHoofdmenu[1]);
         option1.setEditable(false);
         option2.setEditable(false);
@@ -351,8 +291,6 @@ public class Gui extends JFrame implements ActionListener {
         option2.setBounds(1400, 200, 310, 350);
         option3.setBounds(50, 550, 310, 350);
         option4.setBounds(1400, 550, 310, 350);
-        abort[6].setBounds(1100, 700, 200, 200); //temp
-        naarHoofdMenu[2].setBounds(700,700,200,200); //temp
         //panelBon
         panelBon.setLayout(null);
         panelBon.setBackground(Color.CYAN);
@@ -361,9 +299,6 @@ public class Gui extends JFrame implements ActionListener {
         panelBon.add(taNoBon);
         panelBon.add(title[3]);
         panelBon.add(taAskReceipt);
-        panelBon.add(yesBon);
-        panelBon.add(noBon);
-        panelBon.add(abort[1]);
         taAskReceipt.setFont(font);
         taAskReceipt.setBackground(Color.CYAN);
         taYesBon.setFont(font);
@@ -373,16 +308,11 @@ public class Gui extends JFrame implements ActionListener {
         taAskReceipt.setEditable(false);
         taYesBon.setBackground(Color.CYAN);
         taNoBon.setBackground(Color.CYAN);
-        yesBon.setBounds(350,380, 200, 200);
-        noBon.setBounds(1100, 380, 200, 200);
         taAskReceipt.setBounds(710,150,800,70);
         taYesBon.setBounds(50,380,200,200); //temp
         taNoBon.setBounds(1400, 380, 200,200); //temp
-        abort[1].setBounds(1100, 700, 200, 200); //temp
         //panelShowBal
         panelShowBal.setLayout(null);
-        panelShowBal.add(abort[4]);
-        panelShowBal.add(naarHoofdMenu[0]);
         panelShowBal.add(taShowBal);
         panelShowBal.add(afbreken[2]);
         panelShowBal.add(title[4]);
@@ -392,8 +322,6 @@ public class Gui extends JFrame implements ActionListener {
         taShowBal.setEditable(false);
         taShowBal.setBackground(Color.CYAN);
         taShowBal.setBounds(700, 300, 900, 200);
-        abort[4].setBounds(1100, 700, 200, 200); //temp
-        naarHoofdMenu[0].setBounds(700, 700, 200, 200); //temp
         //panelCustomAmount
         panelCustomAmount.setLayout(null);
         panelCustomAmount.setBackground(Color.CYAN);
@@ -401,9 +329,6 @@ public class Gui extends JFrame implements ActionListener {
         panelCustomAmount.add(taInvalidInput);
         panelCustomAmount.add(taNaarHoofdmenu[3]);
         panelCustomAmount.add(afbreken[5]);
-        panelCustomAmount.add(nextPage[2]);
-        panelCustomAmount.add(abort[3]);
-        panelCustomAmount.add(naarHoofdMenu[3]);
         panelCustomAmount.add(customBedragField);
         panelCustomAmount.add(taCustomAmount);
         panelCustomAmount.add(taInsufficientBills[1]);
@@ -425,9 +350,6 @@ public class Gui extends JFrame implements ActionListener {
         customBedragField.setFont(font);
         taCustomAmount.setBounds(400,400,700,70);
         customBedragField.setBounds(950,400,300,70);
-        abort[3].setBounds(1100, 700, 200, 200); //temp
-        naarHoofdMenu[3].setBounds(700,700,200,200); //temp
-        nextPage[2].setBounds(700,900,200,200);
         taInvalidInput.setBounds(600,500,910,200);
         continueCustomAmount.setBounds(1400,400,700,70);
         //panelFinalizeTransaction
@@ -445,61 +367,6 @@ public class Gui extends JFrame implements ActionListener {
         taReceiptPrinted.setBounds(650,150,750,70);
         taThanksMessage.setBounds(750,550,750,70);
 
-
-
-
-
-
-//        panelCustomAmount.add(new JLabel("Voer aangepast bedrag in:"));
-////        panelCustomAmount.add(customBedragField);
-////        customBedragField.setColumns(10);
-//        panelCustomAmount.add(taInvalidInput);
-//        taInvalidInput.setEditable(false);
-//        taInvalidInput.setVisible(false);
-//        taInvalidInput.setForeground(Color.RED);
-//
-////        panelCustomAmount.add(nextPage[2]);
-////        panelCustomAmount.add(abort[3]);
-////        panelCustomAmount.add(naarHoofdMenu[3]);
-//
-//        panelShowBal.add(taShowBal);
-//        taShowBal.setEditable(false);
-////        panelShowBal.add(abort[4]);
-//        panelShowBal.add(naarHoofdMenu[4]);
-//
-////        panelFinalizeTransaction.add(tempTa);
-////        panelFinalizeTransaction.add(abort[6]);
-//
-//        panelOptions.add(optie1);
-//        panelOptions.add(optie2);
-//        panelOptions.add(optie3);
-//        panelOptions.add(optie4);
-//
-//        panelChooseAmount.add(taInsufficientBills);
-//        taInsufficientBills.setEditable(false);
-//        taInsufficientBills.setVisible(false);
-//        taInsufficientBills.setForeground(Color.RED);
-//
-//        panelChooseAmount.add(taInsufficientMoney);
-//        taInsufficientMoney.setEditable(false);
-//        taInsufficientMoney.setVisible(false);
-//        taInsufficientMoney.setForeground(Color.RED);
-
-        // code die ervoor zorgt dat er max 4 tekens ingevuld worden (van stackoverflow gepakt)
-//        PlainDocument documentPF = (PlainDocument) passwordTextField.getDocument();
-//        documentPF.setDocumentFilter(new DocumentFilter() {
-//
-//            @Override
-//            public void replace(DocumentFilter.FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
-//                String string = fb.getDocument().getText(0, fb.getDocument().getLength()) + text;
-//
-//                if (string.length() <= 4) {
-//                    super.replace(fb, offset, length, text, attrs); //To change body of generated methods, choose Tools | Templates.
-//                }
-//            }
-//
-//        });
-
         eventHandler();
 
       /*  mainFrame.getContentPane().add(BorderLayout.SOUTH, );*/
@@ -516,48 +383,8 @@ public class Gui extends JFrame implements ActionListener {
     }
 
     private void eventHandler(){
-        quickPin.addActionListener(this);
-        quickPin.setActionCommand("pin70");
-        showBal.addActionListener(this);
-        showBal.setActionCommand("showBal");
-        customPin.addActionListener(this);
-        customPin.setActionCommand("customPin");
-
-        for(int i = 0; i < array_length; i++){
-            abort[i].addActionListener(this);
-            abort[i].setActionCommand("abort");
-            abort[i].setBackground(Color.RED);
-            naarHoofdMenu[i].addActionListener(this);
-            naarHoofdMenu[i].setActionCommand("hoofdmenu");
-        }
-
-        yesBon.addActionListener(this);
-        yesBon.setActionCommand("yesBon");
-        noBon.addActionListener(this);
-        noBon.setActionCommand("noBon");
-
-        bedrag1.addActionListener(this);
-        bedrag1.setActionCommand("customBedrag1");
-        bedrag2.addActionListener(this);
-        bedrag2.setActionCommand("customBedrag2");
-        bedrag3.addActionListener(this);
-        bedrag3.setActionCommand("customBedrag3");
-        bedrag4.addActionListener(this);
-        bedrag4.setActionCommand("customBedrag4");
-        anderBedrag.addActionListener(this);
-        anderBedrag.setActionCommand("anderBedrag");
-
-        nextPage[0].addActionListener(this);
-        nextPage[0].setActionCommand("inlogScherm");
-        nextPage[1].addActionListener(this);
-        nextPage[1].setActionCommand("wachtwoord");
-        nextPage[2].addActionListener(this);
-        nextPage[2].setActionCommand("custAmountToNext");
-
         logoutTimer.setActionCommand("abort");
         logoutTimer.start();
-
-
     }
 
     private void resetFlags(){
@@ -1019,288 +846,8 @@ public class Gui extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         logoutTimer.restart();
 
-        if("abort".equalsIgnoreCase(e.getActionCommand())){
-            //code om uit te loggen en naar het startscherm te gaan
-            System.out.println("aborting...");
-            if(user != null) user.userLogout();
-            taShowBal.setText("");
-            taInvalidInput.setVisible(false);
-            taInsufficientBills[1].setVisible(false);
-            taInsufficientMoney[1].setVisible(false);
-            panelChooseAmount.add(taInsufficientMoney[2]);
-            login.clearLoginVariables();
-            changePanel(panelStart);
-            serialConnection.stringOut("abort");
-            try {
-                sleep(100);
-            } catch (InterruptedException ex) {
-                ex.printStackTrace();
-            }
-        }
-
-        if("hoofdmenu".equalsIgnoreCase(e.getActionCommand())){
-            //code om naar het hoofdmenu te gaan
-            System.out.println("naar hoofdmenu");
-            user.toMainMenu();
-            taInvalidInput.setVisible(false);
-            taInsufficientBills[2].setVisible(false);
-            taInsufficientMoney[2].setVisible(false);
-            taInsufficientBills[1].setVisible(false);
-            taInsufficientMoney[1].setVisible(false);
-            taInsufficientBills[0].setVisible(false);
-            taInsufficientMoney[0].setVisible(false);
-            panelChooseAmount.add(taInsufficientMoney[2]);
-            changePanel(panelMain);
-//            serialConnection.stringOut("mainMenu"); //todo arduino code voor hoofdmenu
-//            try {
-//                sleep(100);
-//            } catch (InterruptedException ex) {
-//                ex.printStackTrace();
-//            }
-        }
-
-        if("showBal".equalsIgnoreCase(e.getActionCommand())){
-            //code om het saldo te laten zien
-            System.out.println("showing balance");
-
-            changePanel(panelShowBal);
-        }
-
-        if("pin70".equalsIgnoreCase(e.getActionCommand())){
-            //code om 70 euro te pinnen (kan via dezelfde methode als die voor hetzelfde bedrag)
-            if (amounts[2] > 0 && amounts[3] > 0) {
-                if (user.getBalance() - 70 < 0) { //kijken of saldo lager is dan bedrag dat gepind wordt
-                    panelMain.add(taInsufficientMoney[0]);
-                    taInsufficientMoney[0].setVisible(true);
-                } else {
-                    System.out.println("70 euro");
-                    user.makeWithdrawal();
-                    user.withdrawal.customWithdrawal(70);
-                    try {
-                        user.withdrawal.displayOptions();
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                    }
-                    changePanel(panelOptions);
-                }
-            }
-            else {
-                taInsufficientBills[0].setVisible(true);
-            }
-        }
-
-        if("customPin".equalsIgnoreCase(e.getActionCommand())) {
-
-            System.out.println("custom bedrag pinnen");
-            taInsufficientMoney[1].setVisible(false);
-            panelChooseAmount.add(taInsufficientMoney[1]);
-            changePanel(panelChooseAmount);
-        }
-
-        if("yesBon".equalsIgnoreCase(e.getActionCommand()))   {
-            System.out.println("Bon printen");
-            serialConnection.stringOut("printBon");
-            changePanel(panelFinalizeTransaction);
-
-        }
-
-        if("noBon".equalsIgnoreCase(e.getActionCommand()))   {
-            System.out.println("Bon niet printen");
-            changePanel(panelFinalizeTransaction);
-        }
-        if("customBedrag1".equalsIgnoreCase(e.getActionCommand())){
-            if(amount1 > 0) {
-                if (user.getBalance() - 20 < 0) { //kijken of saldo lager is dan bedrag dat gepind wordt
-                    taInsufficientMoney[1].setVisible(true);
-                } else {
-                    System.out.println("20 euro");
-                    user.makeWithdrawal();
-                    user.withdrawal.customWithdrawal(20);
-                    try{
-                        user.withdrawal.displayOptions();
-                    }catch (Exception ex){
-                        ex.printStackTrace();
-                    }
-
-                    changePanel(panelOptions);
-                    amount1 = amount1 - 1;
-                    System.out.println("Amount1:" + amount1);
-                }
-            }
-            else{
-                taInsufficientBills[1].setVisible(true);
-            }
-        }
-        if("customBedrag2".equalsIgnoreCase(e.getActionCommand())){
-            if(amount2 > 0) {
-                if (user.getBalance() - 50 < 0) { //kijken of saldo lager is dan bedrag dat gepind wordt
-                    taInsufficientMoney[1].setVisible(true);
-                } else {
-                    System.out.println("50 euro");
-                    user.makeWithdrawal();
-                    user.withdrawal.customWithdrawal(50);
-                    try{
-                        user.withdrawal.displayOptions();
-                    }catch (Exception ex){
-                        ex.printStackTrace();
-                    }
-
-                    changePanel(panelOptions);
-                    amount2 = amount2 - 1;
-                    System.out.println("Amount2:" + amount2);
-                }
-            }
-            else{
-                taInsufficientBills[1].setVisible(true);
-            }
-        }
-        if("customBedrag3".equalsIgnoreCase(e.getActionCommand())){
-            if(amount3 > 0) {
-                if (user.getBalance() - 100 < 0) { //kijken of saldo lager is dan bedrag dat gepind wordt
-                    taInsufficientMoney[1].setVisible(true);
-                } else {
-                    System.out.println("100 euro");
-                    user.makeWithdrawal();
-                    user.withdrawal.customWithdrawal(100);
-                    try{
-                        user.withdrawal.displayOptions();
-                    }catch (Exception ex){
-                        ex.printStackTrace();
-                    }
-
-                    changePanel(panelOptions);
-                    amount3 = amount3 - 1;
-                    System.out.println("Amount3:" + amount3);
-                }
-            }
-            else{
-                taInsufficientBills[1].setVisible(true);
-            }
-        }
-        if("customBedrag4".equalsIgnoreCase(e.getActionCommand())){
-            if(amount4 > 0) {
-                if (user.getBalance() - 150 < 0) { //kijken of saldo lager is dan bedrag dat gepind wordt
-                    taInsufficientMoney[1].setVisible(true);
-                } else {
-                    System.out.println("150 euro");
-                    user.makeWithdrawal();
-                    user.withdrawal.customWithdrawal(150);
-                    try{
-                        user.withdrawal.displayOptions();
-                    }catch (Exception ex){
-                        ex.printStackTrace();
-                    }
-
-                    changePanel(panelOptions);
-                    amount4 = amount4 - 1;
-                    System.out.println("Amount4:" + amount4);
-                }
-            }
-            else{
-                taInsufficientBills[1].setVisible(true);
-            }
-        }
-        if("optie1".equalsIgnoreCase(e.getActionCommand())){
-            changePanel(panelDispensing);
-            try{
-                user.withdrawal.sendArray(1);
-            } catch (InterruptedException ex){
-                ex.printStackTrace();
-            }
-        }
-        if("optie2".equalsIgnoreCase(e.getActionCommand())){
-            changePanel(panelDispensing);
-            try{
-                user.withdrawal.sendArray(2);
-            } catch(InterruptedException ex){
-                ex.printStackTrace();
-            }
-        }
-        if("optie3".equalsIgnoreCase(e.getActionCommand())){
-            changePanel(panelDispensing);
-            try{
-                user.withdrawal.sendArray(3);
-            } catch (InterruptedException ex){
-                ex.printStackTrace();
-            }
-        }
-        if("optie4".equalsIgnoreCase(e.getActionCommand())){
-            changePanel(panelDispensing);
-            try{
-                user.withdrawal.sendArray(4);
-            }catch(InterruptedException ex){
-                ex.printStackTrace();
-            }
-        }
-
-        if("inlogScherm".equalsIgnoreCase((e.getActionCommand()))){
-            System.out.println("Naar inlogscherm");
-            changePanel(panelPassword);
-            //moet nog veranderd worden naar inlogscherm
-        }
-        //if statement met string van arduino
-        if("wachtwoord".equalsIgnoreCase((e.getActionCommand()))){
-            System.out.println("login");
-            try {
-                if (login.checkLogin()) {//todo  //test string: "2A 9F 0D 0B" //juiste code is: login.getPassnumber()
-                    // user.setPasswordCheck(passwordField.getPassword()); //oude code
-                    //System.out.println("passwd: " + Arrays.toString(user.getPasswordCheck()));
-                    passwordTextField.setText("");
-                    try {
-                        user.requestUserVariables();
-                    } catch (SQLException ex) {
-                        ex.printStackTrace();
-                    }
-                    changePanel(panelMain); //?moet nog veranderd worden naar inlogscherm?
-                }
-            } catch(SQLException ex){
-                ex.printStackTrace();
-            }
-        }
-
-        if("anderBedrag".equalsIgnoreCase((e.getActionCommand()))){
-            System.out.println("ander bedrag invullen");
-            customBedragField.setText("");
-            taInsufficientMoney[1].setVisible(false);
-            taInsufficientMoney[0].setVisible(false);
-            taInsufficientBills[0].setVisible(false);
-            taInsufficientMoney[2].setVisible(false);
-            taInsufficientBills[2].setVisible(false);
-            changePanel(panelCustomAmount);
-        }
-
-        if("custAmountToNext".equalsIgnoreCase((e.getActionCommand()))){
-            taInsufficientMoney[0].setVisible(false);
-            taInsufficientBills[0].setVisible(false);
-            taInsufficientMoney[1].setVisible(false);
-            taInsufficientBills[1].setVisible(false);
-            if(!("".equals(customBedragField.getText()))) {
-                try {
-                    int tempInt = Integer.parseInt(customBedragField.getText());
-                    if(tempInt%5 != 0 || tempInt < 0) throw new NumberFormatException();
-                    if (user.getBalance() - tempInt < 0) { //kijken of saldo lager is dan bedrag dat gepind wordt, en of het getal eindigt met 0 of 5
-                        panelCustomAmount.add(taInsufficientMoney[1]);
-                        taInsufficientMoney[1].setVisible(true);
-
-                    }
-
-                    else {
-                        System.out.println("custom bedrag: " + tempInt);
-                        user.makeWithdrawal();
-                        user.withdrawal.customWithdrawal(tempInt);
-                        try{
-                            user.withdrawal.displayOptions();
-                            changePanel(panelOptions);
-                        }catch (Exception ex){
-                            taInsufficientBills[1].setVisible(true);
-                        }
-                    }
-                } catch (NumberFormatException nfe) {
-                    System.out.println("ERROR: invalid input");
-                    customBedragField.setText("");
-                    taInvalidInput.setVisible(true);
-                }
-            }
+        if ("abort".equalsIgnoreCase(e.getActionCommand())) {
+            arduinoInputHandler("ArdSend_B");
         }
     }
 }
